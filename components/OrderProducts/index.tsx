@@ -17,7 +17,7 @@ export default function OrderProducts({ sales, editable, setOrderProducts }: Pro
             style={styles.container}
             contentContainerStyle={{ paddingBottom: 120 }}
             data={sales}    //v´`--if (editable === true) && |for passado o hook para alterar o OrderProducts| -> será renderizado o <EditableItem />
-            renderItem={i => editable && setOrderProducts ? <EditableItem item={i.item} setOrderProducts={setOrderProducts} /> : <Item item={i.item} />}
+            renderItem={i => (editable && setOrderProducts) ? <EditableItem item={i.item} setOrderProducts={setOrderProducts} /> : <Item item={i.item} />}
             keyExtractor={item => item.name_product}
         />
     )
@@ -30,15 +30,15 @@ interface ItemProps {
 export function Item({ item }: ItemProps) {
     const colorScheme = useColorScheme();
     return (
-        <View style={[{ backgroundColor: Colors[colorScheme].itemColor }, styles.item]}>
+        <View style={[{ backgroundColor: Colors.light.itemColor }, styles.item]}>
             <Text
-                style={{ flexGrow: 1, color: Colors[colorScheme].text, textTransform: 'uppercase' }}
+                style={{ flexGrow: 1, color: Colors.light.text, textTransform: 'uppercase' }}
             >{item.name_product}</Text>
             <Text
-                style={[styles.itemPrice, { color: Colors[colorScheme].text }]}
+                style={[styles.itemPrice, { color: Colors.light.text }]}
             >R$ {item.price_product.toFixed(2)}</Text>
             <Text
-                style={[styles.itemCount, { fontWeight: '700', backgroundColor: Colors.gray, color: Colors[colorScheme].itemColor }]}
+                style={[styles.itemCount, { fontWeight: '700', backgroundColor: Colors.gray, color: Colors.light.itemColor }]}
             >x {item.count}</Text>
         </View>
     );

@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         borderRadius: 8,
-        width: '100%',
+        width: '90%',
 
     },
     itemCount: {

@@ -45,16 +45,16 @@ function ProductCell({ product, setOrderProducts, orderProducts }: ItemProps) {
     }
 
     //definindo cores
-    var bgItemColor = Colors[colorScheme].itemColor;
+    var bgItemColor = Colors.light.itemColor;
     var bgItemPriceColor = Colors.primary;
-    var priceColor = Colors[colorScheme].textContrast;
-    var nameColor = Colors[colorScheme].text;
+    var priceColor = Colors.light.textContrast;
+    var nameColor = Colors.light.text;
 
     //se o produto está no pedido outras cores são exibidas
     const productIsInTheOrder = isInTheOrder();
     if (productIsInTheOrder) {
         bgItemColor = Colors.primary;
-        bgItemPriceColor = Colors[colorScheme].itemColor;
+        bgItemPriceColor = Colors.light.itemColor;
         priceColor = Colors.primary;
     }
     //valores

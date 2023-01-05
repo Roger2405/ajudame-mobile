@@ -25,14 +25,15 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.ajudame.mobile"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "89f4e501-9c5f-4c8c-acf3-8e7906f4cb39"
+        "projectId": "37b278d1-d99e-4eee-b9e4-cd41884349d2"
       }
     }
   }
