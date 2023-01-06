@@ -1,11 +1,11 @@
-
 import { StyleSheet } from 'react-native';
-
 
 
 export const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 8,
+        position: 'relative',
+        width: '100%',
     },
     item: {
         flexDirection: 'row',
@@ -14,8 +14,11 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         borderRadius: 8,
-        width: '90%',
+        maxWidth: '100%',
 
+    },
+    itemName: {
+        flexBasis: '50%',
     },
     itemCount: {
         padding: 4,
@@ -28,5 +31,9 @@ export const styles = StyleSheet.create({
         width: 70,
         marginHorizontal: 8,
         textAlign: 'right',
+    },
+    text: {
+        textTransform: 'uppercase',
+        fontSize: 16,
     }
 })

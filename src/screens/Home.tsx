@@ -4,23 +4,16 @@ import { CompositeNavigationProp, useNavigation } from '@react-navigation/native
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { SingleButton } from '../components/Buttons';
-import OrderProducts from '../components/OrderProducts';
-
-import { Text, View } from '../components/Themed';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
-import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
-import { OrderProductProps } from '../types/orderProduct';
+import { OrderProductProps } from '../@types/orderProduct';
+import OrderProducts from '../components/common/OrderProducts';
+import { SingleButton } from '../components/common/Buttons';
 
-type ProfileScreenNavigationProp = CompositeNavigationProp<
-  BottomTabNavigationProp<RootTabParamList, 'TabSales'>,
-  NativeStackNavigationProp<RootStackParamList>
->;
 
-export default function TabSales() {
+export default function Home() {
   const [salesOfDay, setSalesOfDay] = useState<OrderProductProps[]>();
-  const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const navigation = useNavigation();
 
 
   useEffect(() => {
@@ -60,6 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: Colors.light.background,
   },
   title: {
     fontSize: 20,

@@ -1,17 +1,13 @@
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList } from 'react-native';
-import { OrderProduct } from '../components/AddSales/OrderProduct';
 import { ProductsGrid } from '../components/AddSales/ProductsGrid';
-import { Buttons } from '../components/Buttons';
-import OrderProducts from '../components/OrderProducts';
+import OrderProducts from '../components/common/OrderProducts';
 import Colors from '../constants/Colors';
-import { RootTabParamList, RootStackParamList } from '../types';
-import { OrderProductProps } from '../types/orderProduct';
-import { ProductProps } from '../types/product';
+import { OrderProductProps } from '../@types/orderProduct';
+import { ProductProps } from '../@types/product';
+import { Buttons } from '../components/common/Buttons';
 
 
 
@@ -31,11 +27,11 @@ export function AddSales() {
 
 
 
-    const [stringify, setStringify] = useState('')
-
     useEffect(() => {
-        const groupedProducts = getProducts().then(res =>
-            groupProducts(res))
+        getProducts().then(products => {
+            const groupedProducts = groupProducts(products)
+            setArrFiltered(groupedProducts);
+        })
     }, [])
 
     async function getProducts() {
@@ -47,7 +43,6 @@ export function AddSales() {
         const arrProducts: ProductProps[] = await axios.get(`https://server-ajudame.vercel.app/114/products`)
             .then((response) => {
                 if (response.data[0]) {
-                    setStringify(JSON.stringify(response.data[0]))
                     return response.data;
                 }
                 else {
@@ -61,10 +56,7 @@ export function AddSales() {
         let arrayProductsGrouped: ProductProps[][] = [];
         let productsTypes: string[] = [];
         arrProducts.forEach(product => {
-            if (productsTypes.includes(product.type_product)) {
-                return;
-            }
-            else {
+            if (!productsTypes.includes(product.type_product)) {
                 productsTypes.push(product.type_product);
             }
         });
@@ -76,9 +68,7 @@ export function AddSales() {
                 break;
             }
         }
-        setArrFiltered(arrayProductsGrouped);
-
-
+        return arrayProductsGrouped;
     }
 
 

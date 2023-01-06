@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Image, Text, FlatList, TouchableOpacity } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
-import { OrderProductProps } from '../../../types/orderProduct';
-import { ProductProps } from '../../../types/product';
+import { OrderProductProps } from '../../../@types/orderProduct';
+import { ProductProps } from '../../../@types/product';
 
 import { styles } from './styles';
 

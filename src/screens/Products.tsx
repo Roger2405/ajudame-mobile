@@ -1,14 +1,10 @@
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
-
-export default function Menu() {
+export default function Products() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Produtos</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/Menu.tsx" />
     </View>
   );
 }

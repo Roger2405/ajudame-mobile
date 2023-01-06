@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
-import { OrderProductProps } from '../../../types/orderProduct';
+import { OrderProductProps } from '../../../@types/orderProduct';
 
 import { styles } from './styles';
 

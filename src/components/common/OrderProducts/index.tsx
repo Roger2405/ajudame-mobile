@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList } from 'react-native';
-import Colors from '../../constants/Colors';
-import useColorScheme from '../../hooks/useColorScheme';
-import { OrderProductProps } from '../../types/orderProduct';
+import Colors from '../../../constants/Colors';
+import useColorScheme from '../../../hooks/useColorScheme';
+import { OrderProductProps } from '../../../@types/orderProduct';
 import { styles } from './styles';
 
 interface Props {
@@ -32,13 +32,13 @@ export function Item({ item }: ItemProps) {
     return (
         <View style={[{ backgroundColor: Colors.light.itemColor }, styles.item]}>
             <Text
-                style={{ flexGrow: 1, color: Colors.light.text, textTransform: 'uppercase' }}
+                style={[styles.itemName, styles.text, { flexGrow: 1, color: Colors[colorScheme].text }]}
             >{item.name_product}</Text>
             <Text
-                style={[styles.itemPrice, { color: Colors.light.text }]}
+                style={[styles.text, styles.itemPrice, { color: Colors[colorScheme].text }]}
             >R$ {item.price_product.toFixed(2)}</Text>
             <Text
-                style={[styles.itemCount, { fontWeight: '700', backgroundColor: Colors.gray, color: Colors.light.itemColor }]}
+                style={[styles.itemCount, { backgroundColor: Colors.gray, color: Colors[colorScheme].itemColor }]}
             >x {item.count}</Text>
         </View>
     );

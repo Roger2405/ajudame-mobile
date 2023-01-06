@@ -9,21 +9,16 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import * as React from 'react';
-import { ColorSchemeName, Pressable, TouchableOpacity } from 'react-native';
-
-
-import useColorScheme from '../hooks/useColorScheme';
-import ModalScreen from '../screens/ModalScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
-
-
-import TabSales from '../screens/TabSales';
-import TabProducts from '../screens/TabProducts';
-import TabStock from '../screens/TabStock';
+import { ColorSchemeName, Pressable, TouchableOpacity, useColorScheme } from 'react-native';
 
 import { RootStackParamList, RootTabParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import { AddSales } from '../screens/AddSales';
+import { AddSales } from '../src/screens/AddSales';
+import ModalScreen from '../src/screens/ModalScreen';
+import NotFoundScreen from '../src/screens/NotFoundScreen';
+import Home from '../src/screens/Home';
+import Products from '../src/screens/Products';
+import Stock from '../src/screens/Stock';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -73,7 +68,7 @@ function TabNavigator() {
       }}>
       <Tab.Screen
         name="TabSales"
-        component={TabSales}
+        component={Home}
 
         options={() => ({
           title: 'Vendas',
@@ -82,7 +77,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="TabProducts"
-        component={TabProducts}
+        component={Products}
         options={{
           title: 'Produtos',
           tabBarIcon: ({ color }) => <TabBarIcon name="box" color={color} />,
@@ -90,7 +85,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="TabStock"
-        component={TabStock}
+        component={Stock}
         options={{
           title: 'Estoque',
           tabBarIcon: ({ color }) => <TabBarIcon name="boxes" color={color} />,
