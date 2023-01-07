@@ -1,20 +1,20 @@
 // import { axios } from 'axios';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import { OrderProductProps } from '../@types/orderProduct';
 import OrderProducts from '../components/common/OrderProducts';
 import { SingleButton } from '../components/common/Buttons';
+import useColorScheme from '../hooks/useColorScheme';
 
 
 export default function Home() {
   const [salesOfDay, setSalesOfDay] = useState<OrderProductProps[]>();
   const navigation = useNavigation();
-
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
     var idUser = 114;
@@ -33,7 +33,7 @@ export default function Home() {
 
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       <Text style={styles.title}>Vendas do Dia</Text>
       {
         salesOfDay?.length ?
@@ -41,9 +41,7 @@ export default function Home() {
           :
           <Text>Não foi encontrada nenhuma venda!</Text>
       }
-      <SingleButton onPress={() => navigation.navigate('AddSales')} color={Colors.primary} >
-        Adicionar Venda
-      </SingleButton>
+      <SingleButton onPress={() => navigation.navigate('AddSales')} color={Colors.primary} title='Adicionar Venda' iconName="plus" />
     </View>
   );
 }
@@ -53,7 +51,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.light.background,
   },
   title: {
     fontSize: 20,

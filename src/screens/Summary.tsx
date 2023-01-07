@@ -1,0 +1,37 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { OrderProductProps } from '../@types/orderProduct';
+import { DualButtons } from '../components/common/Buttons';
+import OrderProducts from '../components/common/OrderProducts';
+
+
+
+export function Summary() {
+    const navigation = useNavigation();
+    const [orderProductsFromStorage, setOrderProductsFromStorage] = useState<OrderProductProps[]>([])
+
+    AsyncStorage.getItem('orderProducts').then(str => {
+        if (str) {
+            const orderProducts = JSON.parse(str);
+            setOrderProductsFromStorage(orderProducts);
+        }
+    })
+    return (
+        <View style={styles.container}>
+            <Text>Resumo</Text>
+            <OrderProducts sales={orderProductsFromStorage} />
+            <DualButtons title='Continuar' onPress={() => { navigation.navigate('Home') }} color={Colors.primary}
+                iconName="angle-right"
+            />
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    }
+})

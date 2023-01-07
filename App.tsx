@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { OptionsModal } from './src/components/OptionsModal';
 // import useCachedResources from './hooks/useCachedResources';
 import { Routes } from './src/routes';
 
@@ -19,6 +20,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar hidden />
+      <OptionsModal />
       <Routes />
       {/* <Navigation colorScheme={colorScheme} /> */}
     </SafeAreaProvider>

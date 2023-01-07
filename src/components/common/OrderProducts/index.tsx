@@ -30,7 +30,7 @@ interface ItemProps {
 export function Item({ item }: ItemProps) {
     const colorScheme = useColorScheme();
     return (
-        <View style={[{ backgroundColor: Colors.light.itemColor }, styles.item]}>
+        <View style={[{ backgroundColor: Colors[colorScheme].itemColor }, styles.item]}>
             <Text
                 style={[styles.itemName, styles.text, { flexGrow: 1, color: Colors[colorScheme].text }]}
             >{item.name_product}</Text>

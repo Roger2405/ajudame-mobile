@@ -1,3 +1,4 @@
+import { OrderProductProps } from "./orderProduct";
 
 export declare global {
     namespace ReactNavigation {
@@ -8,6 +9,14 @@ export declare global {
         }
         interface StackParamList {
             AddSales: undefined;
+            Summary: undefined;//OrderProductProps[];
         }
     }
 }
+
+export type RootStackParamList = {
+    Root: NavigatorScreenParams<RootTabParamList> | undefined;
+    AddSales: undefined;
+    Modal: undefined;
+    NotFound: undefined;
+  };

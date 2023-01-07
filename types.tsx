@@ -6,6 +6,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { OrderProductProps } from './src/@types/orderProduct';
 
 declare global {
   namespace ReactNavigation {
@@ -16,8 +17,7 @@ declare global {
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   AddSales: undefined;
-  Modal: undefined;
-  NotFound: undefined;
+  Summary: OrderProductProps[]
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

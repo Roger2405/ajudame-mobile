@@ -14,9 +14,11 @@ interface Props {
 }
 
 export function ProductsGrid({ productsArr, setOrderProducts, orderProducts }: Props) {
+
+    const colorScheme = useColorScheme();
     return (
         <View>
-            <Text style={{ fontWeight: '700', fontSize: 24 }}>{productsArr[0].type_product}</Text>
+            <Text style={{ fontWeight: '700', fontSize: 24, color: Colors[colorScheme].text }}>{productsArr[0].type_product}</Text>
             <FlatList
                 style={styles.grid}
                 horizontal
@@ -45,10 +47,10 @@ function ProductCell({ product, setOrderProducts, orderProducts }: ItemProps) {
     }
 
     //definindo cores
-    var bgItemColor = Colors.light.itemColor;
+    var bgItemColor = Colors[colorScheme].itemColor;
     var bgItemPriceColor = Colors.primary;
-    var priceColor = Colors.light.textContrast;
-    var nameColor = Colors.light.text;
+    var priceColor = Colors[colorScheme].textContrast;
+    var nameColor = Colors[colorScheme].text;
 
     //se o produto está no pedido outras cores são exibidas
     const productIsInTheOrder = isInTheOrder();

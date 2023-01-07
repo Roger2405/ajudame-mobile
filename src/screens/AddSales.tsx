@@ -1,19 +1,27 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { ProductsGrid } from '../components/AddSales/ProductsGrid';
 import OrderProducts from '../components/common/OrderProducts';
 import Colors from '../constants/Colors';
 import { OrderProductProps } from '../@types/orderProduct';
 import { ProductProps } from '../@types/product';
-import { Buttons } from '../components/common/Buttons';
-
+import { DualButtons } from '../components/common/Buttons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useColorScheme from '../hooks/useColorScheme';
 
 
 export function AddSales() {
+    var initialOrderProducts: OrderProductProps[] = [];
+    AsyncStorage.getItem('orderProducts').then(str => {
+        if (str) {
+            initialOrderProducts = JSON.parse(str);
+        }
+    })
     const navigation = useNavigation();
-    const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([]);
+    const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>(initialOrderProducts);
 
     const [errorMessage, setErrorMessage] = useState<string>();
     //const [inputValue, setInputValue] = useState<string>('');
@@ -25,6 +33,8 @@ export function AddSales() {
     const [overflowX, setOverflowX] = useState(true);
     const [priceModel, setPriceModel] = useState('main');
 
+
+    const colorScheme = useColorScheme();
 
 
     useEffect(() => {
@@ -75,8 +85,8 @@ export function AddSales() {
 
 
     return (
-        <View style={{ height: '100%' }}>
-            <Text>Adicionar venda</Text>
+        <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+            <Text style={styles.title}>Adicionar venda</Text>
             <FlatList
                 style={{
                     flexBasis: '60%',
@@ -94,9 +104,23 @@ export function AddSales() {
                 /> */}
             <View style={{ flexBasis: '40%' }}>
                 <OrderProducts sales={orderProducts} editable setOrderProducts={setOrderProducts} />
-
             </View>
-            <Buttons leftButtonColor={Colors.gray} rightButtonColor={Colors.primary} navigation={navigation} />
+            <DualButtons title='Continuar' onPress={() => {
+                AsyncStorage.setItem('orderProducts', JSON.stringify(orderProducts))
+                navigation.navigate('Summary', orderProducts)
+            }} color={Colors.primary}
+                iconName="angle-right"
+            />
         </View >
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+});

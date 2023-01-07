@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
-import Colors from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
+        width: '100%',
         justifyContent: 'center',
         paddingHorizontal: 16,
         position: 'absolute',
@@ -13,23 +13,27 @@ export const styles = StyleSheet.create({
         height: 64,
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
         borderRadius: 32,
         marginBottom: 16,
-    },
-    centerButton: {
-        width: '100%',
+        flexGrow: 1,
     },
     text: {
         textTransform: 'uppercase',
-        color: Colors.white,
+        marginHorizontal: 16,
+        // fontWeight: '400'
     },
-    leftButton: {
+    center: {
+
+    },
+    left: {
         width: '50%',
+        flexDirection: 'row-reverse',
         transform: [
             { translateY: -24 },
         ]
     },
-    rightButton: {
+    right: {
         width: '50%',
         alignSelf: 'flex-end',
     }
