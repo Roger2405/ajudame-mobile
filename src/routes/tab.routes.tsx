@@ -1,9 +1,6 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import { SingleButton } from '../components/common/Buttons';
-import { OptionsModal } from '../components/OptionsModal';
 
 import Colors from "../constants/Colors";
 
@@ -36,21 +33,6 @@ export function TabRoutes() {
             sceneContainerStyle={{ paddingTop: 64 }}
 
         >
-            {/* <Screen
-                name='options'
-                component={OptionsModal}
-                options={{
-                    title: '',
-                    tabBarItemStyle: { flexGrow: 0.25, paddingVertical: 8, transform: [{ translateY: 8 }] },
-                    tabBarIcon: ({ color }) => <FontAwesome5 name='ellipsis-v' size={24} color={color} />,
-                    // tabBarButton: () => <TouchableOpacity onPress={() => {}} style={{}} >
-                    //     <FontAwesome5 name='ellipsis-v' size={24} />
-                    // </TouchableOpacity>  
-                    tabBarActiveBackgroundColor: undefined,
-                    // tabBarActiveTintColor: Colors.white,
-                }}
-
-            /> */}
             <Screen
                 name='home'
                 component={Home}

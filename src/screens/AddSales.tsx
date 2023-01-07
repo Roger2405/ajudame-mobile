@@ -118,6 +118,7 @@ export function AddSales() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingHorizontal: 8,
     },
     title: {
         fontSize: 20,

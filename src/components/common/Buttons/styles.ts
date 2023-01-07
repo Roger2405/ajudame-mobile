@@ -5,9 +5,10 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'center',
-        paddingHorizontal: 16,
-        position: 'absolute',
-        bottom: 0,
+        // position: 'absolute',
+        // bottom: 0,
+        marginTop: 'auto'
+        // paddingHorizontal: 16
     },
     button: {
         height: 64,
@@ -17,14 +18,22 @@ export const styles = StyleSheet.create({
         borderRadius: 32,
         marginBottom: 16,
         flexGrow: 1,
+
+        elevation: 4,
+        shadowOffset: { width: 0, height: -4 },
+        shadowRadius: 4,
+        borderColor: 'white',
+        borderLeftWidth: 2,
+        borderRightWidth: 2,
     },
     text: {
         textTransform: 'uppercase',
         marginHorizontal: 16,
-        // fontWeight: '400'
+        fontWeight: 'bold',
+        fontSize: 16
     },
     center: {
-
+        // shadowRadius: 16,
     },
     left: {
         width: '50%',

@@ -8,6 +8,7 @@ export declare global {
             Stock: undefined;
         }
         interface StackParamList {
+            AuthSignIn: undefined,
             AddSales: undefined;
             Summary: undefined;//OrderProductProps[];
         }
@@ -19,4 +20,4 @@ export type RootStackParamList = {
     AddSales: undefined;
     Modal: undefined;
     NotFound: undefined;
-  };
+};

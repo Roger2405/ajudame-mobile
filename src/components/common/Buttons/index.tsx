@@ -11,7 +11,8 @@ import { styles } from './styles';
 interface GenericButtonProps extends TouchableOpacityProps {
     title: string
     color: string
-    iconName: React.ComponentProps<typeof FontAwesome5>['name'];
+    iconName?: React.ComponentProps<typeof FontAwesome5>['name'];
+    relativePosition?: boolean
 }
 
 
@@ -24,15 +25,17 @@ export default function Button({ title, color, onPress, iconName, buttonStyle }:
     const colorScheme = useColorScheme();
     return (
         <TouchableOpacity onPress={onPress} style={[styles.button, styles[buttonStyle], { backgroundColor: color }]}>
-            <Text style={[styles.text, { color: Colors[colorScheme].background }]}>
+            <Text style={[styles.text, { color: Colors[colorScheme].text }]}>
                 {title}
             </Text>
-            <ButtonIcon iconName={iconName} color={Colors[colorScheme].background} />
+            {iconName &&
+                <ButtonIcon iconName={iconName} color={Colors[colorScheme].background} />
+            }
         </TouchableOpacity >
     )
 }
 function ButtonIcon(props: {
-    iconName: React.ComponentProps<typeof FontAwesome5>['name'];
+    iconName?: React.ComponentProps<typeof FontAwesome5>['name'];
     color: string
 }) {
     return <FontAwesome5 size={32} name={props.iconName} style={{ margin: -5, alignSelf: 'center' }} color={props.color} />;
@@ -49,7 +52,7 @@ export function SingleButton({ title, color, onPress, iconName }: GenericButtonP
     );
 }
 
-export function DualButtons({ onPress, title, iconName, color }: GenericButtonProps) {
+export function DualButtons({ onPress, relativePosition, title, iconName, color }: GenericButtonProps) {
     const navigation = useNavigation();
     return (
         <View style={styles.container}>

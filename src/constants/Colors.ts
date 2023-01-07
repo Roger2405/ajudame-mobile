@@ -1,8 +1,9 @@
 
 
 export default {
-  primary: '#45C567',
+  primary: 'rgb(69, 197, 103)',
   gray: '#888',
+  red: '#E55454',
   white: '#FFF',
   light: {
     text: '#444',
