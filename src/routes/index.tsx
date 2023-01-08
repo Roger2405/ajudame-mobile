@@ -1,27 +1,21 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
-import React, { useState } from "react";
-import { AuthSignIn } from "../screens/AuthSignIn";
-import { AppRoutes } from "./stack.routes";
+
+import React, { useContext } from "react";
+import { ActivityIndicator, View } from "react-native";
+import AuthContext from "../contexts/auth";
+import { AppRoutes } from "./appStack.routes";
+import { AuthRoutes } from "./authStack.routes";
 
 
 export function Routes() {
-    const [isLogged, setIsLogged] = useState(false);
-    AsyncStorage.getItem('user')
-        .then((str) => {
-            str && setIsLogged(true)
-        })
 
-    return (
-        <NavigationContainer>
-            {/* <TabRoutes /> */}
-            {
-                isLogged ?
-                    <AppRoutes />
-                    :
-                    <AuthSignIn setIsLogged={setIsLogged} />
+    const { signed, loading } = useContext(AuthContext)
 
-            }
-        </NavigationContainer>
-    )
+    if (loading) {
+        <View>
+            <ActivityIndicator />
+        </View>
+    }
+
+    return signed ? <AppRoutes /> : <AuthRoutes />
+
 }

@@ -1,16 +1,38 @@
 import axios from "axios";
 
-export async function userLogIn(email: string, password: string) {
+interface Response {
+    user: {
+        id: number,
+        email: string
+    }
+}
+
+// export function signIn() {
+//     return new Promise<Response>(
+//         resolve => {
+//             setTimeout(() => {
+//                 resolve({
+//                     user: {
+//                         id: 10,
+//                         email: 'teste@demo.com'
+//                     }
+//                 })
+//             }, 1000)
+//         }
+//     )
+// }
+
+
+export async function signIn<Response>(email: string, password: string) {
     try {
         const response = await axios.post(`https://server-ajudame.vercel.app/user/login/`, {
             email: email,
             password: password,
         })
-        console.log(response.data)
         return response.data;
     }
     catch (error) {
-        console.log(error, "Erro ao efetuar o LogIn");
+        throw (error);
     }
     /*
     .then((response) => {

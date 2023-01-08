@@ -1,12 +1,13 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AddSales } from "../screens/AddSales";
-import { AuthSignIn } from "../screens/AuthSignIn";
-import { Summary } from "../screens/Summary";
-import { TabRoutes } from "./tab.routes";
 
-const { Screen, Navigator } = createNativeStackNavigator();
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
+import { AddSales } from "../screens/AddSales";
+import { Summary } from "../screens/Summary";
+import { TabRoutes } from "./appTab.routes";
+
 
 export function AppRoutes() {
+    const { Screen, Navigator } = createNativeStackNavigator();
     return (
         <Navigator
             screenOptions={{
@@ -28,20 +29,5 @@ export function AppRoutes() {
 
         </Navigator>
     )
-}/*
-export function AuthRoutes() {
-    return (
-        <Navigator
-            screenOptions={{
-                headerShown: false,
-            }}
-        >
-            <Screen
-                name='SignIn'
-                component={AuthSignIn}
-            />
+}
 
-        </Navigator>
-
-    )
-}*/
