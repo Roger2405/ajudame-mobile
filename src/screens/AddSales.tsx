@@ -11,6 +11,7 @@ import { DualButtons } from '../components/common/Buttons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useColorScheme from '../hooks/useColorScheme';
+import { getGroupedProducts } from '../services/products';
 
 
 export function AddSales() {
@@ -38,50 +39,8 @@ export function AddSales() {
 
 
     useEffect(() => {
-        getProducts().then(products => {
-            const groupedProducts = groupProducts(products)
-            setArrFiltered(groupedProducts);
-        })
+        getGroupedProducts().then(setArrFiltered)
     }, [])
-
-    async function getProducts() {
-        // if (!idUser) {
-        //     alert("Usuário não está logado");
-        //     return [];
-        // }
-        // else {
-        const arrProducts: ProductProps[] = await axios.get(`https://server-ajudame.vercel.app/114/products`)
-            .then((response) => {
-                if (response.data[0]) {
-                    return response.data;
-                }
-                else {
-                    throw Error(response.data.msg);
-                }
-            })
-        return arrProducts;
-        // }
-    }
-    function groupProducts(arrProducts: ProductProps[]) {
-        let arrayProductsGrouped: ProductProps[][] = [];
-        let productsTypes: string[] = [];
-        arrProducts.forEach(product => {
-            if (!productsTypes.includes(product.type_product)) {
-                productsTypes.push(product.type_product);
-            }
-        });
-        for (var i = 0; i < productsTypes.length; i++) {
-            let arr = arrProducts.filter(product => product.type_product === productsTypes[i]);
-            arrayProductsGrouped.push(arr);
-
-            if (i > 50) {//watch dog
-                break;
-            }
-        }
-        return arrayProductsGrouped;
-    }
-
-
 
 
     return (
