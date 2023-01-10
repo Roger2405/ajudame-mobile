@@ -1,11 +1,13 @@
-import { FontAwesome5 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import React from "react";
-import Button from "../components/common/Buttons";
-import { OptionsModal } from "../components/OptionsModal";
+
+import { FontAwesome5 } from "@expo/vector-icons";
+
 import Colors from "../constants/Colors";
+
 import useColorScheme from "../hooks/useColorScheme";
+
+import { OptionsModal } from "../components/OptionsModal";
 import Historic from "../screens/Historic";
 import Home from "../screens/Home";
 import Products from "../screens/Products";
@@ -28,7 +30,7 @@ export function TabRoutes() {
                 tabBarActiveTintColor: Colors.primary,
                 tabBarInactiveTintColor: Colors[colorScheme].textContrast,
                 //estilos
-                tabBarStyle: { top: 0, position: "absolute", paddingTop: 8, height: 64, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
+                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 8, height: 64, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
                 tabBarItemStyle: { borderTopLeftRadius: 8, borderTopRightRadius: 8, flexGrow: 1 },
                 tabBarLabelStyle: { fontSize: 12, textTransform: "uppercase", fontWeight: '700' },
             }}
