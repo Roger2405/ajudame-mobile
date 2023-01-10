@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { User } from '../../@types/user';
-import { DualButtons, SingleButton } from '../../components/common/Buttons';
+import { SingleButton } from '../../components/common/Buttons';
 import Colors from '../../constants/Colors';
 import useColorScheme from '../../hooks/useColorScheme';
 import AuthContext from '../../contexts/auth';

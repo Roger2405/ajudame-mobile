@@ -3,7 +3,10 @@ import { ProductProps } from "../@types/product";
 
 
 export async function getProducts() {
-    const response = await axios.get('https://server-ajudame.vercel.app/114/products');
+    const ID_USER = 114;
+    // const url = `${process.env.REACT_APP_LINK_API}/${ID_USER}/stock/update`;
+    const url = `http://10.0.2.2:3001/${ID_USER}/products`;
+    const response = await axios.get(url);
     return response.data as ProductProps[];
 }
 

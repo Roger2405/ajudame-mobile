@@ -25,10 +25,10 @@ interface ModalStockProps {
     setNewStock: React.Dispatch<React.SetStateAction<Map<number, number>>>
 }
 
-export function ModalStock({ modal, setModal, setNewStock }: ModalStockProps) {
+export function ModalEditStock({ modal, setModal, setNewStock }: ModalStockProps) {
     const colorScheme = useColorScheme();
     const modalType = modal.options.type;
-    const lightColor = modalType == 'add' ? Colors.primaryLight : Colors.grayLight;
+    const lightColor = modalType == 'add' ? Colors.lightPrimary : Colors.lightGray;
     const mainColor = modalType == 'add' ? Colors.primary : Colors.gray;
     const [quantity, setQuantity] = useState(0);
 
@@ -157,6 +157,7 @@ const modalStyles = StyleSheet.create({
     modalView: {
         width: '100%',
         padding: 8,
+        paddingBottom: 0,
         backgroundColor: "white",
         borderRadius: 8,
         alignItems: "center",
@@ -178,7 +179,7 @@ const modalStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 8,
+        borderRadius: 4,
         borderWidth: 2,
         width: '100%',
         padding: 4,
@@ -191,22 +192,5 @@ const modalStyles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center"
-    }
-})
-const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        backgroundColor: Colors.primary,
-
-        // flexGrow: 1,
-        // alignItems: 'center'
-        // height: '100%',
-        // width: '100%',
-        // position: 'absolute'
-    },
-    content: {
-        backgroundColor: Colors.gray,
-        height: 200,
-
     }
 })

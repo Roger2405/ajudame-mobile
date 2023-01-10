@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ajudame.mobile"
+      "package": "com.ajudame.ajudame"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
