@@ -1,6 +1,6 @@
 import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { ProductProps } from '../../../@types/product';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
@@ -13,7 +13,7 @@ interface ProductListProps {
 export function ProductList({ products }: ProductListProps) {
     return (
         <View style={[listStyles.container]}>
-            <Text>{products[0].type_product}</Text>
+            <Text style={[listStyles.title, { color: Colors.gray }]}>{products[0].type_product}</Text>
             <FlatList
                 data={products}
                 renderItem={(product) => <ProductListItem product={product.item} />}
@@ -26,11 +26,11 @@ export function ProductList({ products }: ProductListProps) {
 interface ProductListItemProps {
     product: ProductProps
 }
-export function ProductListItem({ product }: ProductListItemProps) {
+function ProductListItem({ product }: ProductListItemProps) {
     const colorScheme = useColorScheme();
     return (
         <View style={[itemStyles.item, { backgroundColor: Colors[colorScheme].itemColor }]}>
-            <Text style={itemStyles.name}>{product.name_product}</Text>
+            <Text style={[itemStyles.name, { color: Colors.gray }]}>{product.name_product}</Text>
             <View style={itemStyles.prices}>
                 <Text style={[itemStyles.price, { fontWeight: '700', color: Colors.primary }]}>R$ {product.main_price.toFixed(2)}</Text>
                 {
@@ -39,7 +39,6 @@ export function ProductListItem({ product }: ProductListItemProps) {
                         :
                         <Text style={[itemStyles.price, { opacity: 0.75, color: Colors.gray }]}>S/N</Text>
                 }
-
             </View>
             <TouchableOpacity style={[itemStyles.editButton, { backgroundColor: Colors.primary }]}>
                 <MaterialIcons size={24} name={'edit'} color={Colors[colorScheme].itemColor} />

@@ -5,7 +5,13 @@ export const listStyles = StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',
+        marginTop: 8,
     },
+    title: {
+        fontSize: 20,
+        // textTransform: "uppercase",
+        fontWeight: 'bold'
+    }
 
 })
 export const itemStyles = StyleSheet.create({
@@ -14,7 +20,8 @@ export const itemStyles = StyleSheet.create({
         borderRadius: 4,
         flexDirection: "row",
         position: "relative",
-        overflow: "hidden"
+        overflow: "hidden",
+        width: '100%'
 
     },
     name: {
@@ -26,9 +33,11 @@ export const itemStyles = StyleSheet.create({
         marginLeft: 'auto',
         textAlignVertical: "center",
         marginRight: 8,
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "flex-end"
     },
     price: {
+        fontSize: 16,
 
     },
     editButton: {
