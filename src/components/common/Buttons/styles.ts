@@ -5,6 +5,8 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'center',
+        paddingTop: 32,
+        // height: 100,
         // position: 'absolute',
         // bottom: 0,
         marginTop: 'auto'
