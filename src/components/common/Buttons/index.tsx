@@ -1,7 +1,8 @@
 
 
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { ReactNode } from 'react';
 import { View, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
@@ -11,8 +12,7 @@ import { styles } from './styles';
 interface GenericButtonProps extends TouchableOpacityProps {
     title: string
     color: string
-    iconName?: React.ComponentProps<typeof FontAwesome5>['name'];
-    relativePosition?: boolean
+    icon?: ReactNode;
 }
 
 
@@ -20,48 +20,60 @@ interface ButtonProps extends GenericButtonProps {
     buttonStyle: 'center' | 'left' | 'right'
 }
 
-export default function Button({ title, color, onPress, iconName, buttonStyle }: ButtonProps) {
-
-    const colorScheme = useColorScheme();
+function Button({ title, color, onPress, icon, buttonStyle }: ButtonProps) {
     return (
         <TouchableOpacity onPress={onPress} style={[styles.button, styles[buttonStyle], { backgroundColor: color }]}>
-            <Text style={[styles.text, { color: Colors[colorScheme].text }]}>
+            <Text style={[styles.text, { color: Colors.white }]}>
                 {title}
             </Text>
-            {iconName &&
-                <ButtonIcon iconName={iconName} color={Colors[colorScheme].background} />
+            {icon &&
+                icon
             }
         </TouchableOpacity >
     )
 }
-function ButtonIcon(props: {
-    iconName?: React.ComponentProps<typeof FontAwesome5>['name'];
-    color: string
-}) {
-    return <FontAwesome5 size={32} name={props.iconName} style={{ margin: -5, alignSelf: 'center' }} color={props.color} />;
-}
 
-
-export function SingleButton({ title, color, onPress, iconName }: GenericButtonProps) {
+export function SingleButton({ title, color, onPress, icon }: GenericButtonProps) {
     return (
         <View style={styles.container}>
             <Button buttonStyle='center' title={title} color={color} onPress={onPress}
-                iconName={iconName}
+                icon={icon}
             />
         </View>
     );
 }
 
-export function DualButtons({ onPress, relativePosition, title, iconName, color }: GenericButtonProps) {
+export function BackButton() {
     const navigation = useNavigation();
     return (
+        <Button color={Colors.gray} buttonStyle='left' title="Voltar" onPress={() => navigation.goBack()} icon={<FontAwesome5 size={32} name={'angle-left'} color={Colors.white} />} />
+    )
+}
+export function CancelButton({ onPress }: TouchableOpacityProps) {
+    return (
+        <Button color={Colors.red} buttonStyle='left' title="Cancelar" onPress={onPress} icon={<Feather size={32} name={'x'} color={Colors.white} />} />
+    )
+}
+export function ContinueButton({ onPress }: TouchableOpacityProps) {
+    return (
+        <Button color={Colors.primary} buttonStyle='right' title="Continuar" onPress={onPress} icon={<FontAwesome5 size={32} name={'angle-right'} color={Colors.white} />} />
+    )
+}
+export function ConfirmButton({ onPress }: TouchableOpacityProps) {
+    return (
+        <Button color={Colors.primary} buttonStyle='right' title="Confirmar" onPress={onPress} icon={<FontAwesome5 size={32} name={'check'} color={Colors.white} />} />
+    )
+}
+
+
+interface ContainerProps {
+    children: ReactNode
+}
+export function ButtonsContainer({ children }: ContainerProps) {
+
+    return (
         <View style={styles.container}>
-            <Button buttonStyle='left' title='Voltar' color={Colors.gray} onPress={() => navigation.goBack()}
-                iconName='angle-left'
-            />
-            <Button buttonStyle='right' style={styles.right} title={title} color={color} onPress={onPress}
-                iconName={iconName}
-            />
+            {children}
         </View>
     )
 }

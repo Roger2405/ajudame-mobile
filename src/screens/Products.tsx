@@ -13,11 +13,8 @@ export default function Products() {
   }, [])
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Produtos</Text>
       <FlatList
         style={{
-          flexGrow: 0,
-          flexShrink: 0
         }}
         data={products}
         renderItem={productsByType => <ProductList products={productsByType.item} />}

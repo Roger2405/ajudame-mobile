@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { OrderProductProps } from '../@types/orderProduct';
-import { DualButtons } from '../components/common/Buttons';
+import { BackButton, ButtonsContainer, ConfirmButton } from '../components/common/Buttons';
 import OrderProducts from '../components/common/OrderProducts';
 import Colors from '../constants/Colors';
 
@@ -23,9 +23,13 @@ export function Summary() {
         <View style={styles.container}>
             <Text>Resumo</Text>
             <OrderProducts sales={orderProductsFromStorage} />
-            <DualButtons title='Continuar' onPress={() => { navigation.navigate('Home') }} color={'green'}
+            {/* <DualButtons title='Continuar' onPress={() => { navigation.navigate('Home') }} color={'green'}
                 iconName="angle-right"
-            />
+            /> */}
+            <ButtonsContainer>
+                <BackButton />
+                <ConfirmButton />
+            </ButtonsContainer>
         </View>
     );
 }

@@ -7,7 +7,7 @@ import OrderProducts from '../components/common/OrderProducts';
 import Colors from '../constants/Colors';
 import { OrderProductProps } from '../@types/orderProduct';
 import { ProductProps } from '../@types/product';
-import { DualButtons } from '../components/common/Buttons';
+import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../components/common/Buttons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useColorScheme from '../hooks/useColorScheme';
@@ -64,12 +64,14 @@ export function AddSales() {
             <View style={{ flexBasis: '40%' }}>
                 <OrderProducts sales={orderProducts} editable setOrderProducts={setOrderProducts} />
             </View>
-            <DualButtons title='Continuar' onPress={() => {
-                AsyncStorage.setItem('orderProducts', JSON.stringify(orderProducts))
-                navigation.navigate('Summary', orderProducts)
-            }} color={Colors.primary}
-                iconName="angle-right"
-            />
+            <ButtonsContainer>
+                <BackButton />
+                <ContinueButton onPress={() => {
+                    AsyncStorage.setItem('orderProducts', JSON.stringify(orderProducts))
+                    navigation.navigate('Summary', orderProducts)
+                }
+                } />
+            </ButtonsContainer>
         </View >
     );
 }

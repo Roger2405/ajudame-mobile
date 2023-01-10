@@ -9,6 +9,7 @@ import { OrderProductProps } from '../@types/orderProduct';
 import OrderProducts from '../components/common/OrderProducts';
 import { SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 
 export default function Home() {
@@ -34,14 +35,13 @@ export default function Home() {
 
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
-      <Text style={styles.title}>Vendas do Dia</Text>
       {
         salesOfDay?.length ?
           <OrderProducts sales={salesOfDay} />
           :
           <Text>Não foi encontrada nenhuma venda!</Text>
       }
-      <SingleButton onPress={() => navigation.navigate('AddSales')} color={Colors.primary} title='Adicionar Venda' iconName="plus" />
+      <SingleButton onPress={() => navigation.navigate('AddSales')} color={Colors.primary} title='Adicionar Venda' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
     </View>
   );
 }
