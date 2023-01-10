@@ -90,10 +90,12 @@ function TopTabBar() {
                 tabBarInactiveTintColor: Colors.gray,
                 tabBarItemStyle: { backgroundColor: Colors[colorScheme].background, margin: 0, padding: 0 },
                 tabBarActiveTintColor: Colors.primary,
+                tabBarLabelStyle: { fontSize: 16 },
                 // tabBarContentContainerStyle: { height: 32, },
                 tabBarIndicatorStyle: { borderWidth: 4, borderColor: Colors.primary },
                 tabBarStyle: { shadowColor: Colors[colorScheme].background, height: 32, }
             }}
+            sceneContainerStyle={{ paddingTop: 4 }}
         >
             <Screen
                 name="home"
@@ -101,6 +103,7 @@ function TopTabBar() {
                 options={{
                     title: "Vendas do dia",
                 }}
+
             />
             <Screen
                 name="historic"
