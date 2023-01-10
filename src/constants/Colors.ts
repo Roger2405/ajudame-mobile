@@ -2,6 +2,8 @@
 
 export default {
   primary: 'rgb(69, 197, 103)',
+  primaryLight: 'rgba(69, 197, 103, 0.5)',
+  grayLight: '#88888888',
   gray: '#888',
   red: '#E55454',
   white: '#FFF',
