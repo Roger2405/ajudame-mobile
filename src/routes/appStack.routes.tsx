@@ -1,6 +1,7 @@
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
+import { AddProduct } from "../screens/AddProduct";
 import { AddSales } from "../screens/AddSales";
 import { Summary } from "../screens/Summary";
 import { TabRoutes } from "./appTab.routes";
@@ -25,6 +26,10 @@ export function AppRoutes() {
             <Screen
                 name='Summary'
                 component={Summary}
+            />
+            <Screen
+                name='AddProduct'
+                component={AddProduct}
             />
 
         </Navigator>

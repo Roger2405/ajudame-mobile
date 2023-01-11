@@ -23,7 +23,7 @@ export default function App() {
 
       <AuthProvider>
         <SafeAreaProvider>
-          <StatusBar hidden />
+          <StatusBar translucent />
           <Routes />
           {/* <Navigation colorScheme={colorScheme} /> */}
         </SafeAreaProvider>

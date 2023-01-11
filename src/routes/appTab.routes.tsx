@@ -30,9 +30,10 @@ export function TabRoutes() {
                 tabBarActiveTintColor: Colors.primary,
                 tabBarInactiveTintColor: Colors[colorScheme].textContrast,
                 //estilos
-                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 8, height: 64, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
+                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 32, height: 88, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
                 tabBarItemStyle: { borderTopLeftRadius: 8, borderTopRightRadius: 8, flexGrow: 1 },
                 tabBarLabelStyle: { fontSize: 12, textTransform: "uppercase", fontWeight: '700' },
+                // headerStatusBarHeight: 160
             }}
             initialRouteName="TopTabBar"
             // safeAreaInsets={{ right: 32, left: 0 }}
@@ -90,14 +91,14 @@ function TopTabBar() {
         <Navigator
             screenOptions={{
                 tabBarInactiveTintColor: Colors.gray,
-                tabBarItemStyle: { backgroundColor: Colors[colorScheme].background, margin: 0, padding: 0 },
+                tabBarItemStyle: { backgroundColor: Colors[colorScheme].background },
                 tabBarActiveTintColor: Colors.primary,
-                tabBarLabelStyle: { fontSize: 16 },
+                tabBarLabelStyle: { fontSize: 16, paddingVertical: 12 },
                 // tabBarContentContainerStyle: { height: 32, },
                 tabBarIndicatorStyle: { borderWidth: 4, borderColor: Colors.primary },
-                tabBarStyle: { shadowColor: Colors[colorScheme].background, height: 32, }
+                tabBarStyle: { shadowColor: Colors[colorScheme].background, height: 48 }
             }}
-            sceneContainerStyle={{ paddingTop: 4 }}
+        // sceneContainerStyle={{ paddingTop: 0 }}
         >
             <Screen
                 name="home"

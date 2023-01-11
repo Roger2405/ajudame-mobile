@@ -15,7 +15,6 @@ export function Routes() {
             <ActivityIndicator />
         </View>
     }
-
     return signed ? <AppRoutes /> : <AuthRoutes />
 
 }
