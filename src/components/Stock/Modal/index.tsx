@@ -71,7 +71,8 @@ export function ModalEditStock({ modal, setModal, setNewStock }: ModalStockProps
 
     return (
         <Modal
-            animationType="slide"
+            animationType="fade"
+            statusBarTranslucent
             transparent={true}
             visible={!!modal?.showModal}
             onRequestClose={() => {

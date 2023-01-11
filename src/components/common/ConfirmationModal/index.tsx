@@ -13,11 +13,10 @@ export default function ConfirmationModal({ showConfirmationModal, setShowConfir
     return (
         <View style={styles.centeredView}>
             <Modal
-                animationType="slide"
+                animationType="none"
                 transparent={true}
                 visible={showConfirmationModal}
                 onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
                     setShowConfirmationModal(!showConfirmationModal);
                 }}
             >

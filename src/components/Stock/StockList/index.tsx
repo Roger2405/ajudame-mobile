@@ -62,7 +62,6 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
         else if (newValue >= 0) {
             setNewStock((oldMap) => new Map(oldMap?.set(product.id, (newValue || 0))))
         }
-        console.log(newStock)
     }
 
     const stockValueInState = newStock.get(product.id);
@@ -147,7 +146,7 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                     </View>
                 </View>
                 :
-                <Text style={[itemStyles.stock]}>{product.stock}</Text>
+                <Text style={[itemStyles.stock]}>{stockValueInState || product.stock}</Text>
             }
         </View >
     )
@@ -173,11 +172,12 @@ const itemStyles = StyleSheet.create({
 
     },
     stock: {
-        fontWeight: '700',
+        fontWeight: 'bold',
         color: Colors.primary,
         alignSelf: 'center',
-        width: 50,
+        width: 60,
         textAlign: 'right',
+        fontSize: 18,
         marginHorizontal: 4,
         paddingHorizontal: 8,
         textAlignVertical: 'center'
@@ -188,13 +188,11 @@ const itemStyles = StyleSheet.create({
         marginRight: 8,
     },
     unitButton: {
-        // width: 50,
         height: 32,
 
         aspectRatio: 1 / 1,
         alignItems: 'center',
         justifyContent: 'center',
-        // flex: 1,
         borderRadius: 4,
 
     },

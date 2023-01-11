@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Modal, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, Modal, StyleSheet, ActivityIndicator, Text, TextInput, View } from 'react-native';
 import { ProductProps } from '../@types/product';
 import { ButtonsContainer, CancelButton, ConfirmButton, SingleButton } from '../components/common/Buttons';
 import ConfirmationModal from '../components/common/ConfirmationModal';
@@ -14,6 +14,7 @@ export default function Stock() {
   const [products, setProducts] = useState<ProductProps[][]>([]);
   const [editMode, setEditMode] = useState(false);
 
+  const [loading, setLoading] = useState(true);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const [newStock, setNewStock] = useState<Map<number, number>>(new Map());
@@ -22,23 +23,20 @@ export default function Stock() {
 
   const [errorMessage, setErrorMessage] = useState('');
   useEffect(() => {
-    getGroupedProducts().then(setProducts)
+    getGroupedProducts().then(setProducts).finally(() => setLoading(false))
   }, [])
 
   function confirmChanges() {
+    setLoading(true)
     updateQuantitiesOnDB(newStock).then((response) => {
-      if (response) {
-        getGroupedProducts().then((products) => {
-          setProducts(products);
-          setNewStock(new Map());
-          setErrorMessage('');
-        })
-      }
-      else {
-        setErrorMessage('Não foi possível atualizar o estoque!')
-      }
-    }
-    ).catch(err => setErrorMessage(err.message))
+      console.log('response: ' + response);
+      setNewStock(new Map());
+      setErrorMessage('');
+      getGroupedProducts().then((products) => {
+        setProducts(products);
+      })
+    }).catch(err => setErrorMessage(err))
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
@@ -47,56 +45,63 @@ export default function Stock() {
   return (
     <View style={[styles.container]}>
       {
-        errorMessage &&
-        <Text style={styles.error}>{errorMessage}</Text>
+
+        loading ?
+          <ActivityIndicator size={32} />
+          :
+          <View style={{ width: '100%' }}>
+            {errorMessage && //mensagem de errro
+              <Text style={styles.error}>{errorMessage}</Text>}
+
+            <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
+
+            <View style={{ flex: 1, width: '100%', flexBasis: '100%' }}>
+              <FlatList
+                style={{
+                  width: '100%',
+                  flex: 1,
+                  flexBasis: '100%',
+
+                }}
+                data={products}
+
+                contentContainerStyle={{ paddingBottom: 120 }}
+                renderItem={productsByType => <StockList setModal={setModal} setNewStock={setNewStock} newStock={newStock} products={productsByType.item} editMode={editMode} />}
+              />
+            </View >
+
+            {showConfirmationModal &&
+              <ConfirmationModal
+                onConfirm={() => {
+                  confirmChanges()
+                  setShowConfirmationModal(false)
+                  setEditMode(false)
+                }}
+                setShowConfirmationModal={setShowConfirmationModal}
+                showConfirmationModal={showConfirmationModal} />}
+
+
+            {editMode ? //definição de botões
+              <ButtonsContainer>
+                <CancelButton onPress={() => {
+                  setNewStock(oldMap => {
+                    console.log(oldMap)
+                    return new Map()
+                  });
+                  setEditMode(false);
+                }} />
+                <ConfirmButton onPress={() => {
+                  setShowConfirmationModal(true)
+                }} />
+              </ButtonsContainer>
+              :
+              <SingleButton color={Colors.primary} title='Editar Estoque' onPress={() => setEditMode(true)} />
+            }
+
+          </View>
       }
-      <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
-
-      <View style={{ flex: 1, width: '100%', flexBasis: '100%' }}>
-        <FlatList
-          style={{
-            width: '100%',
-            flex: 1,
-            flexBasis: '100%',
-
-          }}
-          data={products}
-
-          contentContainerStyle={{ paddingBottom: 120 }}
-          renderItem={productsByType => <StockList setModal={setModal} setNewStock={setNewStock} newStock={newStock} products={productsByType.item} editMode={editMode} />}
-        />
-      </View >
-      {
-        showConfirmationModal &&
-        <ConfirmationModal
-          onConfirm={() => {
-            confirmChanges()
-            setShowConfirmationModal(false)
-            setEditMode(false)
-          }}
-          setShowConfirmationModal={setShowConfirmationModal}
-          showConfirmationModal={showConfirmationModal} />
-      }
-      {editMode ?
-        <ButtonsContainer>
-          <CancelButton onPress={() => {
-            setNewStock(oldMap => {
-              console.log(oldMap)
-              return new Map()
-            });
-            setEditMode(false);
-          }} />
-          <ConfirmButton onPress={() => {
-            setShowConfirmationModal(true)
-            // confirmChanges()
-            // setEditMode(false)
-          }} />
-        </ButtonsContainer>
-        :
-        <SingleButton color={Colors.primary} title='Editar Estoque' onPress={() => setEditMode(true)} />
-      }
-
     </View>
+
   );
 }
 
