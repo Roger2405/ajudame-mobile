@@ -14,7 +14,10 @@ export default function ConfirmationModal({ showConfirmationModal, setShowConfir
         <View style={styles.centeredView}>
             <Modal
                 animationType="none"
-                transparent={true}
+
+                transparent
+                style={{ backgroundColor: Colors.gray }}
+                statusBarTranslucent
                 visible={showConfirmationModal}
                 onRequestClose={() => {
                     setShowConfirmationModal(!showConfirmationModal);
@@ -40,7 +43,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        margin: 20
+        backgroundColor: Colors.bgSmooth,
+        padding: 20
     },
     modalView: {
         backgroundColor: "white",

@@ -21,27 +21,31 @@ export default function Stock() {
   const [modal, setModal] = useState<{ showModal: boolean, options: { productId: number, type: 'add' | 'sub', initialStock: number } }>
     ({ showModal: false, options: {} as { productId: number, type: 'add' | 'sub', initialStock: number } });
 
-  const [errorMessage, setErrorMessage] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
   useEffect(() => {
     getGroupedProducts().then(setProducts).finally(() => setLoading(false))
   }, [])
 
+  function setFeedback(type: 'error' | 'info', msg: string) {
+    setFeedbackMessage({ type, msg });
+    setTimeout(() => {
+      setFeedbackMessage({} as { type: 'error' | 'info', msg: string });
+    }, 2000);
+  }
+
   function confirmChanges() {
     setLoading(true)
     updateQuantitiesOnDB(newStock).then((response) => {
-      console.log('response: ' + response);
+
       setNewStock(new Map());
-      setErrorMessage('');
+      setFeedback('info', 'Estoque atualizado com sucesso!');
       getGroupedProducts().then((products) => {
         setProducts(products);
       })
-    }).catch(err => setErrorMessage(err))
+    }).catch(err => setFeedback('error', err))
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => {
-    console.log(errorMessage)
-  }, [errorMessage])
   return (
     <View style={[styles.container]}>
       {
@@ -50,8 +54,10 @@ export default function Stock() {
           <ActivityIndicator size={32} />
           :
           <View style={{ width: '100%' }}>
-            {errorMessage && //mensagem de errro
-              <Text style={styles.error}>{errorMessage}</Text>}
+            {
+              feedbackMessage.msg && //mensagem de errro
+              < Text style={[styles.feedBack, feedbackMessage.type == 'error' ? styles.error : styles.info]}>{feedbackMessage.msg}</Text>
+            }
 
             <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
 
@@ -100,7 +106,7 @@ export default function Stock() {
 
           </View>
       }
-    </View>
+    </View >
 
   );
 }
@@ -122,10 +128,17 @@ const styles = StyleSheet.create({
   error: {
     backgroundColor: Colors.lightRed,
     color: Colors.red,
+  },
+  feedBack: {
     width: '100%',
     textAlign: 'center',
     padding: 8,
     borderRadius: 4,
     marginTop: 4,
+  },
+  info: {
+    backgroundColor: Colors.lightPrimary,
+    color: Colors.primary,
+
   }
 });

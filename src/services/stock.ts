@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 
 
 
@@ -22,17 +22,6 @@ export async function updateQuantitiesOnDB(newStock: Map<number, number>) {
                 }
             }).catch(err => reject(err.message))
         }, 2000)
-
-        /*
-        if (response.data.success) {
-            return response.data;
-        }
-        else {
-            throw 'Houve algum erro!'
-        }
-        resolve(() => {
- 
-        })*/
     })
 
 }

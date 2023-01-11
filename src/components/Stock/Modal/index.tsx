@@ -73,7 +73,7 @@ export function ModalEditStock({ modal, setModal, setNewStock }: ModalStockProps
         <Modal
             animationType="fade"
             statusBarTranslucent
-            transparent={true}
+            transparent
             visible={!!modal?.showModal}
             onRequestClose={() => {
             }}
@@ -106,7 +106,6 @@ export function ModalEditStock({ modal, setModal, setNewStock }: ModalStockProps
                             style={{
                                 backgroundColor: Colors[colorScheme].itemColor,
                                 borderWidth: 1,
-                                // elevation: 8,
                                 borderColor: lightColor,
                                 paddingHorizontal: 8,
                                 paddingVertical: 4,
@@ -152,8 +151,10 @@ const modalStyles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+
+        backgroundColor: Colors.bgSmooth,
         // marginTop: 22,
-        margin: 20,
+        padding: 20,
     },
     modalView: {
         width: '100%',
