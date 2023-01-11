@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
     container: {
@@ -32,7 +33,12 @@ export const styles = StyleSheet.create({
         textTransform: 'uppercase',
         marginHorizontal: 16,
         fontWeight: 'bold',
+        color: Colors.white,
         fontSize: 16
+    },
+    disabled: {
+
+        opacity: 0.25,
     },
     center: {
         // shadowRadius: 16,

@@ -34,9 +34,7 @@ export function AddSales() {
     const [overflowX, setOverflowX] = useState(true);
     const [priceModel, setPriceModel] = useState('main');
 
-
     const colorScheme = useColorScheme();
-
 
     useEffect(() => {
         getGroupedProducts().then(setArrFiltered)
@@ -45,7 +43,6 @@ export function AddSales() {
 
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
-            <Text style={styles.title}>Adicionar venda</Text>
             <FlatList
                 style={{
                     flexBasis: '60%',
@@ -55,22 +52,18 @@ export function AddSales() {
                 data={arrFiltered}
                 renderItem={productsByType => <ProductsGrid setOrderProducts={setOrderProducts} orderProducts={orderProducts} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
             />
-
-            {/* <FlatList
-                    data={orderProducts}
-                    renderItem={orderProduct => <OrderProduct orderProduct={orderProduct.item} />}
-
-                /> */}
             <View style={{ flexBasis: '40%' }}>
+                <Text style={styles.subTitle}>Pedido</Text>
                 <OrderProducts sales={orderProducts} editable setOrderProducts={setOrderProducts} />
             </View>
             <ButtonsContainer>
-                <BackButton />
-                <ContinueButton onPress={() => {
+                {//se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
+                    orderProducts.length ? <CancelButton onPress={() => setOrderProducts([])} /> : <BackButton />
+                /*e se não há produtos no pedido, o botão de continuar é desativado*/}
+                <ContinueButton disabled={!orderProducts.length} onPress={() => {
                     AsyncStorage.setItem('orderProducts', JSON.stringify(orderProducts))
                     navigation.navigate('Summary', orderProducts)
-                }
-                } />
+                }} />
             </ButtonsContainer>
         </View >
     );
@@ -81,8 +74,11 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 8,
     },
-    title: {
-        fontSize: 20,
+    subTitle: {
+        fontSize: 24,
+        // textAlign: 'right',
+        textTransform: 'uppercase',
         fontWeight: 'bold',
-    },
+        color: Colors.gray,
+    }
 });

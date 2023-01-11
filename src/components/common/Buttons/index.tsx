@@ -20,16 +20,18 @@ interface ButtonProps extends GenericButtonProps {
     buttonStyle: 'center' | 'left' | 'right'
 }
 
-function RoundedButton({ title, color, onPress, icon, buttonStyle }: ButtonProps) {
+function RoundedButton({ title, color, onPress, icon, buttonStyle, disabled }: ButtonProps) {
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, styles[buttonStyle], { backgroundColor: color }]}>
-            <Text style={[styles.text, { color: Colors.white }]}>
+        <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.button, styles[buttonStyle], (disabled && styles.disabled), { backgroundColor: color }]}>
+            <Text style={[styles.text]}>
                 {title}
             </Text>
-            {icon &&
+            {
+                icon &&
                 icon
             }
         </TouchableOpacity >
+        // <Pressable onPress={onPress} disabled={disabled} style={[styles.button, styles[buttonStyle], (disabled && styles.disabled), { backgroundColor: color }]}><Text>{title}</Text></Pressable>
     )
 }
 
@@ -54,14 +56,14 @@ export function CancelButton({ onPress }: TouchableOpacityProps) {
         <RoundedButton color={Colors.red} buttonStyle='left' title="Cancelar" onPress={onPress} icon={<Feather size={32} name={'x'} color={Colors.white} />} />
     )
 }
-export function ContinueButton({ onPress }: TouchableOpacityProps) {
+export function ContinueButton({ onPress, disabled }: TouchableOpacityProps) {
     return (
-        <RoundedButton color={Colors.primary} buttonStyle='right' title="Continuar" onPress={onPress} icon={<FontAwesome5 size={32} name={'angle-right'} color={Colors.white} />} />
+        <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Continuar" onPress={onPress} icon={<FontAwesome5 size={32} name={'angle-right'} color={Colors.white} />} />
     )
 }
-export function ConfirmButton({ onPress }: TouchableOpacityProps) {
+export function ConfirmButton({ onPress, disabled }: TouchableOpacityProps) {
     return (
-        <RoundedButton color={Colors.primary} buttonStyle='right' title="Confirmar" onPress={onPress} icon={<FontAwesome5 size={32} name={'check'} color={Colors.white} />} />
+        <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Confirmar" onPress={onPress} icon={<FontAwesome5 size={32} name={'check'} color={Colors.white} />} />
     )
 }
 export function DeleteButton({ onPress }: TouchableOpacityProps) {
