@@ -15,7 +15,7 @@ export default function OrderProducts({ sales, editable, setOrderProducts }: Pro
     return (
         <FlatList
             style={styles.container}
-            contentContainerStyle={{ paddingBottom: 120 }}
+            contentContainerStyle={{ paddingBottom: 150 }}
             data={sales}    //v´`--if (editable === true) && |for passado o hook para alterar o OrderProducts| -> será renderizado o <EditableItem />
             renderItem={i => (editable && setOrderProducts) ? <EditableItem item={i.item} setOrderProducts={setOrderProducts} /> : <Item item={i.item} />}
             keyExtractor={item => item.name_product}

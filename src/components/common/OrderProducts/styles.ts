@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import Colors from '../../../constants/Colors';
 
 
 export const styles = StyleSheet.create({
@@ -15,6 +16,11 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderRadius: 8,
         maxWidth: '100%',
+
+        borderBottomWidth: 1,
+        borderColor: Colors.lightGray
+
+        // elevation: 4,
 
     },
     itemName: {

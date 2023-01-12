@@ -12,7 +12,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useColorScheme from '../hooks/useColorScheme';
 import { getGroupedProducts } from '../services/products';
-import { BottomSheet } from './SwipeTable';
+import OrderCard from '../components/AddSales/OrderCard';
 
 // import { SwipeablePanel } from 'r';
 
@@ -55,7 +55,7 @@ export function AddSales() {
                 renderItem={productsByType => <ProductsGrid setOrderProducts={setOrderProducts} orderProducts={orderProducts} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
             />
             {
-                <BottomSheet orderProducts={orderProducts} setOrderProducts={setOrderProducts} />
+                <OrderCard orderProducts={orderProducts} setOrderProducts={setOrderProducts} />
             }
             {/* <View style={{ flexBasis: '40%' }}>
                 <Text style={styles.subTitle}>Pedido</Text>
