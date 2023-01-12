@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import { ProductsGrid } from '../components/AddSales/ProductsGrid';
 import OrderProducts from '../components/common/OrderProducts';
 import Colors from '../constants/Colors';
@@ -12,8 +12,11 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useColorScheme from '../hooks/useColorScheme';
 import { getGroupedProducts } from '../services/products';
+import { BottomSheet } from './SwipeTable';
 
+// import { SwipeablePanel } from 'r';
 
+//SWIPE UP ORDER PRODUCTS
 export function AddSales() {
     var initialOrderProducts: OrderProductProps[] = [];
     AsyncStorage.getItem('orderProducts').then(str => {
@@ -39,23 +42,25 @@ export function AddSales() {
     useEffect(() => {
         getGroupedProducts().then(setArrFiltered)
     }, [])
-
-
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
             <FlatList
                 style={{
-                    flexBasis: '60%',
+                    flexBasis: '100%',
                     flexGrow: 0,
                     flexShrink: 0
                 }}
+                contentContainerStyle={{ paddingBottom: 300 }}
                 data={arrFiltered}
                 renderItem={productsByType => <ProductsGrid setOrderProducts={setOrderProducts} orderProducts={orderProducts} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
             />
-            <View style={{ flexBasis: '40%' }}>
+            {
+                <BottomSheet orderProducts={orderProducts} setOrderProducts={setOrderProducts} />
+            }
+            {/* <View style={{ flexBasis: '40%' }}>
                 <Text style={styles.subTitle}>Pedido</Text>
                 <OrderProducts sales={orderProducts} editable setOrderProducts={setOrderProducts} />
-            </View>
+            </View> */}
             <ButtonsContainer>
                 {//se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
                     orderProducts.length ? <CancelButton onPress={() => setOrderProducts([])} /> : <BackButton />
