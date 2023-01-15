@@ -2,11 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { OptionsModal } from './src/components/OptionsModal';
 // import useCachedResources from './hooks/useCachedResources';
 import { Routes } from './src/routes';
-import AuthContext, { AuthProvider } from './src/contexts/auth';
+import { AuthProvider } from './src/contexts/auth';
 import { NavigationContainer } from '@react-navigation/native';
+import { ProductsProvider } from './src/contexts/products';
 // import useCachedResources from './hooks/useCachedResources';
 // import useColorScheme from './hooks/useColorScheme';
 // import Navigation from './navigation';
@@ -22,11 +22,13 @@ export default function App() {
     <NavigationContainer>
 
       <AuthProvider>
-        <SafeAreaProvider>
-          <StatusBar translucent />
-          <Routes />
-          {/* <Navigation colorScheme={colorScheme} /> */}
-        </SafeAreaProvider>
+        <ProductsProvider>
+          <SafeAreaProvider>
+            <StatusBar translucent />
+            <Routes />
+            {/* <Navigation colorScheme={colorScheme} /> */}
+          </SafeAreaProvider>
+        </ProductsProvider>
       </AuthProvider >
     </NavigationContainer>
   );
