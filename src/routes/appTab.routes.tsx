@@ -20,7 +20,7 @@ export function TabRoutes() {
     const { Screen, Navigator } = createBottomTabNavigator();
 
     const OPTIONS_ITEM_WIDTH = 32;
-
+    const TAB_BAR_HEIGHT = 84;
     return (
         <Navigator
             screenOptions={{
@@ -30,14 +30,14 @@ export function TabRoutes() {
                 tabBarActiveTintColor: Colors.primary,
                 tabBarInactiveTintColor: Colors[colorScheme].textContrast,
                 //estilos
-                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 32, height: 88, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
+                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 32, height: TAB_BAR_HEIGHT, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
                 tabBarItemStyle: { borderTopLeftRadius: 8, borderTopRightRadius: 8, flexGrow: 1 },
                 tabBarLabelStyle: { fontSize: 12, textTransform: "uppercase", fontWeight: '700' },
                 // headerStatusBarHeight: 160
             }}
             initialRouteName="TopTabBar"
             // safeAreaInsets={{ right: 32, left: 0 }}
-            sceneContainerStyle={{ paddingTop: 64 }}
+            sceneContainerStyle={{ paddingTop: TAB_BAR_HEIGHT }}
 
 
         >
@@ -91,12 +91,12 @@ function TopTabBar() {
         <Navigator
             screenOptions={{
                 tabBarInactiveTintColor: Colors.gray,
-                tabBarItemStyle: { backgroundColor: Colors[colorScheme].background },
+                tabBarItemStyle: { padding: 0, margin: 0 },
                 tabBarActiveTintColor: Colors.primary,
-                tabBarLabelStyle: { fontSize: 16, paddingVertical: 12 },
+                tabBarLabelStyle: { fontSize: 16, marginBottom: 16, lineHeight: 16, },
                 // tabBarContentContainerStyle: { height: 32, },
-                tabBarIndicatorStyle: { borderWidth: 4, borderColor: Colors.primary },
-                tabBarStyle: { shadowColor: Colors[colorScheme].background, height: 48 }
+                tabBarIndicatorStyle: { backgroundColor: Colors.primary, height: 4 },
+                tabBarStyle: { shadowColor: Colors[colorScheme].background, height: 32, backgroundColor: Colors[colorScheme].background }
             }}
         // sceneContainerStyle={{ paddingTop: 0 }}
         >
