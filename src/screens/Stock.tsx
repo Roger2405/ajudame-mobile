@@ -6,15 +6,16 @@ import ConfirmationModal from '../components/common/ConfirmationModal';
 import { ModalEditStock } from '../components/Stock/Modal';
 import { StockList } from '../components/Stock/StockList';
 import Colors from '../constants/Colors';
+import { useProducts } from '../contexts/products';
 import { getGroupedProducts } from '../services/products';
 import { updateQuantitiesOnDB } from '../services/stock';
 
 
 export default function Stock() {
-  const [products, setProducts] = useState<ProductProps[][]>([]);
+  // const [products, setProducts] = useState<ProductProps[][]>([]);
   const [editMode, setEditMode] = useState(false);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const [newStock, setNewStock] = useState<Map<number, number>>(new Map());
@@ -22,9 +23,8 @@ export default function Stock() {
     ({ showModal: false, options: {} as { productId: number, type: 'add' | 'sub', initialStock: number } });
 
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
-  useEffect(() => {
-    getGroupedProducts().then(setProducts).finally(() => setLoading(false))
-  }, [])
+
+  const { productsGroupedByType, updateProductsInContext } = useProducts();
 
   function setFeedback(type: 'error' | 'info', msg: string) {
     setFeedbackMessage({ type, msg });
@@ -36,12 +36,9 @@ export default function Stock() {
   function confirmChanges() {
     setLoading(true)
     updateQuantitiesOnDB(newStock).then((response) => {
-
       setNewStock(new Map());
       setFeedback('info', 'Estoque atualizado com sucesso!');
-      getGroupedProducts().then((products) => {
-        setProducts(products);
-      })
+      updateProductsInContext();
     }).catch(err => setFeedback('error', err))
       .finally(() => setLoading(false))
   }
@@ -69,7 +66,7 @@ export default function Stock() {
                   flexBasis: '100%',
 
                 }}
-                data={products}
+                data={productsGroupedByType}
 
                 contentContainerStyle={{ paddingBottom: 120 }}
                 renderItem={productsByType => <StockList setModal={setModal} setNewStock={setNewStock} newStock={newStock} products={productsByType.item} editMode={editMode} />}

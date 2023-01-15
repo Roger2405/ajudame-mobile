@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
         fontSize: 16,
 
         color: Colors.white,
-        backgroundColor: Colors.gray,
+        backgroundColor: Colors.bgSmooth,
     },
     itemBody: {
         flexDirection: 'row',

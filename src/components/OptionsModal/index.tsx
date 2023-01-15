@@ -1,18 +1,14 @@
-import { FontAwesome5 } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useState } from 'react';
-import { TouchableOpacity, View, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Button } from 'react-native';
 import Colors from '../../constants/Colors';
-import AuthContext from '../../contexts/auth';
+import { useAuth } from '../../contexts/auth';
 import useColorScheme from '../../hooks/useColorScheme';
 
-import { styles } from './styles';
 
 export function OptionsModal() {
     const [showOptions, setShowOptions] = useState(false);
     const colorScheme = useColorScheme();
-    const { signOut } = useContext(AuthContext);
+    const { signOut } = useAuth();
 
     function handleSignOut() {
         signOut()

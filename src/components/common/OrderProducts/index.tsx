@@ -38,7 +38,7 @@ export function Item({ item }: ItemProps) {
                 style={[styles.text, styles.itemPrice, { color: Colors[colorScheme].text }]}
             >R$ {item.price_product.toFixed(2)}</Text>
             <Text
-                style={[styles.itemCount, { backgroundColor: Colors.gray, color: Colors[colorScheme].itemColor }]}
+                style={[styles.itemCount, { backgroundColor: Colors.bgSmooth, color: Colors[colorScheme].itemColor }]}
             >x {item.count}</Text>
         </View>
     );

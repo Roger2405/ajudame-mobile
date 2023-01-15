@@ -19,8 +19,8 @@ interface Props {
 export default function OrderCard({ orderProducts, setOrderProducts }: Props) {
     const height = Layout.window.height;
     const draggableRange = { top: height / 2, bottom: 0 }
-    // const [draggedValue, setDraggedValue] = useState(new Animated.Value(180))
-    var draggedValue = new Animated.Value(-Number.MIN_VALUE);
+    const [draggedValue, setDraggedValue] = useState(new Animated.Value(180))
+    // var draggedValue = new Animated.Value(-Number.MIN_VALUE);
 
     var panel: SlidingUpPanel | null = {} as SlidingUpPanel;
     // panel?.show(360);
@@ -41,7 +41,6 @@ export default function OrderCard({ orderProducts, setOrderProducts }: Props) {
                 draggableRange={draggableRange}
                 animatedValue={draggedValue}
                 // snappingPoints={[300]}
-
                 showBackdrop={true}
                 allowMomentum={true}
             >

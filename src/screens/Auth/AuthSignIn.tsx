@@ -1,21 +1,19 @@
 
-import { FontAwesome5, Foundation } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Foundation } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { User } from '../../@types/user';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { SingleButton } from '../../components/common/Buttons';
 import Colors from '../../constants/Colors';
 import useColorScheme from '../../hooks/useColorScheme';
-import AuthContext from '../../contexts/auth';
+import { useAuth } from '../../contexts/auth';
 import { InputField, PasswordInput } from '../../components/auth/TextInput';
 
 
 
 export function AuthSignIn() {
-    const { signIn } = useContext(AuthContext)
+    const { signIn } = useAuth()
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -64,6 +62,10 @@ export function AuthSignIn() {
                     <SingleButton color={Colors[colorScheme].itemColor} title='Cadastre-se' />
                 </View>
             </View>
+            <Button title='DEMO' onPress={() => {
+                setEmail('teste@demo.com')
+                setPassword('')
+            }} />
         </View>
     );
 }

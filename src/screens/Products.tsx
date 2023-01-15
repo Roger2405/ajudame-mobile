@@ -6,25 +6,25 @@ import { ProductProps } from '../@types/product';
 import { SingleButton } from '../components/common/Buttons';
 import { ProductList } from '../components/Products/ProductList';
 import Colors from '../constants/Colors';
+import { useProducts } from '../contexts/products';
 import { getGroupedProducts, getProducts } from '../services/products';
 
 export default function Products() {
-  const [products, setProducts] = useState<ProductProps[][]>([]);
+  // const [products, setProducts] = useState<ProductProps[][]>([]);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    getGroupedProducts().then(setProducts)
-  }, [])
+  const { productsGroupedByType } = useProducts();
+  // useEffect(() => {
+  //   getGroupedProducts().then(setProducts)
+  // }, [])
   return (
     <View style={styles.container}>
       <View>
-
         <FlatList
           style={{
             flexBasis: '100%',
             flex: 1,
           }}
-          data={products}
+          data={productsGroupedByType}
           contentContainerStyle={{ paddingBottom: 120 }}
           renderItem={productsByType => <ProductList products={productsByType.item} />}
         />

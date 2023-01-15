@@ -13,7 +13,7 @@ import { ColorSchemeName, Pressable, TouchableOpacity, useColorScheme } from 're
 
 import { RootStackParamList, RootTabParamList } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
-import { AddSales } from '../src/screens/AddSales';
+import { AddSales } from '../src/screens/AddSale/NewSale';
 import ModalScreen from '../src/screens/ModalScreen';
 import NotFoundScreen from '../src/screens/NotFoundScreen';
 import Home from '../src/screens/Home';

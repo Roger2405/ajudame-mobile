@@ -101,7 +101,7 @@ function TopTabBar() {
         // sceneContainerStyle={{ paddingTop: 0 }}
         >
             <Screen
-                name="home"
+                name="Home"
                 component={Home}
                 options={{
                     title: "Vendas do dia",
