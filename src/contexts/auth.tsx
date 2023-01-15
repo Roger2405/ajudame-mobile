@@ -1,11 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import api from '../services/api';
 import * as auth from '../services/auth';
 
 interface AuthContextData {
     signed: boolean
     loading: boolean
-    user: object | null
+    user: {
+        id: number,
+        email: string
+    } | null
     signIn: (email: string, password: string) => Promise<void>
     signOut(): void
 }
@@ -17,7 +21,10 @@ interface Props {
     children: ReactNode
 }
 export function AuthProvider({ children }: Props) {
-    const [user, setUser] = useState<object | null>(null);
+    const [user, setUser] = useState<{
+        id: number,
+        email: string
+    } | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -54,5 +61,8 @@ export function AuthProvider({ children }: Props) {
         </AuthContext.Provider>
     )
 }
-
-export default AuthContext;
+function useAuth() {
+    const context = useContext(AuthContext);
+    return context;
+}
+export { AuthContext, useAuth };
