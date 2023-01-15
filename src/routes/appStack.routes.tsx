@@ -5,8 +5,8 @@ import { Button } from "react-native";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import { AddProduct } from "../screens/AddProduct";
-import { AddSales } from "../screens/AddSales";
-import { Summary } from "../screens/Summary";
+import { NewSale } from "../screens/AddSale/NewSale";
+import { Summary } from "../screens/AddSale/Summary";
 import { TabRoutes } from "./appTab.routes";
 
 
@@ -33,8 +33,8 @@ export function AppRoutes() {
                 }}
             />
             <Screen
-                name='AddSales'
-                component={AddSales}
+                name='NewSale'
+                component={NewSale}
                 options={{
                     title: 'Adicionar Venda'
                 }}

@@ -2,22 +2,22 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
-import { ProductsGrid } from '../components/AddSales/ProductsGrid';
-import OrderProducts from '../components/common/OrderProducts';
-import Colors from '../constants/Colors';
-import { OrderProductProps } from '../@types/orderProduct';
-import { ProductProps } from '../@types/product';
-import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../components/common/Buttons';
+import { ProductsGrid } from '../../components/AddSales/ProductsGrid';
+import OrderProducts from '../../components/common/OrderProducts';
+import Colors from '../../constants/Colors';
+import { OrderProductProps } from '../../@types/orderProduct';
+import { ProductProps } from '../../@types/product';
+import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useColorScheme from '../hooks/useColorScheme';
-import { getGroupedProducts } from '../services/products';
-import OrderCard from '../components/AddSales/OrderCard';
+import useColorScheme from '../../hooks/useColorScheme';
+import { getGroupedProducts } from '../../services/products';
+import OrderCard from '../../components/AddSales/OrderCard';
 
 // import { SwipeablePanel } from 'r';
 
 //SWIPE UP ORDER PRODUCTS
-export function AddSales() {
+export function NewSale() {
     var initialOrderProducts: OrderProductProps[] = [];
     AsyncStorage.getItem('orderProducts').then(str => {
         if (str) {
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
     },
     subTitle: {
         fontSize: 24,
-        // textAlign: 'right',
         textTransform: 'uppercase',
         fontWeight: 'bold',
         color: Colors.gray,
