@@ -1,12 +1,13 @@
-import axios from "axios";
+
 import { ProductProps } from "../@types/product";
+import api from "./api";
+import getUserID from "./getUserID";
 
 
 export async function getProducts() {
-    const ID_USER = 114;
+    const ID_USER = await getUserID();
     // const url = `${process.env.REACT_APP_LINK_API}/${ID_USER}/stock/update`;
-    const url = `http://10.0.2.2:3001/${ID_USER}/products`;
-    const response = await axios.get(url);
+    const response = await api.get(`/${ID_USER}/products`);
     return response.data as ProductProps[];
 }
 
@@ -20,6 +21,7 @@ export async function getGroupedProducts() {
 
 function groupProducts(arrProducts: ProductProps[]) {
     let arrayProductsGrouped: ProductProps[][] = [];
+
     let productsTypes: string[] = [];
     arrProducts.forEach(product => {
         if (!productsTypes.includes(product.type_product)) {

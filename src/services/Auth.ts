@@ -1,10 +1,12 @@
-import axios from "axios";
+import api from "./api";
 
 interface Response {
     user: {
         id: number,
         email: string
-    }
+    },
+    success: boolean,
+    msg: string
 }
 
 // export function signIn() {
@@ -22,10 +24,9 @@ interface Response {
 //     )
 // }
 
-
-export async function signIn<Response>(email: string, password: string) {
+export async function signIn(email: string, password: string): Promise<Response> {
     try {
-        const response = await axios.post(`https://server-ajudame.vercel.app/user/login/`, {
+        const response = await api.post(`/user/login/`, {
             email: email,
             password: password,
         })
