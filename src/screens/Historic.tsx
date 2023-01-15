@@ -1,6 +1,6 @@
 // import { axios } from 'axios';
 
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -20,12 +20,12 @@ export default function Historic() {
     const colorScheme = useColorScheme();
 
     useEffect(() => {
-        var idUser = 114;
-        getSalesResume().then(setHeaderSales)
-
     }, [])
 
-
+    useFocusEffect(
+        React.useCallback(() => {
+            getSalesResume().then(setHeaderSales).catch(console.log)
+        }, []))
 
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
