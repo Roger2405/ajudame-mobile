@@ -4,3 +4,12 @@ export type OrderProductProps = {
     name_product: string
     count: number
 }
+
+export type SaleProductProps = {
+    count: number,
+    id: number,
+    time: string,
+    name_product: string,
+    price_product: number,
+    type_product: string,
+}

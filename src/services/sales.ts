@@ -1,4 +1,4 @@
-import { OrderProductProps } from "../@types/orderProduct";
+import { OrderProductProps, SaleProductProps } from "../@types/orderProduct";
 import { SalesResumeProps } from "../@types/sales";
 import api from "./api";
 import getUserID from "./getUserID";
@@ -9,7 +9,8 @@ export async function getSalesByDay() {
     const formatedDate = today.toISOString().split('T')[0]
 
     const response = await api.get(`/${ID_USER}/sales/${formatedDate}`)
-    const salesOfDay: OrderProductProps[] = response.data;
+    const salesOfDay: SaleProductProps[] = response.data;
+    console.log(salesOfDay[0])
 
     return salesOfDay;
 }
@@ -33,7 +34,7 @@ export async function updateSalesOnDB(orderProducts: OrderProductProps[]) {
     // const response = await api.post(`${ID_USER}/sales/register`, {
     //     orderProducts: strOrderProducts
     // })
-    
+
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             api.post(`${ID_USER}/sales/register`, {
@@ -49,3 +50,11 @@ export async function updateSalesOnDB(orderProducts: OrderProductProps[]) {
         }, 2000)
     })
 };
+
+export async function getLastSale() {
+    const ID_USER = await getUserID();
+    const response = await api.get(`/${ID_USER}/sales/last`)
+    const lastSale: SaleProductProps[] = response.data;
+
+    return lastSale;
+}

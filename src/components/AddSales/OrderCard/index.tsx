@@ -4,10 +4,10 @@ import { Text, View, Dimensions, Animated, StyleSheet } from "react-native";
 
 import SlidingUpPanel from "rn-sliding-up-panel";
 import { OrderProductProps } from "../../../@types/orderProduct";
-import OrderProducts from "../../common/OrderProducts";
 import Colors from "../../../constants/Colors";
 import Layout from "../../../constants/Layout";
 import useColorScheme from "../../../hooks/useColorScheme";
+import OrderProducts from "../OrderProducts";
 import { styles } from "./styles";
 
 

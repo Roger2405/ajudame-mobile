@@ -2,19 +2,19 @@
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
-import { OrderProductProps } from '../@types/orderProduct';
-import OrderProducts from '../components/common/OrderProducts';
-import { SingleButton } from '../components/common/Buttons';
+import { SaleProductProps } from '../@types/orderProduct';
+import { DeleteButton, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { getSalesByDay } from '../services/sales';
+import SalesList from '../components/SalesList';
 
 
 export default function Home() {
-  const [salesOfDay, setSalesOfDay] = useState<OrderProductProps[]>([]);
+  const [salesOfDay, setSalesOfDay] = useState<SaleProductProps[]>([]);
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
@@ -28,9 +28,19 @@ export default function Home() {
 
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+      <View>
+        <View style={{ height: 40, flexDirection: 'row' }}>
+          <Text>
+            Última venda:
+          </Text>
+          <Text></Text>
+          <DeleteButton />
+
+        </View>
+      </View>
       {
         salesOfDay?.length ?
-          <OrderProducts sales={salesOfDay} />
+          <SalesList sales={salesOfDay} />
           :
           <Text>Não foi encontrada nenhuma venda!</Text>
       }

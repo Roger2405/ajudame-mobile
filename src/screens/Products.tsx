@@ -12,10 +12,10 @@ import { getGroupedProducts, getProducts } from '../services/products';
 export default function Products() {
   // const [products, setProducts] = useState<ProductProps[][]>([]);
   const navigation = useNavigation();
-  const { productsGroupedByType } = useProducts();
-  // useEffect(() => {
-  //   getGroupedProducts().then(setProducts)
-  // }, [])
+  const { productsGroupedByType, updateProductsInContext } = useProducts();
+  useEffect(() => {
+    updateProductsInContext();
+  }, [])
   return (
     <View style={styles.container}>
       <View>

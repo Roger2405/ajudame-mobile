@@ -3,7 +3,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import { ProductsGrid } from '../../components/AddSales/ProductsGrid';
-import OrderProducts from '../../components/common/OrderProducts';
 import Colors from '../../constants/Colors';
 import { OrderProductProps } from '../../@types/orderProduct';
 import { ProductProps } from '../../@types/product';
