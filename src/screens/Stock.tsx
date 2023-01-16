@@ -3,6 +3,7 @@ import { FlatList, Modal, StyleSheet, ActivityIndicator, Text, TextInput, View }
 import { ProductProps } from '../@types/product';
 import { ButtonsContainer, CancelButton, ConfirmButton, SingleButton } from '../components/common/Buttons';
 import ConfirmationModal from '../components/common/ConfirmationModal';
+import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { ModalEditStock } from '../components/Stock/Modal';
 import { StockList } from '../components/Stock/StockList';
 import Colors from '../constants/Colors';
@@ -22,24 +23,19 @@ export default function Stock() {
   const [modal, setModal] = useState<{ showModal: boolean, options: { productId: number, type: 'add' | 'sub', initialStock: number } }>
     ({ showModal: false, options: {} as { productId: number, type: 'add' | 'sub', initialStock: number } });
 
-  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
 
   const { productsGroupedByType, updateProductsInContext } = useProducts();
 
-  function setFeedback(type: 'error' | 'info', msg: string) {
-    setFeedbackMessage({ type, msg });
-    setTimeout(() => {
-      setFeedbackMessage({} as { type: 'error' | 'info', msg: string });
-    }, 2000);
-  }
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
+
 
   function confirmChanges() {
     setLoading(true)
     updateQuantitiesOnDB(newStock).then((response) => {
       setNewStock(new Map());
-      setFeedback('info', 'Estoque atualizado com sucesso!');
+      setFeedbackMessage({ type: 'info', msg: 'Estoque atualizado com sucesso!' });
       updateProductsInContext();
-    }).catch(err => setFeedback('error', err))
+    }).catch(err => setFeedbackMessage({ type: 'error', msg: err }))
       .finally(() => setLoading(false))
   }
 
@@ -51,11 +47,8 @@ export default function Stock() {
           <ActivityIndicator size={32} />
           :
           <View style={{ width: '100%' }}>
-            {
-              feedbackMessage.msg && //mensagem de errro
-              < Text style={[styles.feedBack, feedbackMessage.type == 'error' ? styles.error : styles.info]}>{feedbackMessage.msg}</Text>
-            }
 
+            <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
             <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
 
             <View style={{ flex: 1, width: '100%', flexBasis: '100%' }}>
@@ -122,20 +115,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  error: {
-    backgroundColor: Colors.lightRed,
-    color: Colors.red,
-  },
-  feedBack: {
-    width: '100%',
-    textAlign: 'center',
-    padding: 8,
-    borderRadius: 4,
-    marginTop: 4,
-  },
-  info: {
-    backgroundColor: Colors.lightPrimary,
-    color: Colors.primary,
-
-  }
 });
