@@ -7,6 +7,7 @@ import { Routes } from './src/routes';
 import { AuthProvider } from './src/contexts/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { ProductsProvider } from './src/contexts/products';
+import { RecentSalesProvider } from './src/contexts/sales';
 // import useCachedResources from './hooks/useCachedResources';
 // import useColorScheme from './hooks/useColorScheme';
 // import Navigation from './navigation';
@@ -23,11 +24,13 @@ export default function App() {
 
       <AuthProvider>
         <ProductsProvider>
-          <SafeAreaProvider>
-            <StatusBar translucent />
-            <Routes />
-            {/* <Navigation colorScheme={colorScheme} /> */}
-          </SafeAreaProvider>
+          <RecentSalesProvider>
+            <SafeAreaProvider>
+              <StatusBar translucent />
+              <Routes />
+              {/* <Navigation colorScheme={colorScheme} /> */}
+            </SafeAreaProvider>
+          </RecentSalesProvider>
         </ProductsProvider>
       </AuthProvider >
     </NavigationContainer>
