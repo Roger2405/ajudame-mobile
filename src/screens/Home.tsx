@@ -1,53 +1,73 @@
 // import { axios } from 'axios';
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import { SaleProductProps } from '../@types/orderProduct';
-import { DeleteButton, SingleButton } from '../components/common/Buttons';
+import { ButtonsContainer, DeleteButton, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { getSalesByDay } from '../services/sales';
-import SalesList from '../components/SalesList';
-
+import { deleteSale, getLastSale } from '../services/sales';
+import { SalesList, SalesListItem } from '../components/SalesList';
+import { OverView } from '../components/Home/Overview';
+import { LastSale } from '../components/Home/LastSale';
+import { useRecentSales } from '../contexts/sales';
+import { FeedbackMessage } from '../components/common/FeedbackMessage';
 
 export default function Home() {
-  const [salesOfDay, setSalesOfDay] = useState<SaleProductProps[]>([]);
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getSalesByDay().then(setSalesOfDay)
-    }, [])
-  )
+  const { sales, lastSale, updateRecentSalesInContext } = useRecentSales();
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
 
+
+  function handleDeleteSale() {
+    if (lastSale) {
+      const date = lastSale[0].date_sale.split('T')[0];//pegando somente a parte da data
+      const time = lastSale[0].time;
+
+      deleteSale(`${date} ${time}`)
+        .then(res => {
+          setFeedbackMessage({ type: 'info', msg: res })
+        })
+        .catch(err => {
+          setFeedbackMessage({ type: 'error', msg: err })
+        })
+        .finally(() => {
+          updateRecentSalesInContext()
+        })
+    }
+  }
 
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
-      <View>
-        <View style={{ height: 40, flexDirection: 'row' }}>
-          <Text>
-            Última venda:
-          </Text>
-          <Text></Text>
-          <DeleteButton />
-
-        </View>
-      </View>
+    <View style={styles.container}>
+      <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
       {
-        salesOfDay?.length ?
-          <SalesList sales={salesOfDay} />
+        sales?.length ?
+          <>
+            <ScrollView contentContainerStyle={{ paddingBottom: 96 }} style={[{ backgroundColor: Colors[colorScheme].background, width: '100%' }]}>
+              <OverView salesOfDay={sales} />
+              {
+                lastSale &&
+                <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
+              }
+              <Text style={styles.title}>Produtos vendidos: </Text>
+              <SalesList sales={sales} />
+            </ScrollView>
+          </>
           :
-          <Text>Não foi encontrada nenhuma venda!</Text>
+          <Text>Não há nenhuma venda!</Text>
       }
-      <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.primary} title='Adicionar Venda' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
+      <ButtonsContainer style={{ position: 'absolute', bottom: 0 }}>
+        <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.primary} title='Adicionar Venda' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
+      </ButtonsContainer>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -59,5 +79,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: Colors.gray,
   },
 });
+
