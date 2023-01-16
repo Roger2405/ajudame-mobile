@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         paddingTop: 32,
+        paddingHorizontal: 8,
         // height: 100,
         // position: 'absolute',
         // bottom: 0,

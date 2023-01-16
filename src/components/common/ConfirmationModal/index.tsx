@@ -25,7 +25,7 @@ export default function ConfirmationModal({ showConfirmationModal, setShowConfir
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.text}>Confirmar alterações?</Text>
+                        <Text style={styles.text}>Confirmar ação?</Text>
                         <ButtonsContainer>
                             <CancelButton onPress={() => setShowConfirmationModal(false)} />
                             <ConfirmButton onPress={onConfirm} />
@@ -44,12 +44,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: Colors.bgSmooth,
-        padding: 20
     },
     modalView: {
+        margin: 20,
         backgroundColor: "white",
         borderRadius: 8,
-        paddingHorizontal: 8,
+        // paddingHorizontal: 8,
         paddingBottom: 0,
         alignItems: "center",
         shadowColor: "#000",

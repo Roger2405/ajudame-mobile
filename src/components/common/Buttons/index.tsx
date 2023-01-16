@@ -3,7 +3,7 @@
 import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactNode } from 'react';
-import { View, Text, TouchableOpacity, Button, TouchableOpacityProps, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Button, TouchableOpacityProps, Pressable, StyleProp, ViewStyle } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 
@@ -76,11 +76,12 @@ export function DeleteButton({ onPress }: TouchableOpacityProps) {
 
 interface ContainerProps {
     children: ReactNode
+    style?: StyleProp<ViewStyle>
 }
-export function ButtonsContainer({ children }: ContainerProps) {
+export function ButtonsContainer({ children, style }: ContainerProps) {
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             {children}
         </View>
     )

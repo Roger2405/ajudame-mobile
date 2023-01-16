@@ -19,7 +19,7 @@ interface Props {
 export default function OrderCard({ orderProducts, setOrderProducts }: Props) {
     const height = Layout.window.height;
     const draggableRange = { top: height / 2, bottom: 0 }
-    const [draggedValue, setDraggedValue] = useState(new Animated.Value(180))
+    const [draggedValue, setDraggedValue] = useState(new Animated.Value(0))
     // var draggedValue = new Animated.Value(-Number.MIN_VALUE);
 
     var panel: SlidingUpPanel | null = {} as SlidingUpPanel;
@@ -29,7 +29,6 @@ export default function OrderCard({ orderProducts, setOrderProducts }: Props) {
     useEffect(() => {
         panel?.show &&
             panel?.show(-Number.MIN_VALUE)
-
     }, [])
     const colorScheme = useColorScheme();
     return (
