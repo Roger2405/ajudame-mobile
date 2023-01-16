@@ -1,16 +1,22 @@
+import { AxiosPromise } from "axios";
 import { OrderProductProps, SaleProductProps } from "../@types/orderProduct";
 import { SalesResumeProps } from "../@types/sales";
 import api from "./api";
 import getUserID from "./getUserID";
 
-export async function getSalesByDay() {
+export async function getRecentSales() {
     const ID_USER = await getUserID();
     const today = new Date();
-    const formatedDate = today.toISOString().split('T')[0]
+    const day = today.getDate();
+    const formatedDay = day.toString().padStart(2, '0');
+    const month = today.getMonth();
+    const formatedMonth = (month + 1).toString().padStart(2, '0');
+    const fullYear = today.getFullYear();
 
+    const formatedDate = `${fullYear}-${formatedMonth}-${formatedDay}`;
+    console.log(formatedDate)
     const response = await api.get(`/${ID_USER}/sales/${formatedDate}`)
     const salesOfDay: SaleProductProps[] = response.data;
-    console.log(salesOfDay[0])
 
     return salesOfDay;
 }
@@ -57,4 +63,11 @@ export async function getLastSale() {
     const lastSale: SaleProductProps[] = response.data;
 
     return lastSale;
+}
+
+export async function deleteSale(dateTimeSale: string) {
+    const ID_USER = await getUserID();
+
+    const response = await api.delete(`/${ID_USER}/sales/delete/${dateTimeSale}`)
+    return response.data;
 }
