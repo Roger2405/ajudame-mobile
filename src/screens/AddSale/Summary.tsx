@@ -8,6 +8,7 @@ import OrderProducts from '../../components/AddSales/OrderProducts';
 import { InputField } from '../../components/auth/TextInput';
 import { BackButton, ButtonsContainer, ConfirmButton } from '../../components/common/Buttons';
 import Colors from '../../constants/Colors';
+import { useRecentSales } from '../../contexts/sales';
 import useColorScheme from '../../hooks/useColorScheme';
 import { updateSalesOnDB } from '../../services/sales';
 
@@ -18,6 +19,7 @@ export function Summary() {
     const colorScheme = useColorScheme();
     const [isLoading, setIsLoading] = useState(false);
     const [orderProductsFromStorage, setOrderProductsFromStorage] = useState<OrderProductProps[]>([])
+    const { updateRecentSalesInContext } = useRecentSales();
 
     AsyncStorage.getItem('orderProducts').then(str => {
         if (str) {
@@ -32,6 +34,7 @@ export function Summary() {
                 console.log(response))
             .catch(console.log)
             .finally(() => {
+                updateRecentSalesInContext();
                 navigation.navigate('Home')
             })
         // setIsLoading(false);
