@@ -6,15 +6,16 @@ import getUserID from "./getUserID";
 
 export async function getRecentSales() {
     const ID_USER = await getUserID();
+
     const today = new Date();
     const day = today.getDate();
-    const formatedDay = day.toString().padStart(2, '0');
     const month = today.getMonth();
-    const formatedMonth = (month + 1).toString().padStart(2, '0');
     const fullYear = today.getFullYear();
 
+    const formatedDay = day.toString().padStart(2, '0');
+    const formatedMonth = (month + 1).toString().padStart(2, '0');
+
     const formatedDate = `${fullYear}-${formatedMonth}-${formatedDay}`;
-    console.log(formatedDate)
     const response = await api.get(`/${ID_USER}/sales/${formatedDate}`)
     const salesOfDay: SaleProductProps[] = response.data;
 
@@ -36,24 +37,25 @@ export async function getSalesResume() {
 }
 export async function updateSalesOnDB(orderProducts: OrderProductProps[]) {
     const ID_USER = await getUserID();
+
     const strOrderProducts = JSON.stringify(Array.from(orderProducts));
-    // const response = await api.post(`${ID_USER}/sales/register`, {
-    //     orderProducts: strOrderProducts
-    // })
 
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            api.post(`${ID_USER}/sales/register`, {
-                orderProducts: strOrderProducts
-
+        // setTimeout(() => {
+        api.post(`${ID_USER}/sales/register`, {
+            orderProducts: strOrderProducts
+        })
+            .then(res => {
+                if (res.data.success)
+                    resolve(res.data.msg);
+                else {
+                    reject(res.data.msg)
+                }
             })
-                .then(res => {
-                    resolve(res);
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        }, 2000)
+            .catch(err => {
+                reject(err)
+            })
+        // }, 2000)
     })
 };
 
@@ -68,6 +70,18 @@ export async function getLastSale() {
 export async function deleteSale(dateTimeSale: string) {
     const ID_USER = await getUserID();
 
-    const response = await api.delete(`/${ID_USER}/sales/delete/${dateTimeSale}`)
-    return response.data;
+    return new Promise((resolve, reject) => {
+        api.delete(`/${ID_USER}/sales/delete/${dateTimeSale}`)
+            .then(res => {
+                if (res.data.success) {
+                    resolve(res.data.msg);
+                }
+                else {
+                    reject(res.data.msg)
+                }
+            })
+            .catch(err => {
+                reject('Ocorreu um erro no servidor!')
+            })
+    })
 }
