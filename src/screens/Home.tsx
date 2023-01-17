@@ -2,14 +2,14 @@
 
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import { SaleProductProps } from '../@types/orderProduct';
 import { ButtonsContainer, DeleteButton, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { deleteSale, getLastSale } from '../services/sales';
-import { SalesList, SalesListItem } from '../components/SalesList';
+import { SalesList, SalesListItem } from '../components/Home/SalesList';
 import { OverView } from '../components/Home/Overview';
 import { LastSale } from '../components/Home/LastSale';
 import { useRecentSales } from '../contexts/sales';
@@ -19,51 +19,55 @@ export default function Home() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
-  const { sales, lastSale, updateRecentSalesInContext } = useRecentSales();
+  const { sales, lastSale, updateRecentSalesInContext, isLoading } = useRecentSales();
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
 
 
-  function handleDeleteSale() {
+  async function handleDeleteSale() {
     if (lastSale) {
       const date = lastSale[0].date_sale.split('T')[0];//pegando somente a parte da data
       const time = lastSale[0].time;
 
       deleteSale(`${date} ${time}`)
-        .then(res => {
-          setFeedbackMessage({ type: 'info', msg: res })
+        .then((res) => {
+          setFeedbackMessage({ type: 'info', msg: res as string })
         })
+        .then(() => updateRecentSalesInContext())
         .catch(err => {
           setFeedbackMessage({ type: 'error', msg: err })
-        })
-        .finally(() => {
-          updateRecentSalesInContext()
         })
     }
   }
 
-
   return (
     <View style={styles.container}>
-      <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
       {
-        sales?.length ?
-          <>
-            <ScrollView contentContainerStyle={{ paddingBottom: 96 }} style={[{ backgroundColor: Colors[colorScheme].background, width: '100%' }]}>
-              <OverView salesOfDay={sales} />
-              {
-                lastSale &&
-                <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
-              }
-              <Text style={styles.title}>Produtos vendidos: </Text>
-              <SalesList sales={sales} />
-            </ScrollView>
-          </>
+        isLoading ?
+          <ActivityIndicator />
           :
-          <Text>Não há nenhuma venda!</Text>
+          <>
+            <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
+            <ScrollView contentContainerStyle={{ paddingBottom: 96 }} style={[{ backgroundColor: Colors[colorScheme].background, width: '100%' }]}>
+              {
+                sales?.length ?
+                  <>
+                    <OverView salesOfDay={sales} />
+                    {
+                      lastSale &&
+                      <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
+                    }
+                    <Text style={styles.title}>Produtos vendidos: </Text>
+                    <SalesList sales={sales} />
+                  </>
+                  :
+                  <Text style={{ textAlign: 'center', marginTop: 300 }}>Não há nenhuma venda!</Text>
+              }
+            </ScrollView>
+            <ButtonsContainer style={{ position: 'absolute', bottom: 0 }}>
+              <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.primary} title='Adicionar Venda' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
+            </ButtonsContainer>
+          </>
       }
-      <ButtonsContainer style={{ position: 'absolute', bottom: 0 }}>
-        <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.primary} title='Adicionar Venda' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
-      </ButtonsContainer>
     </View>
   );
 }
@@ -74,6 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
     paddingHorizontal: 8,
   },
   title: {

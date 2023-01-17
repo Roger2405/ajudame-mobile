@@ -7,30 +7,36 @@ interface RecentSalesContextData {
     sales: SaleProductProps[] | null,
     lastSale: SaleProductProps[] | null,
     updateRecentSalesInContext: () => void,
+    isLoading: boolean
 }
-const ProductsContext = createContext<RecentSalesContextData>({} as RecentSalesContextData);
+const RecentSalesContext = createContext<RecentSalesContextData>({} as RecentSalesContextData);
 interface Props {
     children: ReactNode
 }
 export function RecentSalesProvider({ children }: Props) {
     const [sales, setSales] = useState<SaleProductProps[] | null>(null)
     const [lastSale, setLastSale] = useState<SaleProductProps[] | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        updateRecentSalesInContext();
+        updateRecentSalesInContext()
     }, [])
 
     async function updateRecentSalesInContext() {
-        getRecentSales().then(setSales).catch(console.log),
-            getLastSale().then(setLastSale).catch(console.log)
+        setIsLoading(true)
+        getRecentSales()
+            .then(setSales)
+            .then(() => getLastSale())
+            .then(setLastSale)
+            .finally(() => setIsLoading(false))
     }
     return (
-        <ProductsContext.Provider value={{ sales, lastSale, updateRecentSalesInContext }}>
+        <RecentSalesContext.Provider value={{ sales, lastSale, isLoading, updateRecentSalesInContext }}>
             {children}
-        </ProductsContext.Provider>
+        </RecentSalesContext.Provider>
     )
 }
 export function useRecentSales() {
-    const context = useContext(ProductsContext);
+    const context = useContext(RecentSalesContext);
     return context;
 }
