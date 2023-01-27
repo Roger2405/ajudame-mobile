@@ -4,7 +4,7 @@ import { ProductProps } from '../@types/product';
 import { ButtonsContainer, CancelButton, ConfirmButton, SingleButton } from '../components/common/Buttons';
 import ConfirmationModal from '../components/common/ConfirmationModal';
 import { FeedbackMessage } from '../components/common/FeedbackMessage';
-import { ModalEditStock } from '../components/Stock/Modal';
+import { ModalEditStock } from '../components/Stock/StockModal';
 import { StockList } from '../components/Stock/StockList';
 import Colors from '../constants/Colors';
 import { useProducts } from '../contexts/products';
@@ -39,6 +39,7 @@ export default function Stock() {
       .finally(() => setLoading(false))
   }
 
+  
   return (
     <View style={[styles.container]}>
       {
