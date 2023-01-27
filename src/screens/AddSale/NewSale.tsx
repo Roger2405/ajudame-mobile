@@ -12,46 +12,69 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useColorScheme from '../../hooks/useColorScheme';
 import { getGroupedProducts } from '../../services/products';
 import OrderCard from '../../components/AddSales/OrderCard';
+import { useProducts } from '../../contexts/products';
+import OrderProducts from '../../components/AddSales/OrderProducts';
+import { ModalSale } from '../../components/AddSales/AddSaleModal';
 
 // import { SwipeablePanel } from 'r';
 
 //SWIPE UP ORDER PRODUCTS
 export function NewSale() {
-    var initialOrderProducts: OrderProductProps[] = [];
-    AsyncStorage.getItem('orderProducts').then(str => {
-        if (str) {
-            initialOrderProducts = JSON.parse(str);
-        }
-    })
     const navigation = useNavigation();
-    const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>(initialOrderProducts);
+    const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([]);
+    const [modal, setModal] = useState({} as {
+        showModal: boolean;
+        options: {
+            product: ProductProps;
+            type: 'add' | 'sub';
+            initialCount?: number;
+        };
+    })
 
     const [errorMessage, setErrorMessage] = useState<string>();
     //const [inputValue, setInputValue] = useState<string>('');
     const [total, setTotal] = useState<number>();
-    const [arrFiltered, setArrFiltered] = useState<ProductProps[][]>([]);
+    // const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>([]);
+    // useEffect(() => {
+    //     getGroupedProducts().then(setProductsGroupedByType).catch(console.log)
+    // }, [])
+    const { productsGroupedByType } = useProducts();
     const [completedOrder, setCompletedOrder] = useState(false);
 
+    const [discountStock, setDiscountStock] = useState<boolean>(true);
     const [showUnavaliableProducts, setShowUnavaliableProducts] = useState<boolean>(true);
     const [overflowX, setOverflowX] = useState(true);
     const [priceModel, setPriceModel] = useState('main');
 
     const colorScheme = useColorScheme();
 
+
     useEffect(() => {
-        getGroupedProducts().then(setArrFiltered)
+        AsyncStorage.getItem('orderProducts').then(str => {
+            if (str) {
+                var initialOrderProducts = JSON.parse(str);
+                setOrderProducts(initialOrderProducts)
+            }
+        })
     }, [])
+
+    
+
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+            {
+                modal.showModal &&
+                <ModalSale setOrderProducts={setOrderProducts} setModal={setModal} modal={modal} />
+            }
             <FlatList
                 style={{
-                    flexBasis: '100%',
+                    flexBasis: '80%',
                     flexGrow: 0,
                     flexShrink: 0
                 }}
-                contentContainerStyle={{ paddingBottom: 300 }}
-                data={arrFiltered}
-                renderItem={productsByType => <ProductsGrid setOrderProducts={setOrderProducts} orderProducts={orderProducts} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
+                contentContainerStyle={{ paddingBottom: 160 }}
+                data={productsGroupedByType}
+                renderItem={productsByType => <ProductsGrid setModal={setModal} setOrderProducts={setOrderProducts} orderProducts={orderProducts} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
             />
             {
                 <OrderCard orderProducts={orderProducts} setOrderProducts={setOrderProducts} />
