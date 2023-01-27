@@ -23,15 +23,11 @@ export default function App() {
     <NavigationContainer>
 
       <AuthProvider>
-        <ProductsProvider>
-          <RecentSalesProvider>
-            <SafeAreaProvider>
-              <StatusBar translucent />
-              <Routes />
-              {/* <Navigation colorScheme={colorScheme} /> */}
-            </SafeAreaProvider>
-          </RecentSalesProvider>
-        </ProductsProvider>
+        <SafeAreaProvider>
+          <StatusBar translucent />
+          <Routes />
+          {/* <Navigation colorScheme={colorScheme} /> */}
+        </SafeAreaProvider>
       </AuthProvider >
     </NavigationContainer>
   );
