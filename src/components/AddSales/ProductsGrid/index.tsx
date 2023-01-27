@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, Text, FlatList, TouchableOpacity } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
@@ -6,14 +6,24 @@ import { OrderProductProps } from '../../../@types/orderProduct';
 import { ProductProps } from '../../../@types/product';
 
 import { styles } from './styles';
+import api from '../../../services/api';
+import ConfirmationModal from '../../common/ConfirmationModal';
 
 interface Props {
     productsArr: ProductProps[]
     setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void
     orderProducts: OrderProductProps[]
+    setModal: React.Dispatch<React.SetStateAction<{
+        showModal: boolean;
+        options: {
+            product: ProductProps;
+            type: 'add' | 'sub';
+            initialCount?: number;
+        };
+    }>>
 }
 
-export function ProductsGrid({ productsArr, setOrderProducts, orderProducts }: Props) {
+export function ProductsGrid({ productsArr, setOrderProducts, orderProducts, setModal }: Props) {
 
     const colorScheme = useColorScheme();
     return (
@@ -24,7 +34,7 @@ export function ProductsGrid({ productsArr, setOrderProducts, orderProducts }: P
                 horizontal
                 bounces
                 data={productsArr}
-                renderItem={product => <ProductCell setOrderProducts={setOrderProducts} key={product.item.name_product} orderProducts={orderProducts} product={product.item} />}
+                renderItem={product => <ProductCell setModal={setModal} setOrderProducts={setOrderProducts} key={product.item.name_product} orderProducts={orderProducts} product={product.item} />}
             />
         </View>
     );
@@ -35,8 +45,16 @@ interface ItemProps {
     product: ProductProps
     setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void
     orderProducts: OrderProductProps[]
+    setModal: React.Dispatch<React.SetStateAction<{
+        showModal: boolean;
+        options: {
+            product: ProductProps;
+            type: 'add' | 'sub';
+            initialCount?: number;
+        };
+    }>>
 }
-function ProductCell({ product, setOrderProducts, orderProducts }: ItemProps) {
+function ProductCell({ product, setOrderProducts, orderProducts, setModal }: ItemProps) {
     const colorScheme = useColorScheme();
 
     function isInTheOrder() {
@@ -62,37 +80,45 @@ function ProductCell({ product, setOrderProducts, orderProducts }: ItemProps) {
     //valores
     var product_count = orderProducts[getIndexInOrderProducts()]?.count;
     var product_price = product.main_price.toFixed(2);
+    var image_url = `${api.defaults.baseURL}${product.image_path}`;
     return (
-        <TouchableOpacity onPress={() => _addProductToOrder(setOrderProducts, product)} style={[styles.item, { backgroundColor: bgItemColor }]}>
-            <View style={styles.itemHeader}>
-                <Text style={[styles.itemName, { color: nameColor }]}>{product.name_product}</Text>
-                {
-                    product_count &&
-                    <Text style={styles.itemCount}>{product_count}</Text>
-                }
+        <>
 
-            </View>
-            <View style={styles.itemBody}>
-                <View style={styles.itemImage}>
+            <TouchableOpacity
+                onLongPress={() => {
+                    setModal({ options: { product: product, type: 'add' }, showModal: true })
+                }}
+                onPress={() => _addProductToOrder(setOrderProducts, product)} style={[styles.item, { backgroundColor: bgItemColor }]}>
+                <View style={styles.itemHeader}>
+                    <Text style={[styles.itemName, { color: nameColor }]}>{product.name_product}</Text>
                     {
-                        product.image_path &&
-                        <Image resizeMode='contain' style={{ width: '100%', height: '100%' }} source={{ uri: `https://server-ajudame.vercel.app/${product.image_path}` }} />
+                        product_count &&
+                        <Text style={styles.itemCount}>{product_count}</Text>
                     }
-                </View>
-                <View>
 
-                    <View style={{ margin: 4 }}>
-                        <Text style={{ fontSize: 8, color: Colors.gray }}>estoque</Text>
-                        <Text style={{ color: Colors.gray, textAlign: 'right' }}>{JSON.stringify(product.stock)}</Text>
+                </View>
+                <View style={styles.itemBody}>
+                    <View style={styles.itemImage}>
+                        {
+                            product.image_path &&
+                            <Image resizeMode='contain' style={{ width: '100%', height: '100%' }} source={{ uri: image_url }} />
+                        }
                     </View>
-                    <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
-                        R$ {product_price}
-                    </Text>
+                    <View>
+
+                        <View style={{ margin: 4 }}>
+                            <Text style={{ fontSize: 8, color: Colors.gray }}>estoque</Text>
+                            <Text style={{ color: Colors.gray, textAlign: 'right' }}>{JSON.stringify(product.stock)}</Text>
+                        </View>
+                        <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
+                            R$ {product_price}
+                        </Text>
+                    </View>
+
+
                 </View>
-
-
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </>
     )
 }
 
@@ -108,7 +134,8 @@ function _addProductToOrder(setOrderProducts: (value: React.SetStateAction<Order
                 id_product: product.id,
                 count: 1,
                 price_product: product.main_price,
-                name_product: product.name_product
+                name_product: product.name_product,
+                cost_product: product.cost
             })
         }
         return [...orderProducts]
