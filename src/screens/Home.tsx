@@ -24,16 +24,16 @@ export default function Home() {
 
 
   async function handleDeleteSale() {
-    if (lastSale) {
-      deleteLastSale()
-        .then((res) => {
-          setFeedbackMessage({ type: 'info', msg: res as string })
-        })
-        .then(() => updateRecentSalesInContext())
-        .catch(err => {
-          setFeedbackMessage({ type: 'error', msg: err })
-        })
-    }
+    deleteLastSale()
+      .then((res) => {
+        console.log('then delete')
+        setFeedbackMessage({ type: 'info', msg: res as string })
+        updateRecentSalesInContext()
+      })
+      .catch(err => {
+        setFeedbackMessage({ type: 'error', msg: err })
+      })
+
   }
 
   return (
@@ -60,11 +60,11 @@ export default function Home() {
                   <Text style={{ textAlign: 'center', marginTop: 300 }}>Não há nenhuma venda!</Text>
               }
             </ScrollView>
-            <ButtonsContainer style={{ position: 'absolute', bottom: 0 }}>
-              <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.primary} title='Adicionar Venda' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
-            </ButtonsContainer>
           </>
       }
+      <ButtonsContainer style={{ position: 'absolute', bottom: 0 }}>
+        <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.primary} title='Adicionar Venda' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
+      </ButtonsContainer>
     </View>
   );
 }

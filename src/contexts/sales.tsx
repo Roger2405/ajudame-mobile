@@ -18,12 +18,13 @@ export function RecentSalesProvider({ children }: Props) {
     const [lastSale, setLastSale] = useState<LastSaleProductProps[] | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
-    useMemo(() => {
+    useEffect(() => {
         updateRecentSalesInContext()
     }, [])
 
     async function updateRecentSalesInContext() {
         setIsLoading(true)
+        console.log('atualizando')
         getRecentSales()
             .then(setSales)
             .then(() => getLastSale())

@@ -20,7 +20,7 @@ export function Summary() {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     const [isLoading, setIsLoading] = useState(false);
-    const { orderProducts } = useOrderProducts();
+    const { orderProducts, setOrderProducts } = useOrderProducts();
     const { updateRecentSalesInContext } = useRecentSales();
     const { updateProductsInContext } = useProducts();
 
@@ -33,14 +33,13 @@ export function Summary() {
                 console.log(res)
                 updateProductsInContext();
                 updateRecentSalesInContext();
-
             })
             .catch(alert)
             .finally(() => setIsLoading(false))
 
 
+        setOrderProducts([])
         navigation.navigate('Home')
-        setIsLoading(false);
     }
 
     return (
