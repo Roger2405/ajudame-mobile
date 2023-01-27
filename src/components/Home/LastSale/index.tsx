@@ -19,15 +19,10 @@ interface Props {
 
 export function LastSale({ data, handleDeleteSale }: Props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-    const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
 
     
     return (
         <View style={styles.container} >
-            {
-                feedbackMessage.msg &&
-                <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
-            }
             <View style={styles.header}>
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>
                     Última venda:

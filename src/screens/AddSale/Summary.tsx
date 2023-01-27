@@ -20,7 +20,7 @@ export function Summary() {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     const [isLoading, setIsLoading] = useState(false);
-    const { orderProducts, setOrderProducts } = useOrderProducts();
+    const { orderProducts } = useOrderProducts();
     const { updateRecentSalesInContext } = useRecentSales();
     const { updateProductsInContext } = useProducts();
 
