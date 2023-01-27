@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Modal, TextInput } from 'react-native';
 import { OrderProductProps } from '../../../@types/orderProduct';
 import { ProductProps } from '../../../@types/product';
 import Colors from '../../../constants/Colors';
+import { useOrderProducts } from '../../../contexts/order';
 import useColorScheme from '../../../hooks/useColorScheme';
 import { ButtonsContainer, CancelButton, ConfirmButton } from '../../common/Buttons';
 
@@ -24,10 +25,10 @@ interface ModalSaleProps {
             initialCount?: number;
         };
     }>>
-    setOrderProducts: React.Dispatch<React.SetStateAction<OrderProductProps[]>>
 }
 
-export function ModalSale({ modal, setModal, setOrderProducts }: ModalSaleProps) {
+export function ModalSale({ modal, setModal }: ModalSaleProps) {
+    const { orderProducts, setOrderProducts } = useOrderProducts();
     const colorScheme = useColorScheme();
     const modalType = modal.options.type;
     const lightColor = modalType == 'add' ? Colors.lightPrimary : Colors.lightGray;

@@ -8,11 +8,10 @@ import { ProductProps } from '../../../@types/product';
 import { styles } from './styles';
 import api from '../../../services/api';
 import ConfirmationModal from '../../common/ConfirmationModal';
+import { useOrderProducts } from '../../../contexts/order';
 
 interface Props {
     productsArr: ProductProps[]
-    setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void
-    orderProducts: OrderProductProps[]
     setModal: React.Dispatch<React.SetStateAction<{
         showModal: boolean;
         options: {
@@ -23,7 +22,7 @@ interface Props {
     }>>
 }
 
-export function ProductsGrid({ productsArr, setOrderProducts, orderProducts, setModal }: Props) {
+export function ProductsGrid({ productsArr, setModal }: Props) {
 
     const colorScheme = useColorScheme();
     return (
@@ -34,7 +33,7 @@ export function ProductsGrid({ productsArr, setOrderProducts, orderProducts, set
                 horizontal
                 bounces
                 data={productsArr}
-                renderItem={product => <ProductCell setModal={setModal} setOrderProducts={setOrderProducts} key={product.item.name_product} orderProducts={orderProducts} product={product.item} />}
+                renderItem={product => <ProductCell setModal={setModal} key={product.item.name_product} product={product.item} />}
             />
         </View>
     );
@@ -43,8 +42,6 @@ export function ProductsGrid({ productsArr, setOrderProducts, orderProducts, set
 
 interface ItemProps {
     product: ProductProps
-    setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void
-    orderProducts: OrderProductProps[]
     setModal: React.Dispatch<React.SetStateAction<{
         showModal: boolean;
         options: {
@@ -54,7 +51,8 @@ interface ItemProps {
         };
     }>>
 }
-function ProductCell({ product, setOrderProducts, orderProducts, setModal }: ItemProps) {
+function ProductCell({ product, setModal }: ItemProps) {
+    const { orderProducts, setOrderProducts } = useOrderProducts();
     const colorScheme = useColorScheme();
 
     function isInTheOrder() {

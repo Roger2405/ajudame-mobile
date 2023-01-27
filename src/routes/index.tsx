@@ -2,6 +2,7 @@
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useAuth } from "../contexts/auth";
+import { OrderProductsProvider } from "../contexts/order";
 import { ProductsProvider } from "../contexts/products";
 import { RecentSalesProvider } from "../contexts/sales";
 import { AppRoutes } from "./appStack.routes";
@@ -20,7 +21,9 @@ export function Routes() {
     return signed ?
         <ProductsProvider>
             <RecentSalesProvider>
-                <AppRoutes />
+                <OrderProductsProvider>
+                    <AppRoutes />
+                </OrderProductsProvider>
             </RecentSalesProvider>
         </ProductsProvider>
         :

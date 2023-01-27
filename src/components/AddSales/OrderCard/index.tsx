@@ -6,17 +6,14 @@ import SlidingUpPanel from "rn-sliding-up-panel";
 import { OrderProductProps } from "../../../@types/orderProduct";
 import Colors from "../../../constants/Colors";
 import Layout from "../../../constants/Layout";
+import { useOrderProducts } from "../../../contexts/order";
 import useColorScheme from "../../../hooks/useColorScheme";
 import OrderProducts from "../OrderProducts";
 import { styles } from "./styles";
 
 
-interface Props {
-    orderProducts: OrderProductProps[]
-    setOrderProducts: React.Dispatch<React.SetStateAction<OrderProductProps[]>>
-}
-
-export default function OrderCard({ orderProducts, setOrderProducts }: Props) {
+export default function OrderCard() {
+    const { orderProducts, setOrderProducts } = useOrderProducts();
     const height = Layout.window.height;
     const draggableRange = { top: height / 2, bottom: 0 }
     const [draggedValue, setDraggedValue] = useState(new Animated.Value(0))

@@ -15,13 +15,15 @@ import OrderCard from '../../components/AddSales/OrderCard';
 import { useProducts } from '../../contexts/products';
 import OrderProducts from '../../components/AddSales/OrderProducts';
 import { ModalSale } from '../../components/AddSales/AddSaleModal';
+import { useOrderProducts } from '../../contexts/order';
 
 // import { SwipeablePanel } from 'r';
 
 //SWIPE UP ORDER PRODUCTS
 export function NewSale() {
     const navigation = useNavigation();
-    const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([]);
+    // const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([]);
+    const { orderProducts, setOrderProducts } = useOrderProducts();
     const [modal, setModal] = useState({} as {
         showModal: boolean;
         options: {
@@ -49,22 +51,12 @@ export function NewSale() {
     const colorScheme = useColorScheme();
 
 
-    useEffect(() => {
-        AsyncStorage.getItem('orderProducts').then(str => {
-            if (str) {
-                var initialOrderProducts = JSON.parse(str);
-                setOrderProducts(initialOrderProducts)
-            }
-        })
-    }, [])
-
-    
 
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
             {
                 modal.showModal &&
-                <ModalSale setOrderProducts={setOrderProducts} setModal={setModal} modal={modal} />
+                <ModalSale setModal={setModal} modal={modal} />
             }
             <FlatList
                 style={{
@@ -74,10 +66,10 @@ export function NewSale() {
                 }}
                 contentContainerStyle={{ paddingBottom: 160 }}
                 data={productsGroupedByType}
-                renderItem={productsByType => <ProductsGrid setModal={setModal} setOrderProducts={setOrderProducts} orderProducts={orderProducts} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
+                renderItem={productsByType => <ProductsGrid setModal={setModal} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
             />
             {
-                <OrderCard orderProducts={orderProducts} setOrderProducts={setOrderProducts} />
+                <OrderCard />
             }
             {/* <View style={{ flexBasis: '40%' }}>
                 <Text style={styles.subTitle}>Pedido</Text>
@@ -88,7 +80,6 @@ export function NewSale() {
                     orderProducts.length ? <CancelButton onPress={() => setOrderProducts([])} /> : <BackButton />
                 /*e se não há produtos no pedido, o botão de continuar é desativado*/}
                 <ContinueButton disabled={!orderProducts.length} onPress={() => {
-                    AsyncStorage.setItem('orderProducts', JSON.stringify(orderProducts))
                     navigation.navigate('Summary', orderProducts)
                 }} />
             </ButtonsContainer>

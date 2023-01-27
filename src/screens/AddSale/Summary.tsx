@@ -8,6 +8,7 @@ import OrderProducts from '../../components/AddSales/OrderProducts';
 import { InputField } from '../../components/auth/TextInput';
 import { BackButton, ButtonsContainer, ConfirmButton } from '../../components/common/Buttons';
 import Colors from '../../constants/Colors';
+import { useOrderProducts } from '../../contexts/order';
 import { useProducts } from '../../contexts/products';
 import { useRecentSales } from '../../contexts/sales';
 import useColorScheme from '../../hooks/useColorScheme';
@@ -19,24 +20,15 @@ export function Summary() {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     const [isLoading, setIsLoading] = useState(false);
-    const [orderProductsFromStorage, setOrderProductsFromStorage] = useState<OrderProductProps[]>([])
+    const { orderProducts, setOrderProducts } = useOrderProducts();
     const { updateRecentSalesInContext } = useRecentSales();
     const { updateProductsInContext } = useProducts();
 
     const discountStock = true;
 
-    useEffect(() => {
-        AsyncStorage.getItem('orderProducts').then(str => {
-            if (str) {
-                const orderProducts = JSON.parse(str);
-                setOrderProductsFromStorage(orderProducts);
-            }
-        })
-    }, [])
-
     function handleConfirmUpdateSales() {
         setIsLoading(true)
-        updateSalesOnDB(orderProductsFromStorage, discountStock)
+        updateSalesOnDB(orderProducts, discountStock)
             .then(res => {
                 console.log(res)
                 updateProductsInContext();
@@ -48,7 +40,7 @@ export function Summary() {
 
 
         navigation.navigate('Home')
-        // setIsLoading(false);
+        setIsLoading(false);
     }
 
     return (
@@ -64,7 +56,7 @@ export function Summary() {
                             style={{ flexBasis: '60%' }}
                         >
 
-                            <OrderProducts sales={orderProductsFromStorage} />
+                            <OrderProducts sales={orderProducts} />
                         </View>
                         <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center' }}>
                             <Text
