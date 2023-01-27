@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 import { OrderProductProps } from '../../@types/orderProduct';
@@ -8,6 +8,7 @@ import OrderProducts from '../../components/AddSales/OrderProducts';
 import { InputField } from '../../components/auth/TextInput';
 import { BackButton, ButtonsContainer, ConfirmButton } from '../../components/common/Buttons';
 import Colors from '../../constants/Colors';
+import { useProducts } from '../../contexts/products';
 import { useRecentSales } from '../../contexts/sales';
 import useColorScheme from '../../hooks/useColorScheme';
 import { updateSalesOnDB } from '../../services/sales';
@@ -20,23 +21,33 @@ export function Summary() {
     const [isLoading, setIsLoading] = useState(false);
     const [orderProductsFromStorage, setOrderProductsFromStorage] = useState<OrderProductProps[]>([])
     const { updateRecentSalesInContext } = useRecentSales();
+    const { updateProductsInContext } = useProducts();
 
-    AsyncStorage.getItem('orderProducts').then(str => {
-        if (str) {
-            const orderProducts = JSON.parse(str);
-            setOrderProductsFromStorage(orderProducts);
-        }
-    })
+    const discountStock = true;
+
+    useEffect(() => {
+        AsyncStorage.getItem('orderProducts').then(str => {
+            if (str) {
+                const orderProducts = JSON.parse(str);
+                setOrderProductsFromStorage(orderProducts);
+            }
+        })
+    }, [])
+
     function handleConfirmUpdateSales() {
         setIsLoading(true)
-        updateSalesOnDB(orderProductsFromStorage)
-            .then(response =>
-                console.log(response))
-            .catch(console.log)
-            .finally(() => {
+        updateSalesOnDB(orderProductsFromStorage, discountStock)
+            .then(res => {
+                console.log(res)
+                updateProductsInContext();
                 updateRecentSalesInContext();
-                navigation.navigate('Home')
+
             })
+            .catch(alert)
+            .finally(() => setIsLoading(false))
+
+
+        navigation.navigate('Home')
         // setIsLoading(false);
     }
 
