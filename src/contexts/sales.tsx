@@ -1,11 +1,11 @@
 
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { SaleProductProps } from "../@types/orderProduct";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { LastSaleProductProps, SaleProductProps } from "../@types/orderProduct";
 import { getLastSale, getRecentSales } from "../services/sales";
 
 interface RecentSalesContextData {
     sales: SaleProductProps[] | null,
-    lastSale: SaleProductProps[] | null,
+    lastSale: LastSaleProductProps[] | null,
     updateRecentSalesInContext: () => void,
     isLoading: boolean
 }
@@ -15,10 +15,10 @@ interface Props {
 }
 export function RecentSalesProvider({ children }: Props) {
     const [sales, setSales] = useState<SaleProductProps[] | null>(null)
-    const [lastSale, setLastSale] = useState<SaleProductProps[] | null>(null)
+    const [lastSale, setLastSale] = useState<LastSaleProductProps[] | null>(null)
     const [isLoading, setIsLoading] = useState(false)
 
-    useEffect(() => {
+    useMemo(() => {
         updateRecentSalesInContext()
     }, [])
 
@@ -29,6 +29,7 @@ export function RecentSalesProvider({ children }: Props) {
             .then(() => getLastSale())
             .then(setLastSale)
             .finally(() => setIsLoading(false))
+
     }
     return (
         <RecentSalesContext.Provider value={{ sales, lastSale, isLoading, updateRecentSalesInContext }}>

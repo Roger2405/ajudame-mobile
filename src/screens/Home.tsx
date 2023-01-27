@@ -8,7 +8,7 @@ import { SaleProductProps } from '../@types/orderProduct';
 import { ButtonsContainer, DeleteButton, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { deleteSale, getLastSale } from '../services/sales';
+import { deleteLastSale, getLastSale } from '../services/sales';
 import { SalesList, SalesListItem } from '../components/Home/SalesList';
 import { OverView } from '../components/Home/Overview';
 import { LastSale } from '../components/Home/LastSale';
@@ -25,10 +25,7 @@ export default function Home() {
 
   async function handleDeleteSale() {
     if (lastSale) {
-      const date = lastSale[0].date_sale.split('T')[0];//pegando somente a parte da data
-      const time = lastSale[0].time;
-
-      deleteSale(`${date} ${time}`)
+      deleteLastSale()
         .then((res) => {
           setFeedbackMessage({ type: 'info', msg: res as string })
         })
