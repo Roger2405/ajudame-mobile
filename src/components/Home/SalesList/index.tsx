@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList } from 'react-native';
-import { SaleProductProps } from '../../@types/orderProduct';
-import Colors from '../../constants/Colors';
-import useColorScheme from '../../hooks/useColorScheme';
+import { LastSaleProductProps, SaleProductProps } from '../../../@types/orderProduct';
+import Colors from '../../../constants/Colors';
+import useColorScheme from '../../../hooks/useColorScheme';
 import { styles } from './styles';
 
 interface Props {
@@ -13,12 +13,14 @@ interface Props {
 
 export function SalesList({ sales }: Props) {
     return (
-        <FlatList
-            style={styles.container}
-            data={sales}    //v´`--if (editable === true) && |for passado o hook para alterar o OrderProducts| -> será renderizado o <EditableItem />
-            renderItem={i => <SalesListItem item={i.item} />}
-            keyExtractor={item => item.name_product}
-        />
+        <View>
+            {
+                sales.length &&
+                sales.map(item => {
+                    return <SalesListItem item={item} key={item.id} />
+                })
+            }
+        </View>
     )
 }
 
