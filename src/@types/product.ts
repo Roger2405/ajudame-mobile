@@ -5,6 +5,4 @@ export type ProductProps = {
     image_path?: string
     main_price: number
     secondary_price?: number
-    stock: number
-    cost?: number
 }

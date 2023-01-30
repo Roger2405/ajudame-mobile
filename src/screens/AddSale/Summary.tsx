@@ -11,6 +11,7 @@ import Colors from '../../constants/Colors';
 import { useOrderProducts } from '../../contexts/order';
 import { useProducts } from '../../contexts/products';
 import { useRecentSales } from '../../contexts/sales';
+import { useStock } from '../../contexts/stock';
 import useColorScheme from '../../hooks/useColorScheme';
 import { updateSalesOnDB } from '../../services/sales';
 
@@ -22,7 +23,7 @@ export function Summary() {
     const [isLoading, setIsLoading] = useState(false);
     const { orderProducts, setOrderProducts } = useOrderProducts();
     const { updateRecentSalesInContext } = useRecentSales();
-    const { updateProductsInContext } = useProducts();
+    const { updateStockInContext } = useStock();
 
     const discountStock = true;
 
@@ -31,7 +32,7 @@ export function Summary() {
         updateSalesOnDB(orderProducts, discountStock)
             .then(res => {
                 console.log(res)
-                updateProductsInContext();
+                updateStockInContext();
                 updateRecentSalesInContext();
             })
             .catch(alert)

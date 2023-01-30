@@ -2,13 +2,14 @@ import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableHighlight, TextInput, TouchableOpacity } from 'react-native';
 import { ProductProps } from '../../../@types/product';
+import { StockProps } from '../../../@types/stock';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 
 import { listStyles } from './styles';
 
 interface ProductListProps {
-    products: ProductProps[]
+    products: StockProps[]
     editMode: boolean
     setNewStock: React.Dispatch<React.SetStateAction<Map<number, number>>>
     newStock: Map<number, number>
@@ -36,7 +37,7 @@ export function StockList({ products, editMode, setNewStock, newStock, setModal 
 }
 
 interface StockListItemProps {
-    product: ProductProps
+    product: StockProps
     editMode: boolean
     setNewStock: React.Dispatch<React.SetStateAction<Map<number, number>>>
     newStock: Map<number, number>
@@ -54,7 +55,7 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
     const iconColor = Colors[colorScheme].itemColor;
 
     function updateStock(newValue: number) {
-        if (newValue == product.stock || newValue == null)
+        if (newValue == product.quantity || newValue == null)
             setNewStock((oldMap) => {
                 oldMap.delete(product.id)
                 return new Map(oldMap)
@@ -69,12 +70,12 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
     var bgColor = defaultItemBg;
 
     if (stockValueInState !== undefined) {
-        if (stockValueInState == product.stock)
+        if (stockValueInState == product.quantity)
             bgColor = defaultItemBg;
-        if (stockValueInState > product.stock)
+        if (stockValueInState > product.quantity)
             bgColor = Colors.lightPrimary
 
-        if (stockValueInState < product.stock)
+        if (stockValueInState < product.quantity)
             bgColor = Colors.lightGray
     }
     else
@@ -93,20 +94,20 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                             stockValueInState !== undefined &&
                             <Text
                                 style={[itemStyles.diff, { color: Colors[colorScheme].itemColor }]}
-                            >{(stockValueInState) - product.stock}</Text>
+                            >{(stockValueInState) - product.quantity}</Text>
                         }
 
                         <TouchableOpacity
                             onLongPress={() => {
-                                setModal({ showModal: true, options: { productId: product.id, type: 'sub', initialStock: product.stock } })
+                                setModal({ showModal: true, options: { productId: product.id, type: 'sub', initialStock: product.quantity } })
                             }}
                             onPress={() => {
-                                var newStockValue = product.stock - 1
+                                var newStockValue = product.quantity - 1
                                 if (stockValueInState != null)
                                     newStockValue = stockValueInState - 1;
                                 updateStock(newStockValue)
                             }}
-                            disabled={stockValueInState ? stockValueInState == 0 : product.stock == 0}
+                            disabled={stockValueInState ? stockValueInState == 0 : product.quantity == 0}
                             style={[itemStyles.subButton, itemStyles.unitButton]}>
                             <FontAwesome5 name='minus' color={iconColor} />
                         </TouchableOpacity>
@@ -116,7 +117,7 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                             cursorColor={Colors.primary}
                             keyboardType='number-pad'
                             style={[itemStyles.stock, { backgroundColor: Colors[colorScheme].background }]}
-                            defaultValue={product.stock.toString()}
+                            defaultValue={product.quantity.toString()}
                             onChangeText={(e) => {
                                 const newValue = parseInt(e) || 0
                                 console.log(newValue)
@@ -129,11 +130,11 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
 
                         <TouchableOpacity
                             onLongPress={() => {
-                                setModal({ showModal: true, options: { productId: product.id, type: 'add', initialStock: product.stock } })
+                                setModal({ showModal: true, options: { productId: product.id, type: 'add', initialStock: product.quantity } })
 
                             }}
                             onPress={() => {
-                                var newStockValue = product.stock + 1
+                                var newStockValue = product.quantity + 1
                                 if (stockValueInState != null)
                                     newStockValue = stockValueInState + 1;
                                 updateStock(newStockValue)
@@ -146,7 +147,7 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                     </View>
                 </View>
                 :
-                <Text style={[itemStyles.stock]}>{stockValueInState || product.stock}</Text>
+                <Text style={[itemStyles.stock]}>{stockValueInState || product.quantity}</Text>
             }
         </View >
     )

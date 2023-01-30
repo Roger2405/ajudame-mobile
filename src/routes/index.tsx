@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/auth";
 import { OrderProductsProvider } from "../contexts/order";
 import { ProductsProvider } from "../contexts/products";
 import { RecentSalesProvider } from "../contexts/sales";
+import { StockProvider } from "../contexts/stock";
 import { AppRoutes } from "./appStack.routes";
 import { AuthRoutes } from "./authStack.routes";
 
@@ -21,9 +22,12 @@ export function Routes() {
     return signed ?
         <ProductsProvider>
             <RecentSalesProvider>
-                <OrderProductsProvider>
-                    <AppRoutes />
-                </OrderProductsProvider>
+                <StockProvider>
+                    <OrderProductsProvider>
+                        <AppRoutes />
+
+                    </OrderProductsProvider>
+                </StockProvider>
             </RecentSalesProvider>
         </ProductsProvider>
         :

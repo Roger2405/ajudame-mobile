@@ -9,6 +9,7 @@ import { styles } from './styles';
 import api from '../../../services/api';
 import ConfirmationModal from '../../common/ConfirmationModal';
 import { useOrderProducts } from '../../../contexts/order';
+import { useStock } from '../../../contexts/stock';
 
 interface Props {
     productsArr: ProductProps[]
@@ -53,6 +54,8 @@ interface ItemProps {
 }
 function ProductCell({ product, setModal }: ItemProps) {
     const { orderProducts, setOrderProducts } = useOrderProducts();
+    const { stock } = useStock();
+
     const colorScheme = useColorScheme();
 
     function isInTheOrder() {
@@ -79,6 +82,9 @@ function ProductCell({ product, setModal }: ItemProps) {
     var product_count = orderProducts[getIndexInOrderProducts()]?.count;
     var product_price = product.main_price.toFixed(2);
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
+    var objectStockFromContext = stock.find(item => item.id_product == product.id);
+    var stockValue = objectStockFromContext?.quantity;
+
     return (
         <>
 
@@ -106,7 +112,7 @@ function ProductCell({ product, setModal }: ItemProps) {
 
                         <View style={{ margin: 4 }}>
                             <Text style={{ fontSize: 8, color: Colors.gray }}>estoque</Text>
-                            <Text style={{ color: Colors.gray, textAlign: 'right' }}>{JSON.stringify(product.stock)}</Text>
+                            <Text style={{ color: Colors.gray, textAlign: 'right' }}>{JSON.stringify(stockValue)}</Text>
                         </View>
                         <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
                             R$ {product_price}
@@ -133,7 +139,7 @@ function _addProductToOrder(setOrderProducts: (value: React.SetStateAction<Order
                 count: 1,
                 price_product: product.main_price,
                 name_product: product.name_product,
-                cost_product: product.cost
+                // cost_product: product.cost
             })
         }
         return [...orderProducts]

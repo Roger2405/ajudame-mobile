@@ -43,7 +43,7 @@ export default function Home() {
           <ActivityIndicator />
           :
           <>
-            <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
+            {/* <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} /> */}
             <ScrollView contentContainerStyle={{ paddingBottom: 96 }} style={[{ backgroundColor: Colors[colorScheme].background, width: '100%' }]}>
               {
                 sales?.length ?
