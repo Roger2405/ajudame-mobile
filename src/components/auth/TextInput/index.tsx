@@ -13,16 +13,17 @@ interface FieldProps extends TextInputProps {
 }
 
 
-export function InputField({ onChangeText, value, label, children, secureTextEntry, placeholder, icon }: FieldProps) {
+export function InputField({ onChangeText, value, label, children, keyboardType, secureTextEntry, placeholder, icon }: FieldProps) {
   const colorScheme = useColorScheme();
   return (
     <View style={styles.field}>
-      <Text style={[styles.label, { color: Colors[colorScheme].textContrast }]}>{label}</Text>
-      <View style={[styles.inputContainer, { backgroundColor: Colors[colorScheme].itemColor }]}>
+      <Text style={[styles.label, { color: Colors[colorScheme].text }]}>{label}</Text>
+      <View style={[styles.inputContainer, { backgroundColor: Colors[colorScheme].background }]}>
         {icon}
-        <TextInput style={[styles.input, { backgroundColor: Colors[colorScheme].itemColor, color: Colors[colorScheme].text }]}
+        <TextInput style={[styles.input, { backgroundColor: Colors[colorScheme].background, color: Colors[colorScheme].text }]}
           onChangeText={onChangeText}
           value={value}
+          keyboardType={keyboardType}
           placeholder={placeholder}
           secureTextEntry={secureTextEntry}
           placeholderTextColor={Colors.gray}
@@ -34,11 +35,11 @@ export function InputField({ onChangeText, value, label, children, secureTextEnt
   )
 }
 
-export function PasswordInput({ onChangeText, value, label }: FieldProps) {
+export function PasswordInput({ placeholder, onChangeText, value, label }: FieldProps) {
   const [hidePassword, setHidePassword] = useState(true)
 
   return (
-    <InputField label={label} onChangeText={onChangeText} value={value} secureTextEntry={hidePassword} placeholder="Sua senha"
+    <InputField label={label} onChangeText={onChangeText} value={value} secureTextEntry={hidePassword} placeholder={placeholder}
       icon={<Foundation style={styles.icon} name={'lock'} size={20} />}
     >
       <TouchableOpacity onPress={() => {

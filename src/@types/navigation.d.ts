@@ -9,6 +9,7 @@ export declare global {
         }
         interface StackParamList {
             AuthSignIn: undefined,
+            AuthSignUp: undefined,
             AddSales: undefined;
             Summary: undefined;//OrderProductProps[];
         }

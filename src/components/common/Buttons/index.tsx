@@ -21,8 +21,14 @@ interface ButtonProps extends GenericButtonProps {
 }
 
 function RoundedButton({ title, color, onPress, icon, buttonStyle, disabled }: ButtonProps) {
+    const colorScheme = useColorScheme();
     return (
-        <Pressable disabled={disabled} onPress={onPress} style={[styles.button, styles[buttonStyle], (disabled && styles.disabled), { backgroundColor: color }]}>
+        <Pressable disabled={disabled} onPress={onPress} style={({ pressed }) => [
+            {
+                // backgroundColor: pressed ? Colors[colorScheme].background : color,
+                opacity: pressed ? 0.5 : 1,
+                backgroundColor: color
+            }, styles.button, styles[buttonStyle], (disabled && styles.disabled)]}>
             <Text style={[styles.text]}>
                 {title}
             </Text>

@@ -9,25 +9,47 @@ import Colors from '../../constants/Colors';
 import useColorScheme from '../../hooks/useColorScheme';
 import { useAuth } from '../../contexts/auth';
 import { InputField, PasswordInput } from '../../components/auth/TextInput';
+import { signUp } from '../../services/auth';
 
 
 
-export function AuthSignIn() {
-    const { signIn } = useAuth()
-    const emailRegEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+export function AuthSignUp() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const emailRegEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     const [errorMessage, setErrorMessage] = useState('');
 
-    function handleLogIn() {
-        if (email && password && !errorMessage)
-            signIn(email, password).catch(err => setErrorMessage(err.message));
+    function handleSignUp() {
+        // signIn(email, password).catch(err => setErrorMessage(err.message));
+        if (email && password && !errorMessage) {
+            signUp(email, password)
+                .then(res => {
+                    alert(res.msg)
+                    if (res.success) {
+                        navigation.navigate('SignIn')
+                    }
+                    // if(res.)
+                })
+                .catch(alert)
+        }
         else {
-            setErrorMessage('Preencha os campos corretamente!')
+            setErrorMessage('Preencha todos os campos corretamente!')
         }
     }
+    useEffect(() => {
+        if (password.length < 8) {
+            setErrorMessage('A senha deve conter pelo menos 8 dígitos!')
+        }
+        else if (confirmPassword != password) {
+            setErrorMessage('As senhas são diferentes!')
+        }
+        else {
+            setErrorMessage('');
+        }
+    }, [confirmPassword, password])
 
     useEffect(() => {
         if (email && emailRegEx.test(email) == false) {
@@ -57,24 +79,23 @@ export function AuthSignIn() {
             </LinearGradient>
 
             <View style={[styles.container, { borderColor: Colors[colorScheme].itemColor }]}>
-                <Text style={[styles.title, { color: Colors[colorScheme].textContrast }]}>Login</Text>
+                <Text style={[styles.title, { color: Colors[colorScheme].textContrast }]}>Cadastro</Text>
 
                 <View>
-                    <InputField keyboardType='email-address' caretHidden={false} label='Email' placeholder='exemplo@email.com' onChangeText={setEmail} value={email} icon={
+                    <InputField keyboardType='email-address' label='Email' caretHidden={false} placeholder='exemplo@email.com' onChangeText={setEmail} value={email} icon={
                         <Foundation style={styles.icon} name={'mail'} size={20} />} />
-                    <PasswordInput placeholder='Sua senha' label='Senha' onChangeText={setPassword} value={password} />
+                    <PasswordInput placeholder='Crie uma senha' label='Senha' onChangeText={setPassword} value={password} />
+                    <PasswordInput placeholder='Confirme sua senha' label='Confirmar senha' onChangeText={setConfirmPassword} value={confirmPassword} />
 
                     {/* <Text style={{ color: 'blue', paddingBottom: 8, textAlign: 'right' }}>Esqueci minha senha</Text> */}
                     {
-                        errorMessage &&
-                        <Text style={{ textAlign: 'center', marginVertical: 4, color: Colors.red }}>{errorMessage}</Text>
+
+                        <Text style={{ textAlign: 'center', marginVertical: 4, color: Colors.red }}>{errorMessage && errorMessage}</Text>
                     }
-                    <SingleButton color={Colors.primary} onPress={handleLogIn} title='Entrar' />
-
-
-                    <Text style={{ color: Colors[colorScheme].text }}>Ainda não possui uma conta?</Text>
-                    <SingleButton onPress={() => navigation.navigate('SignUp')} color={Colors.primary} title='Cadastre-se' />
+                    <SingleButton color={Colors.primary} onPress={handleSignUp} title='Cadastrar' />
                 </View>
+                <Text style={{ color: Colors[colorScheme].text }}>Já possui uma conta?</Text>
+                <SingleButton onPress={() => navigation.navigate('SignIn')} color={Colors.primary} title='Entrar' />
             </View>
         </View>
     );

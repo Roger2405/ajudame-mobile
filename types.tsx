@@ -18,6 +18,8 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   NewSale: undefined;
   AddProduct: undefined;
+  SignUp: undefined;
+  SignIn: undefined;
   Summary: OrderProductProps[]
 };
 

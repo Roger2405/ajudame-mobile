@@ -47,3 +47,15 @@ export async function signIn(email: string, password: string): Promise<Response>
         throw err.message;
     })*/
 }
+export async function signUp(email: string, password: string) {
+    try {
+        const response = await api.post(`/user/register/`, {
+            email: email,
+            password: password,
+        })
+        return response.data;
+    }
+    catch (error) {
+        throw (error);
+    }
+}
