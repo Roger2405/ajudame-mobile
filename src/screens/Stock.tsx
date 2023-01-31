@@ -82,7 +82,6 @@ export default function Stock() {
               <ButtonsContainer>
                 <CancelButton onPress={() => {
                   setNewStock(oldMap => {
-                    console.log(oldMap)
                     return new Map()
                   });
                   setEditMode(false);

@@ -27,7 +27,6 @@ export function StockProvider({ children }: Props) {
                 let stockGrouped = groupStockByProductType(res);
                 setStockGroupedByType(stockGrouped)
             })
-        // getGroupedStockByProductType().then(setStockGroupedByType).catch(console.log)
     }
     return (
         <StockContext.Provider value={{ stockGroupedByType, stock, updateStockInContext }}>

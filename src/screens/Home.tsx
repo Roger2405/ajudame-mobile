@@ -26,7 +26,6 @@ export default function Home() {
   async function handleDeleteSale() {
     deleteLastSale()
       .then((res) => {
-        console.log('then delete')
         setFeedbackMessage({ type: 'info', msg: res as string })
         updateRecentSalesInContext()
       })

@@ -120,7 +120,6 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                             defaultValue={product.quantity.toString()}
                             onChangeText={(e) => {
                                 const newValue = parseInt(e) || 0
-                                console.log(newValue)
                                 updateStock(newValue)
                             }}
 

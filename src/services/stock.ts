@@ -9,7 +9,6 @@ export async function getStock() {
     const ID_USER = await getUserID();
 
     const response = await api.get(`/${ID_USER}/stock`);
-    console.log('response: ------->', response)
     return response.data as StockProps[];
 
 }
