@@ -2,7 +2,7 @@
 import { Feather } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
-import { LastSaleProductProps } from '../../../@types/orderProduct';
+import { LastSaleProductProps, SaleProductProps } from '../../../@types/orderProduct';
 import Colors from '../../../constants/Colors';
 import { useRecentSales } from '../../../contexts/sales';
 import useColorScheme from '../../../hooks/useColorScheme';
@@ -13,14 +13,14 @@ import { FeedbackMessage } from '../../common/FeedbackMessage';
 import { styles } from './styles';
 
 interface Props {
-    data: LastSaleProductProps[]
+    data: LastSaleProductProps
     handleDeleteSale: () => void
 }
 
 export function LastSale({ data, handleDeleteSale }: Props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-    
+
     return (
         <View style={styles.container} >
             <View style={styles.header}>
@@ -29,7 +29,7 @@ export function LastSale({ data, handleDeleteSale }: Props) {
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginLeft: 'auto' }}>
                     <Feather name='clock' size={16} color={Colors.lightGray} />
-                    <Text style={[styles.time, { color: Colors.lightGray }]}>{(data[0].time_sale)}</Text>
+                    <Text style={[styles.time, { color: Colors.lightGray }]}>{(data.header.time)}</Text>
                 </View>
                 <DeleteButton onPress={() => {
                     setShowConfirmationModal(true)
@@ -37,8 +37,8 @@ export function LastSale({ data, handleDeleteSale }: Props) {
             </View>
             <View style={{ paddingTop: 4 }}>
                 {
-                    data.map(sale => {
-                        return <LastSalesListItem key={sale.id_product} item={sale} />
+                    data.products.map(sale => {
+                        return <LastSalesListItem key={sale.id} item={sale} />
                     })
                 }
             </View>
@@ -53,7 +53,7 @@ export function LastSale({ data, handleDeleteSale }: Props) {
 }
 
 interface ItemProps {
-    item: LastSaleProductProps
+    item: SaleProductProps
 }
 
 export function LastSalesListItem({ item }: ItemProps) {

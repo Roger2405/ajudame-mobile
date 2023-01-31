@@ -7,13 +7,11 @@ export type OrderProductProps = {
 }
 
 export type LastSaleProductProps = {
-    count: number,
-    id_product: number,
-    id_sale: number,
-    time_sale: string,
-    name_product: string,
-    price_product: number,
-    type_product: string,
+    header: {
+        id_sale: number,
+        time: string
+    }
+    products: SaleProductProps[]
 }
 
 export type SaleProductProps = {

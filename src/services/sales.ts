@@ -43,7 +43,6 @@ export async function updateSalesOnDB(orderProducts: OrderProductProps[], discou
 
     return new Promise((resolve, reject) => {
         // setTimeout(() => {
-        console.log(strOrderProducts);
         api.post(`${ID_USER}/sales/last`, {
             orderProducts: strOrderProducts,
             discountStock
@@ -65,7 +64,7 @@ export async function updateSalesOnDB(orderProducts: OrderProductProps[], discou
 export async function getLastSale() {
     const ID_USER = await getUserID();
     const response = await api.get(`/${ID_USER}/sales/last`)
-    const lastSale: LastSaleProductProps[] = response.data;
+    const lastSale: LastSaleProductProps = response.data;
 
     return lastSale;
 }
