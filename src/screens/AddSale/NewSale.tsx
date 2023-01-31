@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button, ScrollView, ActivityIndicator } from 'react-native';
 import { ProductsGrid } from '../../components/AddSales/ProductsGrid';
 import Colors from '../../constants/Colors';
 import { OrderProductProps } from '../../@types/orderProduct';
@@ -33,57 +33,77 @@ export function NewSale() {
         };
     })
 
-    const [errorMessage, setErrorMessage] = useState<string>();
+    // const [errorMessage, setErrorMessage] = useState<string>();
     //const [inputValue, setInputValue] = useState<string>('');
-    const [total, setTotal] = useState<number>();
+    // const [total, setTotal] = useState<number>();
     // const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>([]);
     // useEffect(() => {
     //     getGroupedProducts().then(setProductsGroupedByType).catch(console.log)
     // }, [])
     const { productsGroupedByType } = useProducts();
-    const [completedOrder, setCompletedOrder] = useState(false);
 
-    const [discountStock, setDiscountStock] = useState<boolean>(true);
-    const [showUnavaliableProducts, setShowUnavaliableProducts] = useState<boolean>(true);
-    const [overflowX, setOverflowX] = useState(true);
-    const [priceModel, setPriceModel] = useState('main');
+
+    // const [completedOrder, setCompletedOrder] = useState(false);
+
+    // const [discountStock, setDiscountStock] = useState<boolean>(true);
+    // const [showUnavaliableProducts, setShowUnavaliableProducts] = useState<boolean>(true);
+    // const [overflowX, setOverflowX] = useState(true);
+    // const [priceModel, setPriceModel] = useState('main');
 
     const colorScheme = useColorScheme();
 
-
-
     return (
-        <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
-            {
-                modal.showModal &&
-                <ModalSale setModal={setModal} modal={modal} />
-            }
-            <FlatList
-                style={{
-                    flexBasis: '80%',
-                    flexGrow: 0,
-                    flexShrink: 0
-                }}
-                contentContainerStyle={{ paddingBottom: 160 }}
-                data={productsGroupedByType}
-                renderItem={productsByType => <ProductsGrid setModal={setModal} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
-            />
-            {
-                <OrderCard />
-            }
-            {/* <View style={{ flexBasis: '40%' }}>
+        <>
+            {productsGroupedByType?.length ?
+                <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+                    {
+                        modal.showModal &&
+                        <ModalSale setModal={setModal} modal={modal} />
+                    }
+
+                    {/* <FlatList
+                        style={{
+                            flexBasis: '80%',
+                            flexGrow: 0,
+                            flexShrink: 0
+                        }}
+                        keyExtractor={item => item[0].type_product}
+                        contentContainerStyle={{ paddingBottom: 160 }}
+                        data={productsGroupedByType}
+                        renderItem={productsByType => <ProductsGrid setModal={setModal} productsArr={productsByType.item} key={productsByType.item[0].type_product} />}
+                    /> */}
+                    <ScrollView
+                        style={{
+                            marginBottom: 120
+                        }}
+                    >
+                        {
+                            productsGroupedByType?.map(type => {
+                                return <ProductsGrid setModal={setModal} productsArr={type} key={type[0].type_product} />
+                            })
+                        }
+                    </ScrollView>
+                    {
+                        <OrderCard />
+                    }
+                    {/* <View style={{ flexBasis: '40%' }}>
                 <Text style={styles.subTitle}>Pedido</Text>
                 <OrderProducts sales={orderProducts} editable setOrderProducts={setOrderProducts} />
             </View> */}
-            <ButtonsContainer>
-                {//se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
-                    orderProducts.length ? <CancelButton onPress={() => setOrderProducts([])} /> : <BackButton />
-                /*e se não há produtos no pedido, o botão de continuar é desativado*/}
-                <ContinueButton disabled={!orderProducts.length} onPress={() => {
-                    navigation.navigate('Summary', orderProducts)
-                }} />
-            </ButtonsContainer>
-        </View >
+                    <ButtonsContainer>
+                        {//se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
+                            orderProducts.length ? <CancelButton onPress={() => setOrderProducts([])} /> : <BackButton />
+                            //e se não há produtos no pedido, o botão de continuar é desativado
+                        }
+                        <ContinueButton disabled={!orderProducts.length} onPress={() => {
+                            navigation.navigate('Summary', orderProducts)
+                        }} />
+                    </ButtonsContainer>
+                </View >
+                :
+                <ActivityIndicator />
+            }
+        </>
     );
 }
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, Text, FlatList, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Image, Text, FlatList, Pressable, TouchableOpacity, ScrollView } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 import { OrderProductProps } from '../../../@types/orderProduct';
@@ -7,7 +7,6 @@ import { ProductProps } from '../../../@types/product';
 
 import { styles } from './styles';
 import api from '../../../services/api';
-import ConfirmationModal from '../../common/ConfirmationModal';
 import { useOrderProducts } from '../../../contexts/order';
 import { useStock } from '../../../contexts/stock';
 
@@ -29,13 +28,23 @@ export function ProductsGrid({ productsArr, setModal }: Props) {
     return (
         <View>
             <Text style={{ fontWeight: '700', fontSize: 24, color: Colors[colorScheme].text }}>{productsArr[0].type_product}</Text>
-            <FlatList
+            {/* <FlatList
                 style={styles.grid}
                 horizontal
                 bounces
                 data={productsArr}
                 renderItem={product => <ProductCell setModal={setModal} key={product.item.name_product} product={product.item} />}
-            />
+            /> */}
+            <ScrollView
+                horizontal
+                style={styles.grid}
+            >
+                {
+                    productsArr.map(product => {
+                        return <ProductCell setModal={setModal} key={product.id} product={product} />
+                    })
+                }
+            </ScrollView>
         </View>
     );
 }
@@ -86,43 +95,47 @@ function ProductCell({ product, setModal }: ItemProps) {
     var stockValue = objectStockFromContext?.quantity;
 
     return (
-        <>
 
-            <TouchableOpacity
-                onLongPress={() => {
-                    setModal({ options: { product: product, type: 'add' }, showModal: true })
-                }}
-                onPress={() => _addProductToOrder(setOrderProducts, product)} style={[styles.item, { backgroundColor: bgItemColor }]}>
-                <View style={styles.itemHeader}>
-                    <Text style={[styles.itemName, { color: nameColor }]}>{product.name_product}</Text>
+        <Pressable
+            style={({ pressed }) => [
+                {
+                    backgroundColor: pressed ? Colors[colorScheme].background : bgItemColor,
+                }, styles.item]}
+            key={product.id}
+            onLongPress={() => {
+                setModal({ options: { product: product, type: 'add' }, showModal: true })
+            }}
+            onPress={() => _addProductToOrder(setOrderProducts, product)}>
+
+            <View style={styles.itemHeader}>
+                <Text style={[styles.itemName, { color: nameColor }]}>{product.name_product}</Text>
+                {
+                    product_count &&
+                    <Text style={styles.itemCount}>{product_count}</Text>
+                }
+
+            </View>
+            <View style={styles.itemBody}>
+                <View style={styles.itemImage}>
                     {
-                        product_count &&
-                        <Text style={styles.itemCount}>{product_count}</Text>
+                        product.image_path &&
+                        <Image resizeMode='contain' style={{ width: '100%', height: '100%' }} source={{ uri: image_url }} />
                     }
-
                 </View>
-                <View style={styles.itemBody}>
-                    <View style={styles.itemImage}>
-                        {
-                            product.image_path &&
-                            <Image resizeMode='contain' style={{ width: '100%', height: '100%' }} source={{ uri: image_url }} />
-                        }
+                <View>
+
+                    <View style={{ margin: 4 }}>
+                        <Text style={{ fontSize: 8, color: Colors.gray }}>estoque</Text>
+                        <Text style={{ color: Colors.gray, textAlign: 'right' }}>{JSON.stringify(stockValue)}</Text>
                     </View>
-                    <View>
-
-                        <View style={{ margin: 4 }}>
-                            <Text style={{ fontSize: 8, color: Colors.gray }}>estoque</Text>
-                            <Text style={{ color: Colors.gray, textAlign: 'right' }}>{JSON.stringify(stockValue)}</Text>
-                        </View>
-                        <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
-                            R$ {product_price}
-                        </Text>
-                    </View>
-
-
+                    <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
+                        R$ {product_price}
+                    </Text>
                 </View>
-            </TouchableOpacity>
-        </>
+
+
+            </View>
+        </Pressable >
     )
 }
 
