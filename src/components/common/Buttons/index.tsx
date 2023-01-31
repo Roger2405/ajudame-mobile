@@ -3,13 +3,13 @@
 import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactNode } from 'react';
-import { View, Text, TouchableOpacity, Button, TouchableOpacityProps, Pressable, StyleProp, ViewStyle } from 'react-native';
+import { View, Text, PressableProps, Pressable, StyleProp, ViewStyle } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 
 import { styles } from './styles';
 
-interface GenericButtonProps extends TouchableOpacityProps {
+interface GenericButtonProps extends PressableProps {
     title?: string
     color: string
     icon?: ReactNode;
@@ -22,7 +22,7 @@ interface ButtonProps extends GenericButtonProps {
 
 function RoundedButton({ title, color, onPress, icon, buttonStyle, disabled }: ButtonProps) {
     return (
-        <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.button, styles[buttonStyle], (disabled && styles.disabled), { backgroundColor: color }]}>
+        <Pressable disabled={disabled} onPress={onPress} style={[styles.button, styles[buttonStyle], (disabled && styles.disabled), { backgroundColor: color }]}>
             <Text style={[styles.text]}>
                 {title}
             </Text>
@@ -30,7 +30,7 @@ function RoundedButton({ title, color, onPress, icon, buttonStyle, disabled }: B
                 icon &&
                 icon
             }
-        </TouchableOpacity >
+        </Pressable >
         // <Pressable onPress={onPress} disabled={disabled} style={[styles.button, styles[buttonStyle], (disabled && styles.disabled), { backgroundColor: color }]}><Text>{title}</Text></Pressable>
     )
 }
@@ -51,22 +51,22 @@ export function BackButton() {
         <RoundedButton color={Colors.gray} buttonStyle='left' title="Voltar" onPress={() => navigation.goBack()} icon={<FontAwesome5 size={32} name={'angle-left'} color={Colors.white} />} />
     )
 }
-export function CancelButton({ onPress }: TouchableOpacityProps) {
+export function CancelButton({ onPress }: PressableProps) {
     return (
         <RoundedButton color={Colors.red} buttonStyle='left' title="Cancelar" onPress={onPress} icon={<Feather size={32} name={'x'} color={Colors.white} />} />
     )
 }
-export function ContinueButton({ onPress, disabled }: TouchableOpacityProps) {
+export function ContinueButton({ onPress, disabled }: PressableProps) {
     return (
         <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Continuar" onPress={onPress} icon={<FontAwesome5 size={32} name={'angle-right'} color={Colors.white} />} />
     )
 }
-export function ConfirmButton({ onPress, disabled }: TouchableOpacityProps) {
+export function ConfirmButton({ onPress, disabled }: PressableProps) {
     return (
         <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Confirmar" onPress={onPress} icon={<FontAwesome5 size={32} name={'check'} color={Colors.white} />} />
     )
 }
-export function DeleteButton({ onPress }: TouchableOpacityProps) {
+export function DeleteButton({ onPress }: PressableProps) {
     return (
         <Pressable style={{ backgroundColor: Colors.red, height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 4, aspectRatio: 1 / 1 }} onPress={onPress} >
             <FontAwesome5 size={24} name={'trash'} color={Colors.white} />
