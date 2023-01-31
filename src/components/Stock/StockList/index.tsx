@@ -1,6 +1,6 @@
 import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableHighlight, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableHighlight, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { ProductProps } from '../../../@types/product';
 import { StockProps } from '../../../@types/stock';
 import Colors from '../../../constants/Colors';
@@ -9,7 +9,7 @@ import useColorScheme from '../../../hooks/useColorScheme';
 import { listStyles } from './styles';
 
 interface ProductListProps {
-    products: StockProps[]
+    arrStock: StockProps[]
     editMode: boolean
     setNewStock: React.Dispatch<React.SetStateAction<Map<number, number>>>
     newStock: Map<number, number>
@@ -23,21 +23,28 @@ interface ProductListProps {
     }>>
     // setStockModalId: React.Dispatch<React.SetStateAction<number>>
 }
-export function StockList({ products, editMode, setNewStock, newStock, setModal }: ProductListProps) {
+export function StockList({ arrStock, editMode, setNewStock, newStock, setModal }: ProductListProps) {
     return (
         <View style={[listStyles.container]}>
-            <Text style={[listStyles.title, { color: Colors.gray }]}>{products[0].type_product}</Text>
-            <FlatList
-                data={products}
-                renderItem={(product) => <StockListItem setModal={setModal} product={product.item} newStock={newStock} setNewStock={setNewStock} editMode={editMode} />}
+            <Text style={[listStyles.title, { color: Colors.gray }]}>{arrStock[0].type_product}</Text>
+            {/* <FlatList
+                data={arrStock}
+                renderItem={({ item }) => <StockListItem setModal={setModal} stock={item} newStock={newStock} setNewStock={setNewStock} editMode={editMode} />}
                 bounces
-            />
+            /> */}
+            <ScrollView>
+                {
+                    arrStock?.map(item => {
+                        return <StockListItem key={item.id_product} setModal={setModal} stock={item} newStock={newStock} setNewStock={setNewStock} editMode={editMode} />
+                    })
+                }
+            </ScrollView>
         </View>
     )
 }
 
 interface StockListItemProps {
-    product: StockProps
+    stock: StockProps
     editMode: boolean
     setNewStock: React.Dispatch<React.SetStateAction<Map<number, number>>>
     newStock: Map<number, number>
@@ -50,32 +57,33 @@ interface StockListItemProps {
         };
     }>>
 }
-function StockListItem({ product, editMode, setNewStock, newStock, setModal }: StockListItemProps) {
+function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: StockListItemProps) {
     const colorScheme = useColorScheme();
     const iconColor = Colors[colorScheme].itemColor;
 
     function updateStock(newValue: number) {
-        if (newValue == product.quantity || newValue == null)
+        if (newValue == stock.quantity || newValue == null)
             setNewStock((oldMap) => {
-                oldMap.delete(product.id)
+                oldMap.delete(stock.id_product)
                 return new Map(oldMap)
             })
         else if (newValue >= 0) {
-            setNewStock((oldMap) => new Map(oldMap?.set(product.id, (newValue || 0))))
+            console.log(stock.id_product)
+            setNewStock((oldMap) => new Map(oldMap?.set(stock.id_product, (newValue || 0))))
         }
     }
 
-    const stockValueInState = newStock.get(product.id);
+    const stockValueInState = newStock.get(stock.id_product);
     const defaultItemBg: string = Colors[colorScheme].itemColor;
     var bgColor = defaultItemBg;
 
     if (stockValueInState !== undefined) {
-        if (stockValueInState == product.quantity)
+        if (stockValueInState == stock.quantity)
             bgColor = defaultItemBg;
-        if (stockValueInState > product.quantity)
+        if (stockValueInState > stock.quantity)
             bgColor = Colors.lightPrimary
 
-        if (stockValueInState < product.quantity)
+        if (stockValueInState < stock.quantity)
             bgColor = Colors.lightGray
     }
     else
@@ -85,7 +93,7 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
         <View style={[itemStyles.item, { backgroundColor: bgColor }]}>
 
             <Text style={itemStyles.name}>
-                {product.name_product}
+                {stock.name_product}
             </Text>
             {editMode ?
                 <View style={{ flexDirection: 'row', }} >
@@ -94,20 +102,20 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                             stockValueInState !== undefined &&
                             <Text
                                 style={[itemStyles.diff, { color: Colors[colorScheme].itemColor }]}
-                            >{(stockValueInState) - product.quantity}</Text>
+                            >{(stockValueInState) - stock.quantity}</Text>
                         }
 
                         <TouchableOpacity
                             onLongPress={() => {
-                                setModal({ showModal: true, options: { productId: product.id, type: 'sub', initialStock: product.quantity } })
+                                setModal({ showModal: true, options: { productId: stock.id_product, type: 'sub', initialStock: stock.quantity } })
                             }}
                             onPress={() => {
-                                var newStockValue = product.quantity - 1
+                                var newStockValue = stock.quantity - 1
                                 if (stockValueInState != null)
                                     newStockValue = stockValueInState - 1;
                                 updateStock(newStockValue)
                             }}
-                            disabled={stockValueInState ? stockValueInState == 0 : product.quantity == 0}
+                            disabled={stockValueInState ? stockValueInState == 0 : stock.quantity == 0}
                             style={[itemStyles.subButton, itemStyles.unitButton]}>
                             <FontAwesome5 name='minus' color={iconColor} />
                         </TouchableOpacity>
@@ -117,23 +125,23 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                             cursorColor={Colors.primary}
                             keyboardType='number-pad'
                             style={[itemStyles.stock, { backgroundColor: Colors[colorScheme].background }]}
-                            defaultValue={product.quantity.toString()}
+                            defaultValue={stock.quantity.toString()}
                             onChangeText={(e) => {
                                 const newValue = parseInt(e) || 0
                                 updateStock(newValue)
                             }}
 
-                            value={newStock.get(product.id)?.toString()}
+                            value={newStock.get(stock.id_product)?.toString()}
 
                         />
 
                         <TouchableOpacity
                             onLongPress={() => {
-                                setModal({ showModal: true, options: { productId: product.id, type: 'add', initialStock: product.quantity } })
+                                setModal({ showModal: true, options: { productId: stock.id_product, type: 'add', initialStock: stock.quantity } })
 
                             }}
                             onPress={() => {
-                                var newStockValue = product.quantity + 1
+                                var newStockValue = stock.quantity + 1
                                 if (stockValueInState != null)
                                     newStockValue = stockValueInState + 1;
                                 updateStock(newStockValue)
@@ -146,7 +154,7 @@ function StockListItem({ product, editMode, setNewStock, newStock, setModal }: S
                     </View>
                 </View>
                 :
-                <Text style={[itemStyles.stock]}>{stockValueInState || product.quantity}</Text>
+                <Text style={[itemStyles.stock]}>{stockValueInState || stock.quantity}</Text>
             }
         </View >
     )

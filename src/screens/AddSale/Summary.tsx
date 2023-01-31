@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Switch } from 'react-native';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 import { OrderProductProps } from '../../@types/orderProduct';
 import OrderProducts from '../../components/AddSales/OrderProducts';
@@ -13,7 +13,8 @@ import { useProducts } from '../../contexts/products';
 import { useRecentSales } from '../../contexts/sales';
 import { useStock } from '../../contexts/stock';
 import useColorScheme from '../../hooks/useColorScheme';
-import { updateSalesOnDB } from '../../services/sales';
+import { addSale } from '../../services/sales';
+import { discountStockOfSaleItems } from '../../services/stock';
 
 
 
@@ -25,22 +26,28 @@ export function Summary() {
     const { updateRecentSalesInContext } = useRecentSales();
     const { updateStockInContext } = useStock();
 
-    const discountStock = true;
+    const [discountStock, setDiscountStock] = useState<boolean>(true);
+
 
     function handleConfirmUpdateSales() {
         setIsLoading(true)
-        updateSalesOnDB(orderProducts, discountStock)
+        addSale(orderProducts)
             .then(res => {
-                console.log(res)
-                updateStockInContext();
                 updateRecentSalesInContext();
+                setOrderProducts([])
+                navigation.navigate('Home')
+                if (discountStock) {
+                    discountStockOfSaleItems()
+                        .then(() => {
+                            updateStockInContext()
+                        })
+                        .catch(alert)
+                }
             })
             .catch(alert)
             .finally(() => setIsLoading(false))
 
 
-        setOrderProducts([])
-        navigation.navigate('Home')
     }
 
     return (
@@ -52,6 +59,17 @@ export function Summary() {
                     :
                     <View style={{ flex: 1 }}>
                         <Text style={{ textAlign: 'center', color: Colors.gray, fontSize: 12 }}>Você ainda pode voltar e editar a venda!</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text>Descontar estoque</Text>
+                            <Switch
+                                trackColor={{ false: Colors.gray, true: Colors.primary }}
+                                thumbColor={Colors[colorScheme].itemColor}
+                                // style={{ width: 32 }}
+                                ios_backgroundColor={Colors.gray}
+                                onValueChange={() => setDiscountStock(!discountStock)}
+                                value={discountStock}
+                            />
+                        </View>
                         <View
                             style={{ flexBasis: '60%' }}
                         >

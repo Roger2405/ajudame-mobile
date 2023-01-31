@@ -56,3 +56,20 @@ export async function updateQuantitiesOnDB(newStock: Map<number, number>) {
     })
 
 }
+export async function discountStockOfSaleItems() {
+    const ID_USER = await getUserID();
+
+    await new Promise((resolve, reject) => {
+        api.post(`/${ID_USER}/stock/discount`)
+            .then(res => {
+                console.log(res.data)
+                if (res.data.success) {
+                    resolve(res.data.msg)
+                }
+                else {
+                    reject(res.data.msg)
+                }
+            })
+            .catch(reject)
+    })
+}

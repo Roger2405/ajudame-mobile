@@ -35,17 +35,14 @@ export async function getSalesResume() {
         })
     return salesResume
 }
-export async function updateSalesOnDB(orderProducts: OrderProductProps[], discountStock: boolean) {
+export async function addSale(orderProducts: OrderProductProps[]) {
     const ID_USER = await getUserID();
 
     const strOrderProducts = JSON.stringify(Array.from(orderProducts));
-    discountStock = true;
 
     return new Promise((resolve, reject) => {
-        // setTimeout(() => {
         api.post(`${ID_USER}/sales/last`, {
-            orderProducts: strOrderProducts,
-            discountStock
+            orderProducts: strOrderProducts
         })
             .then(res => {
                 if (res.data.success)
@@ -55,9 +52,9 @@ export async function updateSalesOnDB(orderProducts: OrderProductProps[], discou
                 }
             })
             .catch(err => {
-                reject('Ocorreu um erro no servidor!')
+                console.log(err)
+                reject(err)
             })
-        // }, 2000)
     })
 };
 

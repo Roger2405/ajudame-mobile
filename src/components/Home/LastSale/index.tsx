@@ -27,9 +27,12 @@ export function LastSale({ data, handleDeleteSale }: Props) {
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>
                     Última venda:
                 </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', marginLeft: 'auto' }}>
-                    <Feather name='clock' size={16} color={Colors.lightGray} />
-                    <Text style={[styles.time, { color: Colors.lightGray }]}>{(data.header.time)}</Text>
+                <View style={{ alignItems: 'flex-end' }}>
+                    <Text style={{ lineHeight: 16 }}>{!!data.header.discounted_stock ? 'estoque descontado' : 'nops'}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                        <Feather name='clock' size={16} color={Colors.lightGray} />
+                        <Text style={[styles.time, { color: Colors.lightGray }]}>{(data.header.time)}</Text>
+                    </View>
                 </View>
                 <DeleteButton onPress={() => {
                     setShowConfirmationModal(true)

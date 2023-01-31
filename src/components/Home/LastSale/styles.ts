@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
         height: 32, paddingHorizontal: 4, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'
     },
     time: {
-        marginLeft: 4, marginRight: 16, fontSize: 16, fontWeight: '900'
+        marginLeft: 4, fontSize: 16
     },
     item: {
         flexDirection: 'row',

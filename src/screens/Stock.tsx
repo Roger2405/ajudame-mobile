@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Modal, StyleSheet, ActivityIndicator, Text, TextInput, View } from 'react-native';
+import { FlatList, Modal, StyleSheet, ActivityIndicator, Text, TextInput, View, ScrollView } from 'react-native';
 import { ProductProps } from '../@types/product';
 import { ButtonsContainer, CancelButton, ConfirmButton, SingleButton } from '../components/common/Buttons';
 import ConfirmationModal from '../components/common/ConfirmationModal';
@@ -39,7 +39,6 @@ export default function Stock() {
       .finally(() => setLoading(false))
   }
 
-
   return (
     <View style={[styles.container]}>
       {
@@ -53,7 +52,7 @@ export default function Stock() {
             <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
 
             <View style={{ flex: 1, width: '100%', flexBasis: '100%' }}>
-              <FlatList
+              {/* <FlatList
                 style={{
                   width: '100%',
                   flex: 1,
@@ -63,8 +62,17 @@ export default function Stock() {
                 data={stockGroupedByType}
 
                 contentContainerStyle={{ paddingBottom: 120 }}
-                renderItem={productsByType => <StockList setModal={setModal} setNewStock={setNewStock} newStock={newStock} products={productsByType.item} editMode={editMode} />}
-              />
+                renderItem={productsByType => <StockList setModal={setModal} setNewStock={setNewStock} newStock={newStock} arrStock={productsByType.item} editMode={editMode} />}
+              /> */}
+              <ScrollView
+                contentContainerStyle={{ paddingBottom: 120 }}
+              >
+                {
+                  stockGroupedByType?.map(type => {
+                    return <StockList key={type[0].type_product} setModal={setModal} setNewStock={setNewStock} newStock={newStock} arrStock={type} editMode={editMode} />
+                  })
+                }
+              </ScrollView>
             </View >
 
             {showConfirmationModal &&

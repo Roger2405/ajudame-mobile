@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, Text, FlatList, Pressable, TouchableOpacity, ScrollView } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
@@ -23,7 +23,6 @@ interface Props {
 }
 
 export function ProductsGrid({ productsArr, setModal }: Props) {
-
     const colorScheme = useColorScheme();
     return (
         <View>
@@ -67,6 +66,7 @@ function ProductCell({ product, setModal }: ItemProps) {
 
     const colorScheme = useColorScheme();
 
+
     function isInTheOrder() {
         return orderProducts.some(item => item.id_product == product.id)
     }
@@ -93,13 +93,14 @@ function ProductCell({ product, setModal }: ItemProps) {
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
     var objectStockFromContext = stock.find(item => item.id_product == product.id);
     var stockValue = objectStockFromContext?.quantity;
-
+    // const hideProduct = hideNoStockProducts && stockValue == 0;
     return (
 
         <Pressable
             style={({ pressed }) => [
                 {
                     backgroundColor: pressed ? Colors[colorScheme].background : bgItemColor,
+                    // display: hideProduct ? 'none' : 'flex'
                 }, styles.item]}
             key={product.id}
             onLongPress={() => {
