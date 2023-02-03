@@ -1,5 +1,5 @@
 
-import { Feather } from '@expo/vector-icons';
+import { EvilIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import { LastSaleProductProps, SaleProductProps } from '../../../@types/orderProduct';
@@ -27,11 +27,11 @@ export function LastSale({ data, handleDeleteSale }: Props) {
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>
                     Última venda:
                 </Text>
-                <View style={{ alignItems: 'flex-end' }}>
-                    <Text style={{ lineHeight: 16 }}>{!!data.header.discounted_stock ? 'estoque descontado' : 'nops'}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <View style={styles.headerInfo}>
+
+                    <View style={styles.timeContainer}>
                         <Feather name='clock' size={16} color={Colors.lightGray} />
-                        <Text style={[styles.time, { color: Colors.lightGray }]}>{(data.header.time)}</Text>
+                        <Text style={styles.time}>{(data.header.time)}</Text>
                     </View>
                 </View>
                 <DeleteButton onPress={() => {
@@ -44,6 +44,25 @@ export function LastSale({ data, handleDeleteSale }: Props) {
                         return <LastSalesListItem key={sale.id} item={sale} />
                     })
                 }
+            </View>
+            <View style={styles.footer}>
+                {
+                    data.header.discounted_stock ?
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Feather name='check' size={32} color={Colors.lightPrimary} />
+                            <Text style={[styles.discountedStock, { color: Colors.primary }]}>ESTOQUE{'\n'}ATERADO</Text>
+                        </View>
+                        :
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Feather name='x' size={32} color={Colors.lightGray} />
+                            <Text style={[styles.discountedStock, { color: Colors.gray }]}>ESTOQUE{'\n'}NÃO ATERADO</Text>
+                        </View>
+
+                }
+                <View style={styles.subtotalContainer}>
+                    <Text style={{ textTransform: 'uppercase' }}>Total:</Text>
+                    <Text style={styles.subtotal}>R$ {data.header.subtotal.toFixed(2).replace('.', ',')}</Text>
+                </View>
             </View>
             <ConfirmationModal showConfirmationModal={showConfirmationModal} setShowConfirmationModal={setShowConfirmationModal} onConfirm={() => {
                 handleDeleteSale()

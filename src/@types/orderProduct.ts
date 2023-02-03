@@ -10,6 +10,7 @@ export type LastSaleProductProps = {
     header: {
         id_sale: number,
         time: string,
+        subtotal: number,
         discounted_stock: boolean
     }
     products: SaleProductProps[]
