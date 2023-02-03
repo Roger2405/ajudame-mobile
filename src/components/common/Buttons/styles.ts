@@ -6,13 +6,9 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'center',
-        // paddingTop: 32,
+        paddingTop: 32,
         paddingHorizontal: 8,
-        // height: 100,
-        // position: 'absolute',
-        // bottom: 0,
         marginTop: 'auto'
-        // paddingHorizontal: 16
     },
     button: {
         height: 64,

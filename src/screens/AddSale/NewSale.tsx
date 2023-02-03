@@ -1,16 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Button, ScrollView, ActivityIndicator, Switch } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { ProductsGrid } from '../../components/AddSales/ProductsGrid';
 import Colors from '../../constants/Colors';
-import { OrderProductProps } from '../../@types/orderProduct';
 import { ProductProps } from '../../@types/product';
 import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import useColorScheme from '../../hooks/useColorScheme';
-import { getGroupedProducts } from '../../services/products';
 import OrderCard from '../../components/AddSales/OrderCard';
 import { useProducts } from '../../contexts/products';
 import OrderProducts from '../../components/AddSales/OrderProducts';

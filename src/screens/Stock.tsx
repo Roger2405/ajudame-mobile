@@ -7,8 +7,6 @@ import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { ModalEditStock } from '../components/Stock/StockModal';
 import { StockList } from '../components/Stock/StockList';
 import Colors from '../constants/Colors';
-import { useProducts } from '../contexts/products';
-import { getGroupedProducts } from '../services/products';
 import { updateQuantitiesOnDB } from '../services/stock';
 import { useStock } from '../contexts/stock';
 
@@ -99,7 +97,9 @@ export default function Stock() {
                 }} />
               </ButtonsContainer>
               :
-              <SingleButton color={Colors.primary} title='Editar Estoque' onPress={() => setEditMode(true)} />
+              <ButtonsContainer>
+                <SingleButton color={Colors.primary} title='Editar Estoque' onPress={() => setEditMode(true)} />
+              </ButtonsContainer>
             }
 
           </View>

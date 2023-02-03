@@ -11,30 +11,34 @@ export async function getProducts() {
     return response.data as ProductProps[];
 }
 
-export async function getGroupedProducts() {
-    const products = await getProducts();
+// export async function getGroupedProducts() {
+//     const products = await getProducts();
 
-    const groupedProducts = groupProducts(products);
-    return groupedProducts;
-}
-
-
-function groupProducts(arrProducts: ProductProps[]) {
-    let arrayProductsGrouped: ProductProps[][] = [];
-
+//     const groupedProducts = groupProducts(products);
+//     return groupedProducts;
+// }
+export function getProductTypes(arrProducts: ProductProps[]) {
     let productsTypes: string[] = [];
     arrProducts.forEach(product => {
         if (!productsTypes.includes(product.type_product)) {
             productsTypes.push(product.type_product);
         }
     });
-    for (var i = 0; i < productsTypes.length; i++) {
-        let arr = arrProducts.filter(product => product.type_product === productsTypes[i]);
-        arrayProductsGrouped.push(arr);
 
-        if (i > 50) {//watch dog
-            break;
-        }
-    }
-    return arrayProductsGrouped;
+    return productsTypes;
 }
+
+// function groupProducts(arrProducts: ProductProps[]) {
+//     let arrayProductsGrouped: ProductProps[][] = [];
+
+
+//     for (var i = 0; i < productsTypes.length; i++) {
+//         let arr = arrProducts.filter(product => product.type_product === productsTypes[i]);
+//         arrayProductsGrouped.push(arr);
+
+//         if (i > 50) {//watch dog
+//             break;
+//         }
+//     }
+//     return arrayProductsGrouped;
+// }

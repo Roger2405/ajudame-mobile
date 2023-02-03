@@ -54,7 +54,7 @@ export function SingleButton({ title, color, onPress, icon }: GenericButtonProps
 export function BackButton() {
     const navigation = useNavigation();
     return (
-        <RoundedButton color={Colors.gray} buttonStyle='left' title="Voltar" onPress={() => navigation.goBack()} icon={<FontAwesome5 size={32} name={'angle-left'} color={Colors.white} />} />
+        <RoundedButton color={Colors.gray} buttonStyle='left' title="Voltar" onPress={() => navigation.goBack()} icon={<Feather size={32} name={'chevron-left'} color={Colors.white} />} />
     )
 }
 export function CancelButton({ onPress }: PressableProps) {
@@ -64,18 +64,18 @@ export function CancelButton({ onPress }: PressableProps) {
 }
 export function ContinueButton({ onPress, disabled }: PressableProps) {
     return (
-        <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Continuar" onPress={onPress} icon={<FontAwesome5 size={32} name={'angle-right'} color={Colors.white} />} />
+        <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Continuar" onPress={onPress} icon={<Feather size={32} name={'chevron-right'} color={Colors.white} />} />
     )
 }
 export function ConfirmButton({ onPress, disabled }: PressableProps) {
     return (
-        <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Confirmar" onPress={onPress} icon={<FontAwesome5 size={32} name={'check'} color={Colors.white} />} />
+        <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Confirmar" onPress={onPress} icon={<Feather size={32} name={'check'} color={Colors.white} />} />
     )
 }
 export function DeleteButton({ onPress }: PressableProps) {
     return (
         <Pressable style={{ backgroundColor: Colors.red, height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 4, aspectRatio: 1 / 1 }} onPress={onPress} >
-            <FontAwesome5 size={24} name={'trash'} color={Colors.white} />
+            <Feather size={24} name={'trash'} color={Colors.white} />
         </Pressable>
     )
 }
