@@ -97,9 +97,10 @@ export default function Home() {
                     }
                     {
                       dataPieChart ?
-                        <PieChartComponent data={dataPieChart} />
-                        // <PieChartKitComponent data={dataPieChart} />
-                        // <Pie
+                        dataPieChart.length > 1 ?
+                          <PieChartComponent data={dataPieChart} />
+                          :
+                          <></>
                         :
                         <Text style={{ textAlign: 'center', padding: 8, color: Colors.red, backgroundColor: Colors.lightRed, borderRadius: 8, marginVertical: 8 }}>Não foi possível gerar o gráfico</Text>
                     }
