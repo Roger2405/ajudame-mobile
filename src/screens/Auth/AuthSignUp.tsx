@@ -82,7 +82,7 @@ export function AuthSignUp() {
                 <Text style={[styles.title, { color: Colors[colorScheme].textContrast }]}>Cadastro</Text>
 
                 <View>
-                    <InputField keyboardType='email-address' label='Email' caretHidden={false} placeholder='exemplo@email.com' onChangeText={setEmail} value={email} icon={
+                    <InputField keyboardType='email-address' autoCapitalize='none' label='Email' caretHidden={false} placeholder='exemplo@email.com' onChangeText={setEmail} value={email} icon={
                         <Foundation style={styles.icon} name={'mail'} size={20} />} />
                     <PasswordInput placeholder='Crie uma senha' label='Senha' onChangeText={setPassword} value={password} />
                     <PasswordInput placeholder='Confirme sua senha' label='Confirmar senha' onChangeText={setConfirmPassword} value={confirmPassword} />

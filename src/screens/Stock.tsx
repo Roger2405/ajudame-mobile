@@ -41,59 +41,55 @@ export default function Stock() {
 
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+      <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
+      <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
+      {showConfirmationModal &&
+        <ConfirmationModal
+          onConfirm={() => {
+            confirmChanges()
+            setShowConfirmationModal(false)
+            setEditMode(false)
+          }}
+          setShowConfirmationModal={setShowConfirmationModal}
+          showConfirmationModal={showConfirmationModal} />}
       {
-
-        loading ?
-          <ActivityIndicator size={32} />
-          :
-          <View style={{ width: '100%' }}>
-
-            {/* <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} /> */}
-            <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
-
-            {/* <View style={{ flex: 1, width: '100%', flexBasis: '100%' }}> */}
-            <ScrollView
-              style={{ flexBasis: '100%' }}
-              contentContainerStyle={{ paddingBottom: 120 }}
-            >
-              {
-                stockGroupedByType?.map(type => {
-                  return <StockList key={type[0].type_product} setModal={setModal} setNewStock={setNewStock} newStock={newStock} arrStock={type} editMode={editMode} />
-                })
-              }
-            </ScrollView>
-            {/* </View > */}
-
-            {showConfirmationModal &&
-              <ConfirmationModal
-                onConfirm={() => {
-                  confirmChanges()
-                  setShowConfirmationModal(false)
-                  setEditMode(false)
-                }}
-                setShowConfirmationModal={setShowConfirmationModal}
-                showConfirmationModal={showConfirmationModal} />}
-
-
-            {editMode ? //definição de botões
-              <ButtonsContainer>
-                <CancelButton onPress={() => {
-                  setNewStock(oldMap => {
-                    return new Map()
-                  });
-                  setEditMode(false);
-                }} />
-                <ConfirmButton onPress={() => {
-                  setShowConfirmationModal(true)
-                }} />
-              </ButtonsContainer>
+        stockGroupedByType?.length
+          ?
+          <>
+            {loading ?
+              <ActivityIndicator size={32} />
               :
-              <ButtonsContainer>
-                <SingleButton color={Colors.primary} title='Editar Estoque' onPress={() => setEditMode(true)} />
-              </ButtonsContainer>
+              <>
+                <ScrollView style={{ flexBasis: '100%' }} contentContainerStyle={{ paddingBottom: 120 }}>
+                  {stockGroupedByType.map(type => {
+                    return <StockList key={type[0].type_product} setModal={setModal} setNewStock={setNewStock} newStock={newStock} arrStock={type} editMode={editMode} />
+                  })}
+                </ScrollView>
+
+                {editMode ? //definição de botões
+                  <ButtonsContainer>
+                    <CancelButton onPress={() => {
+                      setNewStock(() => {
+                        return new Map()
+                      });
+                      setEditMode(false);
+                    }} />
+                    <ConfirmButton onPress={() => {
+                      setShowConfirmationModal(true)
+                    }} />
+                  </ButtonsContainer>
+                  :
+                  <ButtonsContainer>
+                    <SingleButton color={Colors.primary} title='Editar Estoque' onPress={() => setEditMode(true)} />
+                  </ButtonsContainer>}
+
+              </>
             }
 
-          </View>
+
+          </>
+          :
+          <Text style={{ textAlign: 'center' }}>Adicione um produto {'\n'}para controlar o seu estoque!</Text>
       }
     </View >
 

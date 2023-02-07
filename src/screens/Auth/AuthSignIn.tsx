@@ -60,7 +60,7 @@ export function AuthSignIn() {
                 <Text style={[styles.title, { color: Colors[colorScheme].textContrast }]}>Login</Text>
 
                 <View>
-                    <InputField keyboardType='email-address' caretHidden={false} label='Email' placeholder='exemplo@email.com' onChangeText={setEmail} value={email} icon={
+                    <InputField keyboardType='email-address' autoCapitalize='none' caretHidden={false} label='Email' placeholder='exemplo@email.com' onChangeText={setEmail} value={email} icon={
                         <Foundation style={styles.icon} name={'mail'} size={20} />} />
                     <PasswordInput placeholder='Sua senha' label='Senha' onChangeText={setPassword} value={password} />
 

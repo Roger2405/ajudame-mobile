@@ -21,17 +21,21 @@ export default function Products() {
   }, [])
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
-      {/* <View> */}
+      {
+        productsGroupedByType.length
+        ?
         <FlatList
-          style={{
-            flexBasis: '100%',
-            flex: 1,
-          }}
-          data={productsGroupedByType}
-          contentContainerStyle={{ paddingBottom: 120 }}
-          renderItem={productsByType => <ProductList products={productsByType.item} />}
+        style={{
+          flexBasis: '100%',
+          flex: 1,
+        }}
+        data={productsGroupedByType}
+        contentContainerStyle={{ paddingBottom: 120 }}
+        renderItem={productsByType => <ProductList products={productsByType.item} />}
         />
-      {/* </View> */}
+        :
+        <Text>Não foi encontrado nenhum produto!</Text>
+      }
       <ButtonsContainer>
         <SingleButton onPress={() => navigation.navigate('ProductForm', {})} color={Colors.primary} title='Adicionar Produto' icon={<Feather name='plus' size={24} color={Colors.white} />} />
       </ButtonsContainer>
