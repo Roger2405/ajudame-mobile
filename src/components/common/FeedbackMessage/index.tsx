@@ -1,6 +1,6 @@
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Animated, { Layout, FadeIn, FadeOut } from 'react-native-reanimated'
 import Colors from '../../../constants/Colors';
@@ -20,12 +20,14 @@ interface FeedbackMessageProps {
 
 export function FeedbackMessage({ feedbackMessage, setFeedbackMessage }: FeedbackMessageProps) {
 
-    setFeedbackMessage(feedbackMessage);
-    if (feedbackMessage.msg) {
-        setTimeout(() => {
-            setFeedbackMessage({} as { type: 'error' | 'info', msg: string });
-        }, 5000);
-    }
+    useEffect(() => {
+        setFeedbackMessage(feedbackMessage);
+        if (feedbackMessage.msg) {
+            setTimeout(() => {
+                setFeedbackMessage({} as { type: 'error' | 'info', msg: string });
+            }, 5000);
+        }
+    }, [feedbackMessage])
 
     return (
         <View style={{ width: '100%' }}>
