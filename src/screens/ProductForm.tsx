@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { ButtonsContainer, CancelButton, ConfirmButton, DeleteButton } from '../components/common/Buttons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { addProduct, deleteProduct, getProduct } from '../services/products';
+import { addProduct, deleteProduct, getProduct, updateProduct } from '../services/products';
 import { useProducts } from '../contexts/products';
 import { useStock } from '../contexts/stock';
 import { RootStackParamList } from '../../types';
@@ -20,17 +20,15 @@ import { FeedbackMessage } from '../components/common/FeedbackMessage';
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductForm'>;
 
 type InputValuesProps = {
-    name: string, type: string, mainPrice: number, secondaryPrice: number | undefined, cost: number | undefined
+    name: string, type: string, mainPrice: number, secondaryPrice: number, cost: number, imagePath?: string | null
 }
 export default function ProductForm({ route }: Props) {
     const id_product = route.params.id;
-    const [initialValues, setInitialValues] = useState<ProductProps>
-        ({ id: id_product || 0, name_product: '', type_product: '', main_price: 0, secondary_price: 0 || undefined, image_path: '' });
     const [inputValues, setInputValues] = useState<InputValuesProps>({} as InputValuesProps)
 
 
     const colorScheme = useColorScheme();
-    const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>();
+    // const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>();
     const navigation = useNavigation();
     const [showModalConfirmation, setShowModalConfirmation] = useState(false);
 
@@ -44,9 +42,10 @@ export default function ProductForm({ route }: Props) {
             getProduct(id_product)
                 .then(data => {
                     const { id, name_product, type_product, main_price, secondary_price, image_path } = data;
+                    const fullImagePath = `${api.defaults.baseURL}${image_path}`;
                     setInputValues(() => {
                         return {
-                            name: name_product, type: type_product, mainPrice: main_price, secondaryPrice: secondary_price || undefined, cost: undefined
+                            name: name_product, type: type_product, mainPrice: main_price, secondaryPrice: secondary_price || 0, cost: 0, imagePath: fullImagePath
                         }
                     })
 
@@ -65,12 +64,10 @@ export default function ProductForm({ route }: Props) {
 
 
     async function handleSubmitForm() {
-        const { name, type, mainPrice, secondaryPrice, cost } = inputValues;
+        const { name, type, mainPrice, secondaryPrice, cost, imagePath } = inputValues;
 
         if (!!name && !!type && !!mainPrice) {
-            if (id_product) {
 
-            }
             let formData = new FormData();
 
             formData.append('name', name)
@@ -79,8 +76,9 @@ export default function ProductForm({ route }: Props) {
             formData.append('secondaryPrice', (secondaryPrice || 0).toString())
             formData.append('cost', (cost || 0).toString())
 
-            if (photo) {
-                let localUri = photo.uri;
+            console.log(mainPrice)
+            if (imagePath) {
+                let localUri = imagePath;
                 let filename = localUri.split('/').pop();
 
                 if (filename) {
@@ -90,17 +88,18 @@ export default function ProductForm({ route }: Props) {
                     formData.append('image', { uri: localUri, name: filename, type });
                 }
             }
-            addProduct(formData).then(res => {
-                if (res.success) {
-                    updateProductsInContext();
-                    updateStockInContext();
-                    navigation.navigate('Products')
+            const response = await (id_product ? updateProduct(formData, id_product) : addProduct(formData))
 
-                }
-            })
-        }
-        else {
-            setFeedbackMessage({ msg: 'Preencha os campos obrigatórios', type: 'error' })
+            if (response.success) {
+                updateProductsInContext();
+                updateStockInContext();
+                navigation.navigate('Products')
+
+            }
+            else {
+                setFeedbackMessage({ msg: 'Preencha os campos obrigatórios', type: 'error' })
+            }
+
         }
     }
 
@@ -115,7 +114,10 @@ export default function ProductForm({ route }: Props) {
         });
 
         if (!result.canceled) {
-            setPhoto(result.assets[0]);
+            // setPhoto(result.assets[0]);
+            const path = result.assets[0].uri;
+            if (path)
+                setInputValues(oldValues => { return { ...oldValues, imagePath: path } })
         }
     };
     function handleDeleteProduct() {
@@ -158,14 +160,13 @@ export default function ProductForm({ route }: Props) {
                     <View style={{ flex: 1, marginRight: 4 }}>
 
                         <View style={[styles.imageSquare]}>
-                            {photo?.uri ? <Image source={{ uri: photo.uri }} style={styles.image} />
-                                // : inputValues.image_path ?
-                                //     <Image source={{ uri: inputValues.image_path }} style={styles.image} />
-                                :
-                                <FontAwesome5 color={Colors.gray} name='image' size={128} />}
+                            {
+                                inputValues.imagePath ? <Image source={{ uri: inputValues.imagePath }} style={styles.image} />
+                                    :
+                                    <FontAwesome5 color={Colors.gray} name='image' size={128} />}
                         </View>
                         <View style={styles.buttons}>
-                            <DeleteButton onPress={() => { setPhoto(null) }} accessibilityLabel='Remover imagem do produto' />
+                            <DeleteButton onPress={() => { setInputValues(oldValues => { return { ...oldValues, imagePath: null } }) }} accessibilityLabel='Remover imagem do produto' />
                             <TouchableOpacity style={{ backgroundColor: Colors.primary, marginLeft: 4, borderRadius: 4, height: '100%', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }} onPress={handleChoosePhoto} >
                                 <Text style={{ textAlign: 'center', fontWeight: 'bold', textTransform: 'uppercase', color: Colors[colorScheme].textContrast }}>Escolher{'\n'}Imagem</Text>
                             </TouchableOpacity>

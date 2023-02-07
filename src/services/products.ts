@@ -31,8 +31,8 @@ export async function addProduct(data: {}) {
         }
     })
     return response.data;
-
 }
+
 export async function getProduct(id_product: number) {
     const ID_USER = await getUserID();
 
@@ -47,4 +47,18 @@ export async function deleteProduct(id_product: number) {
 
     const response = await api.delete(`/${ID_USER}/products/${id_product}`)
     return response;
-}   
+}
+export async function updateProduct(data: {}, id: number) {
+    const ID_USER = await getUserID();
+
+    //@ts-ignore
+    console.log(data.mainPrice)
+
+    const response = await api.put(`/${ID_USER}/products/${id}`, data, {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    return response.data;
+}
