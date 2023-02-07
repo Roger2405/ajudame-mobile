@@ -6,7 +6,7 @@ import { StockProps } from '../../../@types/stock';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 
-import { listStyles } from './styles';
+import { itemStyles, listStyles } from './styles';
 
 interface ProductListProps {
     arrStock: StockProps[]
@@ -26,12 +26,7 @@ interface ProductListProps {
 export function StockList({ arrStock, editMode, setNewStock, newStock, setModal }: ProductListProps) {
     return (
         <View style={[listStyles.container]}>
-            <Text style={[listStyles.title, { color: Colors.gray }]}>{arrStock[0].type_product}</Text>
-            {/* <FlatList
-                data={arrStock}
-                renderItem={({ item }) => <StockListItem setModal={setModal} stock={item} newStock={newStock} setNewStock={setNewStock} editMode={editMode} />}
-                bounces
-            /> */}
+            <Text style={[listStyles.title]}>{arrStock[0].type_product}</Text>
             <ScrollView>
                 {
                     arrStock?.map(item => {
@@ -159,10 +154,11 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
         </View >
     )
 }
-
+/*
 const itemStyles = StyleSheet.create({
     item: {
-        marginTop: 8,
+        marginTop: 4,
+        textAlignVertical: 'center',
         borderRadius: 4,
         flexDirection: "row",
         position: "relative",
@@ -211,3 +207,4 @@ const itemStyles = StyleSheet.create({
         backgroundColor: Colors.gray,
     }
 })
+*/

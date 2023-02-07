@@ -27,13 +27,6 @@ export function ProductsGrid({ productsArr, setModal }: Props) {
     return (
         <View>
             <Text style={{ fontWeight: '700', fontSize: 24, color: Colors[colorScheme].text }}>{productsArr[0].type_product}</Text>
-            {/* <FlatList
-                style={styles.grid}
-                horizontal
-                bounces
-                data={productsArr}
-                renderItem={product => <ProductCell setModal={setModal} key={product.item.name_product} product={product.item} />}
-            /> */}
             <ScrollView
                 horizontal
                 style={styles.grid}

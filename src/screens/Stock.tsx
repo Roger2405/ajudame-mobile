@@ -9,11 +9,13 @@ import { StockList } from '../components/Stock/StockList';
 import Colors from '../constants/Colors';
 import { updateQuantitiesOnDB } from '../services/stock';
 import { useStock } from '../contexts/stock';
+import useColorScheme from '../hooks/useColorScheme';
 
 
 export default function Stock() {
   // const [products, setProducts] = useState<ProductProps[][]>([]);
   const [editMode, setEditMode] = useState(false);
+  const colorScheme = useColorScheme();
 
   const [loading, setLoading] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -38,7 +40,7 @@ export default function Stock() {
   }
 
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       {
 
         loading ?
@@ -49,29 +51,18 @@ export default function Stock() {
             {/* <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} /> */}
             <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
 
-            <View style={{ flex: 1, width: '100%', flexBasis: '100%' }}>
-              {/* <FlatList
-                style={{
-                  width: '100%',
-                  flex: 1,
-                  flexBasis: '100%',
-
-                }}
-                data={stockGroupedByType}
-
-                contentContainerStyle={{ paddingBottom: 120 }}
-                renderItem={productsByType => <StockList setModal={setModal} setNewStock={setNewStock} newStock={newStock} arrStock={productsByType.item} editMode={editMode} />}
-              /> */}
-              <ScrollView
-                contentContainerStyle={{ paddingBottom: 120 }}
-              >
-                {
-                  stockGroupedByType?.map(type => {
-                    return <StockList key={type[0].type_product} setModal={setModal} setNewStock={setNewStock} newStock={newStock} arrStock={type} editMode={editMode} />
-                  })
-                }
-              </ScrollView>
-            </View >
+            {/* <View style={{ flex: 1, width: '100%', flexBasis: '100%' }}> */}
+            <ScrollView
+              style={{ flexBasis: '100%' }}
+              contentContainerStyle={{ paddingBottom: 120 }}
+            >
+              {
+                stockGroupedByType?.map(type => {
+                  return <StockList key={type[0].type_product} setModal={setModal} setNewStock={setNewStock} newStock={newStock} arrStock={type} editMode={editMode} />
+                })
+              }
+            </ScrollView>
+            {/* </View > */}
 
             {showConfirmationModal &&
               <ConfirmationModal

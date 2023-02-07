@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 import { OrderProductProps } from '../../../@types/orderProduct';
@@ -13,13 +13,24 @@ interface Props {
 
 export default function OrderProducts({ sales, editable, setOrderProducts }: Props) {
     return (
-        <FlatList
+        // <FlatList
+        //     style={styles.container}
+        //     contentContainerStyle={{ paddingBottom: 150 }}
+        //     data={sales}    //v´`--if (editable === true) && |for passado o hook para alterar o OrderProducts| -> será renderizado o <EditableItem />
+        //     renderItem={i => (editable && setOrderProducts) ? <EditableItem item={i.item} setOrderProducts={setOrderProducts} /> : <Item item={i.item} />}
+        //     keyExtractor={item => item.name_product}
+        // />
+        <ScrollView
             style={styles.container}
             contentContainerStyle={{ paddingBottom: 150 }}
-            data={sales}    //v´`--if (editable === true) && |for passado o hook para alterar o OrderProducts| -> será renderizado o <EditableItem />
-            renderItem={i => (editable && setOrderProducts) ? <EditableItem item={i.item} setOrderProducts={setOrderProducts} /> : <Item item={i.item} />}
-            keyExtractor={item => item.name_product}
-        />
+
+        >
+            {
+                sales.map(sale => {
+                    return (editable && setOrderProducts) ? <EditableItem key={sale.id_product} item={sale} setOrderProducts={setOrderProducts} /> : <Item key={sale.id_product} item={sale} />
+                })
+            }
+        </ScrollView>
     )
 }
 

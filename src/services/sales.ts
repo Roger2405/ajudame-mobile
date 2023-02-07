@@ -7,15 +7,6 @@ import getUserID from "./getUserID";
 export async function getRecentSales() {
     const ID_USER = await getUserID();
 
-    const today = new Date();
-    const day = today.getDate();
-    const month = today.getMonth();
-    const fullYear = today.getFullYear();
-
-    const formatedDay = day.toString().padStart(2, '0');
-    const formatedMonth = (month + 1).toString().padStart(2, '0');
-
-    const formatedDate = `${fullYear}-${formatedMonth}-${formatedDay}`;
     const response = await api.get(`/${ID_USER}/sales/recent`)
     const salesOfDay: SaleProductProps[] = response.data;
 
