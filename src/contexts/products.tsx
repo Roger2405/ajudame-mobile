@@ -8,6 +8,7 @@ interface ProductsContextData {
     productsGroupedByType: ProductProps[][],
     productTypes: string[],
     updateProductsInContext: () => void,
+    isLoading: boolean
 }
 const ProductsContext = createContext<ProductsContextData>({} as ProductsContextData);
 interface Props {
@@ -16,11 +17,15 @@ interface Props {
 export function ProductsProvider({ children }: Props) {
     const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>([])
     const [productTypes, setProductTypes] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     useEffect(() => {
         updateProductsInContext();
     }, [])
 
+
     async function updateProductsInContext() {
+        setIsLoading(true)
         getProducts()
             .then(products => {
                 const productTypes = getProductTypes(products)
@@ -29,9 +34,10 @@ export function ProductsProvider({ children }: Props) {
                 setProductsGroupedByType(productsGrouped);
             })
             .catch(console.log)
+            .finally(() => setIsLoading(false))
     }
     return (
-        <ProductsContext.Provider value={{ productTypes, productsGroupedByType, updateProductsInContext }}>
+        <ProductsContext.Provider value={{ isLoading, productTypes, productsGroupedByType, updateProductsInContext }}>
             {children}
         </ProductsContext.Provider>
     )
