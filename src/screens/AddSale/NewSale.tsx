@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Switch } from 'react-native';
 import { ProductsGrid } from '../../components/AddSales/ProductsGrid';
 import Colors from '../../constants/Colors';
 import { ProductProps } from '../../@types/product';
@@ -9,7 +9,7 @@ import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../.
 import useColorScheme from '../../hooks/useColorScheme';
 import OrderCard from '../../components/AddSales/OrderCard';
 import { useProducts } from '../../contexts/products';
-import OrderProducts from '../../components/AddSales/OrderProducts';
+import OrderProducts, { Item } from '../../components/AddSales/OrderProducts';
 import { ModalSale } from '../../components/AddSales/AddSaleModal';
 import { useOrderProducts } from '../../contexts/order';
 import { useStock } from '../../contexts/stock';
@@ -38,66 +38,106 @@ export function NewSale() {
     //     getGroupedProducts().then(setProductsGroupedByType).catch(console.log)
     // }, [])
     const { productsGroupedByType } = useProducts();
-    const [products, setProducts] = useState<ProductProps[][] | null>(productsGroupedByType)
-
+    const { stock } = useStock();
+    const [productsFiltered, setProductsFiltered] = useState<ProductProps[][]>(productsGroupedByType)
+    // var productsFiltered: ProductProps[][] = [];
+    const [hideNoStockProducts, setHideNoStockProducts] = useState(true);
     // const [completedOrder, setCompletedOrder] = useState(false);
 
     // const [overflowX, setOverflowX] = useState(true);
     // const [priceModel, setPriceModel] = useState('main');
 
+    useEffect(() => {
+        console.log(productsFiltered)
+    }, [productsFiltered])
+    useEffect(() => {
+        // if (hideNoStockProducts) {
+        //     setProductsFiltered(productsFiltered => {
+        //         if (productsFiltered)
+        //             return productsFiltered.map((group, index) => {
+        //                 console.log(index, JSON.stringify(group[0].type_product))
+        //                 return group.filter(product => {
+        //                     const productStock = stock.find(item => item.id_product == product.id);
+        //                     return productStock?.quantity as number > 0;
+        //                 })
+        //             })
+        //         else {
+        //             return productsGroupedByType;
+        //         }
+        //     })
+        // }
+        // else {
+        //     setProductsFiltered(productsGroupedByType)
+        // }
+        if (hideNoStockProducts)
+            setProductsFiltered(
+                productsGroupedByType?.map((group, index) => {
+                    return group.filter(product => {
+                        const productStock = stock.find(item => item.id_product == product.id);
+                        return productStock?.quantity as number > 0;
+                    })
+                })
+            )
+        else {
+            setProductsFiltered(productsGroupedByType)
+        }
+    }, [hideNoStockProducts])
+
     const colorScheme = useColorScheme();
-    const { stock } = useStock();
+    // const { stock } = useStock();
 
     return (
         <>
-            {products?.length ?
-                <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
-                    {
-                        modal.showModal &&
-                        <ModalSale setModal={setModal} modal={modal} />
-                    }
-                    {/* 
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text>Ocultar sem estoque</Text>
-                        <Switch
-                            trackColor={{ false: Colors.gray, true: Colors.primary }}
-                            thumbColor={Colors[colorScheme].itemColor}
-                            ios_backgroundColor={Colors.gray}
-                            onValueChange={() => setHideNoStockProducts(!hideNoStockProducts)}
-                            value={hideNoStockProducts}
-                        />
-                    </View> */}
-                    <ScrollView
-                        style={{
-                            marginBottom: 120
-                        }}
-                    >
+            {
+                productsFiltered.length ?
+                    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
                         {
-                            products?.map(type => {
-                                return <ProductsGrid setModal={setModal} productsArr={type} key={type[0].type_product} />
-                            })
+                            modal.showModal &&
+                            <ModalSale setModal={setModal} modal={modal} />
                         }
-                    </ScrollView>
-                    <OrderCard />
-                    <ButtonsContainer>
-                        {
-                            //se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
-                            orderProducts.length ?
-                                <CancelButton onPress={() => setOrderProducts([])} />
-                                :
-                                <BackButton />
-                            //e se não há produtos no pedido, o botão de continuar é desativado
-                        }
-                        <ContinueButton
-                            disabled={!orderProducts.length}
-                            onPress={() => {
-                                navigation.navigate('Summary', orderProducts)
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text>Ocultar sem estoque</Text>
+                            <Switch
+                                trackColor={{ false: Colors.gray, true: Colors.primary }}
+                                thumbColor={Colors[colorScheme].itemColor}
+                                ios_backgroundColor={Colors.gray}
+                                onValueChange={() => setHideNoStockProducts(!hideNoStockProducts)}
+                                value={hideNoStockProducts}
+                            />
+                        </View>
+                        <ScrollView
+                            style={{
+                                marginBottom: 120
                             }}
-                        />
-                    </ButtonsContainer>
-                </View >
-                :
-                <ActivityIndicator />
+                        >
+                            {
+                                productsFiltered?.map(type => {
+                                    if (type.length)
+                                        return <ProductsGrid setModal={setModal} productsArr={type} key={type[0].type_product} />
+                                })
+                            }
+                        </ScrollView>
+                        <OrderCard />
+                        <ButtonsContainer>
+                            {
+                                //se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
+                                orderProducts.length ?
+                                    <CancelButton onPress={() => setOrderProducts([])} />
+                                    :
+                                    <BackButton />
+                                //e se não há produtos no pedido, o botão de continuar é desativado
+                            }
+                            <ContinueButton
+                                disabled={!orderProducts.length}
+                                onPress={() => {
+                                    navigation.navigate('Summary', orderProducts)
+                                }}
+                            />
+                        </ButtonsContainer>
+                    </View >
+                    :
+                    <ActivityIndicator />
             }
         </>
     );
