@@ -1,5 +1,6 @@
 
 import { StyleSheet } from "react-native";
+import Colors from "../../../constants/Colors";
 
 export const listStyles = StyleSheet.create({
     container: {
@@ -9,7 +10,8 @@ export const listStyles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        // textTransform: "uppercase",
+        color: Colors.gray,
+        textTransform: "uppercase",
         fontWeight: 'bold'
     }
 
@@ -17,32 +19,51 @@ export const listStyles = StyleSheet.create({
 export const itemStyles = StyleSheet.create({
     item: {
         marginTop: 4,
+        textAlignVertical: 'center',
         borderRadius: 4,
         flexDirection: "row",
-        position: "relative",
+        // position: "relative",
         overflow: "hidden",
-        width: '100%'
-
+        justifyContent: 'space-between',
+        width: '100%',
+        paddingHorizontal: 8
     },
     name: {
+        color: Colors.gray,
         fontSize: 16,
-        margin: 8,
+        marginVertical: 12,
+        width: '50%',
 
     },
-    prices: {
-        marginLeft: 'auto',
-        textAlignVertical: "center",
+    stock: {
+        fontWeight: 'bold',
+        color: Colors.primary,
+        alignSelf: 'center',
+        width: 60,
+        textAlign: 'right',
+        fontSize: 18,
+        marginHorizontal: 4,
+        paddingHorizontal: 8,
+        textAlignVertical: 'center'
+    },
+    diff: {
+        fontWeight: 'bold',
+        fontSize: 16,
         marginRight: 8,
-        justifyContent: "center",
-        alignItems: "flex-end"
     },
-    price: {
-        fontSize: 16,
+    unitButton: {
+        height: 32,
+
+        aspectRatio: 1 / 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 4,
 
     },
-    editButton: {
-        aspectRatio: 1 / 1,
-        alignItems: "center",
-        justifyContent: "center",
+    addButton: {
+        backgroundColor: Colors.primary,
+    },
+    subButton: {
+        backgroundColor: Colors.gray,
     }
 })

@@ -1,5 +1,6 @@
 
 import { StyleSheet } from "react-native";
+import Colors from "../../../constants/Colors";
 
 export const listStyles = StyleSheet.create({
     container: {
@@ -9,7 +10,8 @@ export const listStyles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        // textTransform: "uppercase",
+        color: Colors.gray,
+        textTransform: "uppercase",
         fontWeight: 'bold'
     }
 
@@ -17,6 +19,7 @@ export const listStyles = StyleSheet.create({
 export const itemStyles = StyleSheet.create({
     item: {
         marginTop: 4,
+        textAlignVertical: 'center',
         borderRadius: 4,
         flexDirection: "row",
         position: "relative",
@@ -27,6 +30,7 @@ export const itemStyles = StyleSheet.create({
     name: {
         fontSize: 16,
         margin: 8,
+        marginVertical: 12,
 
     },
     prices: {
