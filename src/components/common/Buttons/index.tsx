@@ -83,11 +83,12 @@ export function DeleteButton({ onPress }: PressableProps) {
 interface ContainerProps {
     children: ReactNode
     style?: StyleProp<ViewStyle>
+    relative?: boolean
 }
-export function ButtonsContainer({ children, style }: ContainerProps) {
+export function ButtonsContainer({ children, style, relative }: ContainerProps) {
 
     return (
-        <View style={[styles.container, style]}>
+        <View style={[styles.container, { position: relative ? 'relative' : 'absolute' }, style]}>
             {children}
         </View>
     )

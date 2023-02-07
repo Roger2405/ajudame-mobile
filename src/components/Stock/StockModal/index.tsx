@@ -123,7 +123,7 @@ export function ModalEditStock({ modal, setModal, setNewStock }: ModalStockProps
                             value={quantity.toString()}
                         />
                     </View>
-                    <ButtonsContainer>
+                    <ButtonsContainer relative>
                         <CancelButton
                             onPress={() => {
                                 closeModal();

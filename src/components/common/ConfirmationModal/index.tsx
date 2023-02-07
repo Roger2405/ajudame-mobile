@@ -26,7 +26,7 @@ export default function ConfirmationModal({ showConfirmationModal, setShowConfir
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.text}>Confirmar ação?</Text>
-                        <ButtonsContainer>
+                        <ButtonsContainer relative>
                             <CancelButton onPress={() => setShowConfirmationModal(false)} />
                             <ConfirmButton onPress={onConfirm} />
                         </ButtonsContainer>
