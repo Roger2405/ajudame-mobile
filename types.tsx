@@ -17,7 +17,7 @@ declare global {
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   NewSale: undefined;
-  AddProduct: undefined;
+  ProductForm: { id?: number };
   SignUp: undefined;
   SignIn: undefined;
   Summary: OrderProductProps[]

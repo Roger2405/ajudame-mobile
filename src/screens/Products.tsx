@@ -1,4 +1,4 @@
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
@@ -7,17 +7,21 @@ import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import { ProductList } from '../components/Products/ProductList';
 import Colors from '../constants/Colors';
 import { useProducts } from '../contexts/products';
+import useColorScheme from '../hooks/useColorScheme';
 
 export default function Products() {
   // const [products, setProducts] = useState<ProductProps[][]>([]);
+
   const navigation = useNavigation();
   const { productsGroupedByType, updateProductsInContext } = useProducts();
+
+  const colorScheme = useColorScheme();
   useEffect(() => {
     updateProductsInContext();
   }, [])
   return (
-    <View style={styles.container}>
-      <View>
+    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+      {/* <View> */}
         <FlatList
           style={{
             flexBasis: '100%',
@@ -27,9 +31,9 @@ export default function Products() {
           contentContainerStyle={{ paddingBottom: 120 }}
           renderItem={productsByType => <ProductList products={productsByType.item} />}
         />
-      </View>
+      {/* </View> */}
       <ButtonsContainer>
-        <SingleButton onPress={() => navigation.navigate('AddProduct')} color={Colors.primary} title='Adicionar Produto' icon={<FontAwesome5 name='plus' size={24} color={Colors.white} />} />
+        <SingleButton onPress={() => navigation.navigate('ProductForm', {})} color={Colors.primary} title='Adicionar Produto' icon={<Feather name='plus' size={24} color={Colors.white} />} />
       </ButtonsContainer>
     </View >
   );

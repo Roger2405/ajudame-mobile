@@ -64,7 +64,7 @@ export function TabRoutes() {
 
             />
             <Screen
-                name='products'
+                name='Products'
                 component={Products}
                 options={{
                     title: 'Produtos',
@@ -72,7 +72,7 @@ export function TabRoutes() {
                 }}
             />
             <Screen
-                name='stock'
+                name='Stock'
                 component={Stock}
                 options={{
                     title: 'Estoque',

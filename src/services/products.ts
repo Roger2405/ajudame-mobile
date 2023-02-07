@@ -11,12 +11,6 @@ export async function getProducts() {
     return response.data as ProductProps[];
 }
 
-// export async function getGroupedProducts() {
-//     const products = await getProducts();
-
-//     const groupedProducts = groupProducts(products);
-//     return groupedProducts;
-// }
 export function getProductTypes(arrProducts: ProductProps[]) {
     let productsTypes: string[] = [];
     arrProducts.forEach(product => {
@@ -27,18 +21,30 @@ export function getProductTypes(arrProducts: ProductProps[]) {
 
     return productsTypes;
 }
+export async function addProduct(data: {}) {
+    const ID_USER = await getUserID();
 
-// function groupProducts(arrProducts: ProductProps[]) {
-//     let arrayProductsGrouped: ProductProps[][] = [];
+    const response = await api.post(`/${ID_USER}/products/register`, data, {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    return response.data;
+
+}
+export async function getProduct(id_product: number) {
+    const ID_USER = await getUserID();
 
 
-//     for (var i = 0; i < productsTypes.length; i++) {
-//         let arr = arrProducts.filter(product => product.type_product === productsTypes[i]);
-//         arrayProductsGrouped.push(arr);
+    const response = await api.get(`/${ID_USER}/products/${id_product}`)
+    console.log('response', response.data)
+    return response.data[0] as ProductProps;
+}
 
-//         if (i > 50) {//watch dog
-//             break;
-//         }
-//     }
-//     return arrayProductsGrouped;
-// }
+export async function deleteProduct(id_product: number) {
+    const ID_USER = await getUserID();
+
+    const response = await api.delete(`/${ID_USER}/products/${id_product}`)
+    return response;
+}   

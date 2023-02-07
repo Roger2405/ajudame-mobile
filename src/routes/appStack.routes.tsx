@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "react-native";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import { AddProduct } from "../screens/AddProduct";
+import ProductForm from "../screens/ProductForm";
 import { NewSale } from "../screens/AddSale/NewSale";
 import { Summary } from "../screens/AddSale/Summary";
 import { TabRoutes } from "./appTab.routes";
@@ -22,7 +22,10 @@ export function AppRoutes() {
                 headerBlurEffect: "dark",
                 // headerTitleStyle: { color: Colors[colorScheme].textContrast },
                 statusBarTranslucent: true,
-                headerTintColor: Colors[colorScheme].textContrast
+                headerTintColor: Colors[colorScheme].textContrast,
+                // contentStyle: { backgroundColor: Colors.primary }
+            
+
             }}
         >
             <Screen
@@ -47,11 +50,11 @@ export function AppRoutes() {
                 }}
             />
             <Screen
-                name='AddProduct'
-                component={AddProduct}
+                name='ProductForm'
+                // @ts-ignore
+                component={ProductForm}
             />
 
         </Navigator>
     )
 }
-

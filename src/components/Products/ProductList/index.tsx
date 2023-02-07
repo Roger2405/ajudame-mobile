@@ -1,4 +1,5 @@
 import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { ProductProps } from '../../../@types/product';
@@ -28,6 +29,11 @@ interface ProductListItemProps {
 }
 function ProductListItem({ product }: ProductListItemProps) {
     const colorScheme = useColorScheme();
+    const { navigate } = useNavigation();
+
+    function handleEditProduct() {
+        navigate('ProductForm', { id: product.id })
+    }
     return (
         <View style={[itemStyles.item, { backgroundColor: Colors[colorScheme].itemColor }]}>
             <Text style={[itemStyles.name, { color: Colors.gray }]}>{product.name_product}</Text>
@@ -40,7 +46,10 @@ function ProductListItem({ product }: ProductListItemProps) {
                         <Text style={[itemStyles.price, { opacity: 0.75, color: Colors.gray }]}>S/N</Text>
                 }
             </View>
-            <TouchableOpacity style={[itemStyles.editButton, { backgroundColor: Colors.primary }]}>
+            <TouchableOpacity
+                onPress={handleEditProduct}
+                style={[itemStyles.editButton, { backgroundColor: Colors.primary }]}
+            >
                 <MaterialIcons size={24} name={'edit'} color={Colors[colorScheme].itemColor} />
             </TouchableOpacity>
         </View>
