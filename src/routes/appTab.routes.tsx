@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Feather, FontAwesome5 } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
 
@@ -12,14 +12,15 @@ import Historic from "../screens/Historic";
 import Home from "../screens/Home";
 import Products from "../screens/Products";
 import Stock from "../screens/Stock";
+import React from "react";
 
 
 
 export function TabRoutes() {
     const colorScheme = useColorScheme();
-    const { Screen, Navigator } = createBottomTabNavigator();
+    const { Screen, Navigator, Group } = createBottomTabNavigator();
 
-    const OPTIONS_ITEM_WIDTH = 32;
+    const OPTIONS_ITEM_WIDTH = 40;
     const TAB_BAR_HEIGHT = 84;
     return (
         <Navigator
@@ -30,23 +31,27 @@ export function TabRoutes() {
                 tabBarActiveTintColor: Colors.primary,
                 tabBarInactiveTintColor: Colors[colorScheme].textContrast,
                 //estilos
-                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 32, height: TAB_BAR_HEIGHT, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
+                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 32, height: TAB_BAR_HEIGHT, shadowColor: Colors[colorScheme].background },
                 tabBarItemStyle: { borderTopLeftRadius: 8, borderTopRightRadius: 8, flexGrow: 1 },
                 tabBarLabelStyle: { fontSize: 12, textTransform: "uppercase", fontWeight: '700' },
-                // headerStatusBarHeight: 160
             }}
             initialRouteName="TopTabBar"
-            // safeAreaInsets={{ right: 32, left: 0 }}
             sceneContainerStyle={{ paddingTop: TAB_BAR_HEIGHT }}
 
 
         >
             <Screen
-                name='options'
-                component={OptionsModal}
+                name='Menu'
+                component={React.Component}
+                listeners={(({ navigation }) => ({
+                    tabPress: event => {
+                        event.preventDefault();
+                        navigation.openDrawer();
+                    }
+                }))}
                 options={{
                     title: 'Opções',
-                    tabBarIcon: ({ color }) => <FontAwesome5 name="ellipsis-v" size={32} color={color} />,
+                    tabBarIcon: ({ color }) => <Feather name="menu" size={32} color={color} />,
                     tabBarItemStyle: { flexBasis: OPTIONS_ITEM_WIDTH, flexGrow: 0, flexShrink: 0 },
                     tabBarLabelStyle: { display: 'none' },
 
@@ -54,6 +59,10 @@ export function TabRoutes() {
 
 
             />
+            {/* <Group screenOptions={}>
+
+            </Group> */}
+
             <Screen
                 name='TopTabBar'
                 component={TopTabBar}

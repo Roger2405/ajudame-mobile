@@ -6,8 +6,8 @@ import { OrderProductsProvider } from "../contexts/order";
 import { ProductsProvider } from "../contexts/products";
 import { RecentSalesProvider } from "../contexts/sales";
 import { StockProvider } from "../contexts/stock";
-import { AppRoutes } from "./appStack.routes";
 import { AuthRoutes } from "./authStack.routes";
+import { DrawerNav } from "./drawerNav.routes";
 
 
 export function Routes() {
@@ -24,7 +24,7 @@ export function Routes() {
             <RecentSalesProvider>
                 <StockProvider>
                     <OrderProductsProvider>
-                        <AppRoutes />
+                        <DrawerNav />
 
                     </OrderProductsProvider>
                 </StockProvider>
