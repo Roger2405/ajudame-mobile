@@ -1,68 +1,91 @@
-
-import Colors from "../constants/Colors";
-
-import useColorScheme from "../hooks/useColorScheme";
-
-import { OptionsModal } from "../components/OptionsModal";
 import { AppRoutes } from "./appStack.routes";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+    createDrawerNavigator,
+    DrawerContentScrollView,
+} from "@react-navigation/drawer";
+
 import React from "react";
-import { Button, View, Text, Pressable } from "react-native";
+import { Text, StyleSheet, TouchableOpacity, Pressable, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { AuthSignIn } from "../screens/Auth/AuthSignIn";
 import { useAuth } from "../contexts/auth";
+import Colors from "../constants/Colors";
 // import {} from '@reac'
 
 export function DrawerNav() {
-    const { Screen, Navigator } = createDrawerNavigator();
+    const Drawer = createDrawerNavigator();
     const { signOut } = useAuth();
     return (
-        <Navigator initialRouteName="App"
-            // sceneContainerStyle={{ paddingTop: 0 }}
-            screenOptions={{
 
-
-            }}
+        <Drawer.Navigator
+            drawerContent={(props: any) => <MenuItems {...props} />}
+            initialRouteName="Main"
+            defaultStatus={'closed'}
         >
-            <Screen
-                name="App"
-                component={AppRoutes}
-                options={
-                    {
-                        drawerIcon: () => <Feather name="x" size={32} />,
-                        title: '',
-                        // headerTitleStyle: { textAlign: "right", backgroundColor: 'green' }
-
-                    }
-                }
-            // listeners={(({ navigation }) => ({
-            //     tabPress: event => {
-            //         event.preventDefault();
-            //         navigation.openDrawer();
-            //     }
-            // }))}
-            />
-            <Screen
-                name="LogOut"
-                component={AuthSignIn}
-                listeners={(({ navigation }) => ({
-                    focus: () => {
-                        signOut()
-                    }
-                })
-
-                )}
-            />
-
-        </Navigator>
+            <Drawer.Screen name="Main" component={AppRoutes} />
+        </Drawer.Navigator>
     )
 }
-function Feed({ navigation }: any) {
+
+function MenuItems({ navigation }: any) {
+    const { user, signOut } = useAuth();
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Feed Screen</Text>
-            <Button title="Open drawer" onPress={() => navigation.openDrawer()} />
-            <Button title="Toggle drawer" onPress={() => navigation.toggleDrawer()} />
-        </View>
-    );
+        <DrawerContentScrollView
+            style={{
+                backgroundColor: Colors.lightGray,
+                paddingHorizontal: 8,
+                paddingBottom: 40
+            }}
+            contentContainerStyle={styles.container}
+        >
+            <Pressable onPress={() => navigation.closeDrawer()}>
+                <Feather name="x" size={32} color={Colors.gray} />
+            </Pressable>
+            <View style={styles.content}>
+                <Text style={styles.email}>{user?.email}</Text>
+                {/* <TouchableOpacity style={styles.routeLink}>
+                    <Text style={{ fontSize: 16, textTransform: "uppercase" }}>Estoque</Text>
+                </TouchableOpacity> */}
+            </View>
+            <View style={styles.separator} />
+            <TouchableOpacity onPress={signOut} style={styles.signOut}>
+                <Feather name="log-out" size={24} color={Colors.gray} />
+                <Text style={{ fontSize: 16, marginLeft: 8, color: Colors.gray, fontWeight: 'bold' }}>Sair</Text>
+            </TouchableOpacity>
+        </DrawerContentScrollView>
+    )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    content: {
+        flex: 1,
+        padding: 16,
+        justifyContent: "flex-start",
+        // flexBasis: '100%',
+    },
+    title: {
+
+    },
+    email: {
+    },
+    // routeLink: {
+    //     padding: 16,
+    //     backgroundColor: Colors.lightGray,
+    //     borderRadius: 4,
+    // },
+    separator: {
+        height: 2,
+        // marginHorizontal: 8,
+        backgroundColor: Colors.lightGray
+    },
+    signOut: {
+        marginTop: 'auto',
+        paddingTop: 16,
+        // borderColor: Colors.gray,
+        flexDirection: "row",
+        alignItems: "center",
+        // fontSize: 20,
+    }
+})
