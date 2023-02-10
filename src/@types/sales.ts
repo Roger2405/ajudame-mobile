@@ -9,5 +9,5 @@ export type SaleOverviewProps = {
     total: number
     cost: number
     gain: number
-    ym_date?: string
+    ym_date: string
 }

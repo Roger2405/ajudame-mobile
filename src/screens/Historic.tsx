@@ -21,7 +21,10 @@ export default function Historic() {
 
     useFocusEffect(
         React.useCallback(() => {
-            getHistoric().then(res => setSalesHistoric(res as SaleOverviewProps[])).catch(console.log)
+            getHistoric().then((res) => {
+                setSalesHistoric(res as SaleOverviewProps[])
+                console.log(res)
+            }).catch(console.log)
         }, [sales])
     )
 
@@ -40,7 +43,8 @@ export default function Historic() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 8,
+        paddingHorizontal: 4,
+        flexBasis: '100%',
     },
     title: {
         fontSize: 20,

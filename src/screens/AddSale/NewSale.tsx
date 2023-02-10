@@ -95,16 +95,28 @@ export function NewSale() {
                             modal.showModal &&
                             <ModalSale setModal={setModal} modal={modal} />
                         }
+                        <View style={{ flexDirection: 'row' }}>
 
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text>Ocultar sem estoque</Text>
-                            <Switch
-                                trackColor={{ false: Colors.gray, true: Colors.primary }}
-                                thumbColor={Colors[colorScheme].itemColor}
-                                ios_backgroundColor={Colors.gray}
-                                onValueChange={() => setHideNoStockProducts(!hideNoStockProducts)}
-                                value={hideNoStockProducts}
-                            />
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text>Ocultar sem estoque</Text>
+                                <Switch
+                                    trackColor={{ false: Colors.gray, true: Colors.primary }}
+                                    thumbColor={Colors[colorScheme].itemColor}
+                                    ios_backgroundColor={Colors.gray}
+                                    onValueChange={() => setHideNoStockProducts(!hideNoStockProducts)}
+                                    value={hideNoStockProducts}
+                                />
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text>Ocultar sem estoque</Text>
+                                <Switch
+                                    trackColor={{ false: Colors.gray, true: Colors.primary }}
+                                    thumbColor={Colors[colorScheme].itemColor}
+                                    ios_backgroundColor={Colors.gray}
+                                    onValueChange={() => setHideNoStockProducts(!hideNoStockProducts)}
+                                    value={hideNoStockProducts}
+                                />
+                            </View>
                         </View>
                         <ScrollView
                             style={{

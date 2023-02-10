@@ -1,41 +1,51 @@
-
-import React, { ReactNode, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Button, ActivityIndicator } from 'react-native';
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import * as ImagePicker from 'expo-image-picker';
-import { ButtonsContainer, CancelButton, ConfirmButton, DeleteButton } from '../components/common/Buttons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Button, ActivityIndicator, Switch, FlatList } from 'react-native';
+//hooks
 import { useNavigation } from '@react-navigation/native';
-import { addProduct, deleteProduct, getProduct, getProductTypes, updateProduct } from '../services/products';
+import useColorScheme from '../hooks/useColorScheme';
+//react navigation
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import Colors from '../constants/Colors';
+
+import { RootStackParamList } from '../../types';
+import { ProductDetailsProps } from '../@types/product';
+
+import api from '../services/api';
+import { addProduct, deleteProduct, getProduct, updateProduct } from '../services/products';
+
 import { useProducts } from '../contexts/products';
 import { useStock } from '../contexts/stock';
-import { RootStackParamList } from '../../types';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ProductDetailsProps, ProductProps } from '../@types/product';
-import api from '../services/api';
-import ConfirmationModal from '../components/common/ConfirmationModal';
-//@ts-ignore
-import DatalistInput from '@avul/react-native-datalist-input';
-import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { useRecentSales } from '../contexts/sales';
+
+import * as ImagePicker from 'expo-image-picker';
+import { FontAwesome5 } from '@expo/vector-icons';
+
+import { ButtonsContainer, CancelButton, ConfirmButton, DeleteButton } from '../components/common/Buttons';
+import { FeedbackMessage } from '../components/common/FeedbackMessage';
+import ConfirmationModal from '../components/common/ConfirmationModal';
+
+// @ts-ignore
+import DatalistInput from '@avul/react-native-datalist-input';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductForm'>;
 
 export default function ProductForm({ route }: Props) {
     const id_product = route.params.id;
+
+    const [updateCostInSales, setUpdateCostInSales] = useState<boolean>();
+
     const [inputValues, setInputValues] = useState<ProductDetailsProps>({} as ProductDetailsProps)
     const [productData, setProductData] = useState<ProductDetailsProps>({} as ProductDetailsProps);
 
-
     const colorScheme = useColorScheme();
-    // const [photo, setPhoto] = useState<ImagePicker.ImagePickerAsset | null>();
     const navigation = useNavigation();
+
     const [showModalConfirmation, setShowModalConfirmation] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
-
+    //data from contexts
     const { productTypes, updateProductsInContext } = useProducts();
     const { updateStockInContext } = useStock();
     const { updateRecentSalesInContext } = useRecentSales();
@@ -47,10 +57,8 @@ export default function ProductForm({ route }: Props) {
                 .then(data => {
                     const { image_path } = data;
                     const fullImagePath = `${api.defaults.baseURL}${image_path}`;
-                    console.log('estoque: ', data.stock)
-                    console.log(data)
                     setProductData(() => {
-                        return { ...data, image_path: fullImagePath }
+                        return { ...data, image_path: image_path ? fullImagePath : undefined }
                     })
                 })
         }
@@ -78,6 +86,8 @@ export default function ProductForm({ route }: Props) {
 
             const stockChanged = stock !== undefined;
             const costChanged = cost !== undefined;
+
+            console.log('custo input', cost)
             costChanged &&
                 formData.append('cost', cost?.toString())
             stockChanged &&
@@ -161,7 +171,7 @@ export default function ProductForm({ route }: Props) {
                     <View>
                         <View style={styles.group}>
                             <Text style={[styles.label, { color }]}>Nome: </Text>
-                            <Text style={styles.required}>Campo Obrigatório</Text>
+                            <Text style={styles.required}>(obrigatório)</Text>
                             <TextInput
                                 defaultValue={inputValues.name_product}
                                 onChangeText={(e) =>
@@ -171,27 +181,43 @@ export default function ProductForm({ route }: Props) {
                                 style={[styles.input, { backgroundColor }]} placeholder='Nome do produto' />
                         </View>
                         <View style={styles.group}>
-                            <Text style={[styles.label, { color }]}>Categoria: *</Text>
-                            <DatalistInput
-                                containerStyle={[styles.input, { backgroundColor }]}
-                                value={inputValues.type_product}
-                                onChangeText={(text: string) => setInputValues(oldValues => { return { ...oldValues, type_product: text } })}
-                                data={productTypes}
-                                style={{ borderWidth: 0, padding: 0 }}
-                                placeholder="Insira uma categoria"
-                                placeholderTextColor={Colors.lightGray}
-                            />
+                            <Text style={[styles.label, { color, alignSelf: 'flex-start', marginVertical: 8 }]}>Categoria:</Text>
+                            <Text style={styles.required}>(obrigatório)</Text>
+                            <View style={{ flexGrow: 1 }}>
+                                <TextInput
+                                    defaultValue={inputValues.type_product?.toString()}
+                                    value={inputValues.type_product?.toString()}
+                                    onChangeText={(e) =>
+                                        setInputValues((oldValues) => {
+                                            return { ...oldValues, type_product: e }
+                                        })} style={[styles.input, { backgroundColor }]} placeholder='Categoria do produto' />
+                                <FlatList
+                                    data={productTypes}
+                                    keyExtractor={item => item}
+                                    contentContainerStyle={{ paddingVertical: 8 }}
+                                    style={[{ maxHeight: 64 }]}
+                                    renderItem={({ item }) =>
+                                        <TouchableOpacity
+                                            onPress={() => setInputValues(oldValues => { return { ...oldValues, type_product: item } })}
+                                            style={[{ padding: 8, borderRadius: 4, marginTop: 2, backgroundColor }]}>
+                                            <Text>{item}</Text>
+                                        </TouchableOpacity>
+                                    }
+                                />
+
+                            </View>
                         </View>
                         <View style={styles.group}>
-                            <Text style={[styles.label, { color }]}>Estoque: *</Text>
+                            <Text style={[styles.label, { color }]}>Estoque:</Text>
                             <TextInput
-                                defaultValue={inputValues.stock?.toString()}
+                                defaultValue={(inputValues.stock || 0).toString()}
                                 onChangeText={(e) =>
                                     setInputValues((oldValues) => {
                                         return { ...oldValues, stock: parseInt(e) }
                                     })} style={[styles.input, { backgroundColor }]} placeholder='Quantidade em estoque' />
                         </View>
                     </View>
+                    {/* IMAGEM */}
                     <View style={{ flexDirection: 'row', marginTop: 16 }}>
                         <View style={{ flex: 1, marginRight: 4 }}>
 
@@ -202,37 +228,47 @@ export default function ProductForm({ route }: Props) {
                                         <FontAwesome5 color={Colors.gray} name='image' size={128} />}
                             </View>
                             <View style={styles.buttons}>
-                                <DeleteButton onPress={() => { setInputValues(oldValues => { return { ...oldValues, imagePath: null } }) }} accessibilityLabel='Remover imagem do produto' />
+                                <DeleteButton onPress={() => { setInputValues(oldValues => { return { ...oldValues, image_path: null } }) }} accessibilityLabel='Remover imagem do produto' />
                                 <TouchableOpacity style={{ backgroundColor: Colors.primary, marginLeft: 4, borderRadius: 4, height: '100%', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }} onPress={handleChoosePhoto} >
                                     <Text style={{ textAlign: 'center', fontWeight: 'bold', textTransform: 'uppercase', color: Colors[colorScheme].textContrast }}>Escolher{'\n'}Imagem</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
+                        {/* PREÇOS $$$ */}
                         <View style={{ flex: 1, marginLeft: 4 }}>
                             <View style={{}}>
                                 <Text style={[styles.label, { fontWeight: '700' }]}>Preços</Text>
-                                <Text style={[styles.label, { color }]}>Principal: *</Text>
-                                <TextInput
-                                    onChangeText={(e) =>
-                                        setInputValues((oldValues) => {
-                                            return { ...oldValues, main_price: parseFloat(e) }
-                                        })}
-                                    defaultValue={inputValues.main_price?.toString()}
-                                    keyboardType='number-pad'
-                                    style={[styles.input, { backgroundColor }]}
-                                    placeholder='Padrão: 0' />
 
-                                <Text style={[styles.label, { color }]}>Secundário: </Text>
-                                <TextInput
-                                    onChangeText={(e) =>
-                                        setInputValues((oldValues) => {
-                                            return { ...oldValues, secondary_price: parseFloat(e) }
-                                        })}
-                                    defaultValue={inputValues.secondary_price?.toString()}
-                                    keyboardType='number-pad'
-                                    style={[styles.input, { backgroundColor }]}
-                                    placeholder='Padrão: 0' />
+                                <View>
+                                    <Text style={[styles.label, { color }]}>Principal: </Text>
+                                    <Text style={styles.required}>(obrigatório)</Text>
+                                    <TextInput
+                                        onChangeText={(e) =>
+                                            setInputValues((oldValues) => {
+                                                const newValue = parseFloat(e);
+                                                return { ...oldValues, main_price: (isNaN(newValue) ? 0 : newValue) }
+                                            })}
+                                        defaultValue={(inputValues.main_price || 0).toString()}
+                                        keyboardType='number-pad'
+                                        style={[styles.input, { backgroundColor }]}
+                                        placeholder='Padrão: 0' />
+                                </View>
+
+                                <View>
+                                    <Text style={[styles.label, { color }]}>Secundário: </Text>
+                                    <TextInput
+                                        onChangeText={(e) =>
+                                            setInputValues((oldValues) => {
+                                                const newValue = parseFloat(e);
+                                                return { ...oldValues, secondary_price: (isNaN(newValue) ? undefined : newValue) }
+                                            })}
+                                        defaultValue={inputValues.secondary_price?.toString()}
+                                        keyboardType='number-pad'
+                                        style={[styles.input, { backgroundColor }]}
+                                        placeholder='Padrão: 0' />
+                                </View>
                             </View>
+                            {/* CUSTO  */}
                             <View style={{ borderBottomWidth: 1, marginTop: 16, marginBottom: 8 }} />
                             <View style={{}}>
                                 <Text style={[styles.label, { fontWeight: '700' }]}>Custo:</Text>
@@ -240,7 +276,8 @@ export default function ProductForm({ route }: Props) {
                                     editable={!!editableCost}
                                     onChangeText={(e) =>
                                         setInputValues((oldValues) => {
-                                            return { ...oldValues, cost: parseFloat(e) }
+                                            const newValue = parseFloat(e);
+                                            return { ...oldValues, cost: (isNaN(newValue) ? undefined : newValue) }
                                         })}
                                     defaultValue={inputValues.cost?.toString()}
                                     keyboardType='number-pad'
@@ -253,9 +290,22 @@ export default function ProductForm({ route }: Props) {
                     </View>
                     {
                         id_product &&
-                        <View style={{ marginTop: 8 }}>
-                            <Button color={Colors.red} title='Deletar produto' onPress={() => setShowModalConfirmation(true)} />
-                        </View>
+                        <>
+                            {
+                                productData.cost == undefined && inputValues.cost !== null &&
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Switch
+                                        trackColor={{ false: Colors.gray, true: Colors.primary }}
+                                        thumbColor={updateCostInSales ? Colors.white : Colors[colorScheme].background}
+                                        ios_backgroundColor={Colors.gray}
+                                        onValueChange={() => setUpdateCostInSales(!updateCostInSales)} value={updateCostInSales} />
+                                    <Text style={{ fontSize: 12, flex: 1 }}>Atualizar o custo em todas as vendas já registradas com esse produto sem o custo informado!</Text>
+                                </View>
+                            }
+                            <View style={{ marginTop: 8 }}>
+                                <Button color={Colors.red} title='Deletar produto' onPress={() => setShowModalConfirmation(true)} />
+                            </View>
+                        </>
                     }
                     {
                         showModalConfirmation &&
@@ -285,8 +335,12 @@ const styles = StyleSheet.create({
     group: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 8,
-        // width: '100%',
+        borderBottomWidth: 1,
+        borderColor: Colors.lightGray,
+        // paddingTop: 4,
+        // marginTop: 4,
+        paddingBottom: 4,
+        marginBottom: 4,
 
     },
     datalist: {
@@ -304,13 +358,16 @@ const styles = StyleSheet.create({
     },
     required: {
         position: 'absolute',
-        bottom: 0,
         right: 0,
-        backgroundColor: Colors.lightGray,
+        bottom: 0,
+        zIndex: 10,
+        fontSize: 8,
+        margin: 4,
 
     },
     input: {
         // elevation: 4,
+        // maxWidth: 200,
         borderColor: Colors.lightGray,
         borderWidth: 1,
         borderRadius: 4,

@@ -10,7 +10,7 @@ export type ProductProps = {
 export type ProductDetailsProps = {
     id: number;
     name_product: string;
-    image_path?: string
+    image_path?: string | null
     type_product: string;
     main_price: number;
     secondary_price?: number;

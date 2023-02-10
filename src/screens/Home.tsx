@@ -33,7 +33,8 @@ export default function Home() {
     type: string,
     sum: number;
   }[]>();
-
+  const date = new Date();
+  const formatedDate = date.toISOString().split('T')[0];
 
   useEffect(() => {
     if (sales) {
@@ -106,7 +107,7 @@ export default function Home() {
               {
                 sales?.length ?
                   <>
-                    <OverView date={'2023-02-09'} />
+                    <OverView date={formatedDate} />
                     {
                       lastSale &&
                       <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
