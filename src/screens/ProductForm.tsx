@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Button, ActivityIndicator, Switch, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Button, ActivityIndicator, Switch, FlatList, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 //hooks
 import { useNavigation } from '@react-navigation/native';
 import useColorScheme from '../hooks/useColorScheme';
@@ -43,6 +43,7 @@ export default function ProductForm({ route }: Props) {
 
     const [showModalConfirmation, setShowModalConfirmation] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
     const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
     //data from contexts
@@ -62,6 +63,18 @@ export default function ProductForm({ route }: Props) {
                     })
                 })
         }
+        Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // or some other action
+            }
+        );
+        Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // or some other action
+            }
+        );
     }, [])
     useEffect(() => {
         if (productData) {
@@ -85,11 +98,12 @@ export default function ProductForm({ route }: Props) {
             formData.append('secondary_price', (secondary_price || 0).toString())
 
             const stockChanged = stock !== undefined;
-            const costChanged = cost !== undefined;
+            const costChanged = cost !== undefined && editableCost && cost !== productData.cost;
 
-            console.log('custo input', cost)
+            console.log('custo input', cost, costChanged)
             costChanged &&
                 formData.append('cost', cost?.toString())
+
             stockChanged &&
                 formData.append('stock', stock?.toString())
 
@@ -194,13 +208,13 @@ export default function ProductForm({ route }: Props) {
                                 <FlatList
                                     data={productTypes}
                                     keyExtractor={item => item}
-                                    contentContainerStyle={{ paddingVertical: 8 }}
+                                    contentContainerStyle={{ paddingBottom: 16 }}
                                     style={[{ maxHeight: 64 }]}
                                     renderItem={({ item }) =>
                                         <TouchableOpacity
                                             onPress={() => setInputValues(oldValues => { return { ...oldValues, type_product: item } })}
-                                            style={[{ padding: 8, borderRadius: 4, marginTop: 2, backgroundColor }]}>
-                                            <Text>{item}</Text>
+                                            style={[{ padding: 8, borderRadius: 4, marginTop: 1, backgroundColor: Colors.lightGray }]}>
+                                            <Text style={{ color: Colors.gray }}>{item}</Text>
                                         </TouchableOpacity>
                                     }
                                 />
@@ -211,14 +225,16 @@ export default function ProductForm({ route }: Props) {
                             <Text style={[styles.label, { color }]}>Estoque:</Text>
                             <TextInput
                                 defaultValue={(inputValues.stock || 0).toString()}
+                                keyboardType={'number-pad'}
                                 onChangeText={(e) =>
                                     setInputValues((oldValues) => {
                                         return { ...oldValues, stock: parseInt(e) }
                                     })} style={[styles.input, { backgroundColor }]} placeholder='Quantidade em estoque' />
                         </View>
                     </View>
-                    {/* IMAGEM */}
+                    {/* Flex row - IMAGEM E VALORES */}
                     <View style={{ flexDirection: 'row', marginTop: 16 }}>
+                        {/* IMAGEM */}
                         <View style={{ flex: 1, marginRight: 4 }}>
 
                             <View style={[styles.imageSquare]}>
@@ -288,7 +304,7 @@ export default function ProductForm({ route }: Props) {
                         </View>
 
                     </View>
-                    {
+                    {//switch custo (condicional) e botão DELETE  
                         id_product &&
                         <>
                             {
@@ -312,13 +328,19 @@ export default function ProductForm({ route }: Props) {
                         <ConfirmationModal setShowConfirmationModal={setShowModalConfirmation} showConfirmationModal={showModalConfirmation} onConfirm={handleDeleteProduct} />
                     }
                 </View>
-                <ButtonsContainer>
-                    <CancelButton onPress={() => {
-                        navigation.goBack();
-                    }} />
-                    <ConfirmButton onPress={handleSubmitForm} />
-                </ButtonsContainer>
-            </View>
+                {
+                    isKeyboardVisible ?
+                        <></>
+                        :
+                        <ButtonsContainer>
+                            <CancelButton onPress={() => {
+                                navigation.goBack();
+                            }} />
+                            <ConfirmButton onPress={handleSubmitForm} />
+                        </ButtonsContainer>
+                }
+
+            </View >
     );
 }
 
