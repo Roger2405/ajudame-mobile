@@ -5,33 +5,31 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
-import { OrderProductProps } from '../@types/orderProduct';
-import OrderProducts from '../components/common/OrderProducts';
 import { SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
-import { getSalesResume } from '../services/sales';
-import { SalesResumeProps } from '../@types/sales';
-import { SalesList } from '../components/SalesHistory/SalesList';
+import { getHistoric } from '../services/sales';
+import { SaleOverviewProps, SalesResumeProps } from '../@types/sales';
+import { SalesHistoricList } from '../components/SalesHistory/SalesList';
+import { useRecentSales } from '../contexts/sales';
 
 
 export default function Historic() {
-    const [headerSales, setHeaderSales] = useState<SalesResumeProps[]>();
+    const [salesHistoric, setSalesHistoric] = useState<SaleOverviewProps[]>();
+    const { sales } = useRecentSales();
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
 
-    useEffect(() => {
-    }, [])
-
     useFocusEffect(
         React.useCallback(() => {
-            getSalesResume().then(setHeaderSales).catch(console.log)
-        }, []))
+            getHistoric().then(res => setSalesHistoric(res as SaleOverviewProps[])).catch(console.log)
+        }, [sales])
+    )
 
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
             {
-                headerSales?.length ?
-                    <SalesList salesHeaders={headerSales} />
+                salesHistoric?.length ?
+                    <SalesHistoricList salesHistoric={salesHistoric} />
                     :
                     <Text>Não foi encontrada nenhuma venda!</Text>
             }

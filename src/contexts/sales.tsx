@@ -6,6 +6,7 @@ import { getLastSale, getRecentSales } from "../services/sales";
 interface RecentSalesContextData {
     sales: SaleProductProps[] | null,
     lastSale: LastSaleProductProps | null,
+    noCostItems: SaleProductProps[] | undefined
     updateRecentSalesInContext: () => void,
     isLoading: boolean
 }
@@ -16,11 +17,16 @@ interface Props {
 export function RecentSalesProvider({ children }: Props) {
     const [sales, setSales] = useState<SaleProductProps[] | null>(null)
     const [lastSale, setLastSale] = useState<LastSaleProductProps | null>(null)
+    const [noCostItems, setNoCostItems] = useState<SaleProductProps[]>()
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         updateRecentSalesInContext()
     }, [])
+
+    useEffect(() => {
+        setNoCostItems(sales?.filter(sale => !sale.cost_product))
+    }, [sales])
 
     async function updateRecentSalesInContext() {
         setIsLoading(true)
@@ -31,7 +37,7 @@ export function RecentSalesProvider({ children }: Props) {
             .finally(() => setIsLoading(false))
     }
     return (
-        <RecentSalesContext.Provider value={{ sales, lastSale, isLoading, updateRecentSalesInContext }}>
+        <RecentSalesContext.Provider value={{ noCostItems, sales, lastSale, isLoading, updateRecentSalesInContext }}>
             {children}
         </RecentSalesContext.Provider>
     )

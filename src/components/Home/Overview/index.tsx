@@ -1,76 +1,100 @@
 import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import { View, Text } from "react-native";
 import { SaleProductProps } from "../../../@types/orderProduct";
+import { SaleOverviewProps } from "../../../@types/sales";
 import Colors from "../../../constants/Colors";
 import useColorScheme from "../../../hooks/useColorScheme";
+import { getOverview } from "../../../services/sales";
 
 interface Props {
-    salesOfDay: SaleProductProps[]
+    date: string
 }
 
-export function OverView({ salesOfDay }: Props) {
-
-
-
-    const [sumTotal, setSumTotal] = useState(0);
-
-
-    const COST_PERCENT = 68.6;
-
+export function OverView({ date }: Props) {
+    const [overviewData, setOverviewData] = useState<SaleOverviewProps>()
+    const COST_PERCENT = overviewData?.cost ? ((overviewData?.cost / overviewData?.total) * 100) : 0;
     useEffect(() => {
-        setSumTotal(getSumTotal(salesOfDay))
-    }, [salesOfDay])
+        getOverview(date)
+            .then(res => {
+                setOverviewData(res as SaleOverviewProps)
+            })
+            .catch(alert)
+    }, [])
 
-    function getSumTotal(arr: SaleProductProps[]) {
-        let sum = 0
-        arr.forEach(item => {
-            sum += item.count * item.price_product;
-        })
-        return sum;
-    }
 
     const colorScheme = useColorScheme();
+    const backgroundColor = Colors[colorScheme].itemColor
     return (
-        <View style={{ width: '100%', marginVertical: 8, borderRadius: 8, overflow: 'hidden' }}>
-            <View
-                style={{
-                    backgroundColor: Colors[colorScheme].itemColor,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    minHeight: 50,
-                    alignItems: 'center',
-                    padding: 8,
-
-                    borderColor: Colors.lightGray,
-                    borderBottomWidth: 8,
-                }}>
-                <Text
-                    style={{
-                        textTransform: 'uppercase',
-                        fontSize: 24,
-                        fontWeight: 'bold',
-                        color: Colors.gray,
-                    }}>Total:</Text>
-                <Text
-                    style={{
-                        color: Colors[colorScheme].itemColor,
-                        backgroundColor: Colors.lightGray,
-                        padding: 8,
-                        fontSize: 24,
-                        fontWeight: 'bold',
-                        borderRadius: 8,
-                    }}
-                >R$ {sumTotal.toFixed(2).replace('.', ',')}</Text>
+        <View style={[styles.container, { backgroundColor }]}>
+            <View style={styles.info}>
+                <View style={styles.group}>
+                    <Text style={[styles.label, { fontSize: 20, color: Colors.gray }]}>Total:</Text>
+                    <Text style={[styles.value, { backgroundColor: Colors.lightGray, color: Colors.gray, fontSize: 20 }]}>R$ {overviewData?.total.toFixed(2).replace('.', ',')}</Text>
+                </View>
+                {
+                    overviewData?.cost &&
+                    <>
+                        <View style={styles.group}>
+                            <Text style={[styles.label, { fontSize: 16, color: Colors.red }]}>Custo:</Text>
+                            <Text style={[styles.value, { color: Colors.red, fontSize: 16 }]}>- R$ {overviewData?.cost.toFixed(2).replace('.', ',')}</Text>
+                        </View>
+                        <View style={[styles.group, {}]}>
+                            <Text style={[styles.label, { fontSize: 24, color: Colors.primary }]}>Lucro:</Text>
+                            <Text style={[styles.value, { backgroundColor: Colors.primary, color: Colors.white, fontSize: 24 }]}>R$ {overviewData?.gain.toFixed(2).replace('.', ',')}</Text>
+                        </View>
+                    </>
+                }
             </View>
-            <View style={{ width: '100%', flexDirection: 'row', height: 20 }}>
+            <View style={{ width: '100%', flexDirection: 'row', height: 24 }}>
                 <View style={{ backgroundColor: Colors.red, width: `${COST_PERCENT}%` }} >
-                    <Text style={{ textAlign: 'center', color: Colors[colorScheme].textContrast, fontWeight: 'bold' }}>{COST_PERCENT}%</Text>
+                    <Text style={styles.percent}>{COST_PERCENT.toFixed(2)}%</Text>
                 </View>
                 <View style={{ backgroundColor: Colors.primary, flex: 1 }} >
-                    <Text style={{ textAlign: 'center', color: Colors[colorScheme].textContrast, fontWeight: 'bold' }}>31,4%</Text>
+                    <Text style={styles.percent}>{(100 - COST_PERCENT).toFixed(2)}%</Text>
                 </View>
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        width: '100%',
+        marginVertical: 8,
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    info: {
+        borderBottomWidth: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 8,
+        borderColor: Colors.lightGray,
+    },
+    group: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        alignItems: 'center',
+
+    },
+    label: {
+        textTransform: "uppercase",
+        fontWeight: 'bold'
+    },
+    value: {
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        marginVertical: 1,
+        borderRadius: 4,
+        fontWeight: 'bold',
+    },
+    percent: {
+        textAlign: 'center',
+        textAlignVertical: "center",
+        color: Colors.white,
+        lineHeight: 24,
+        fontWeight: 'bold'
+    }
+
+})

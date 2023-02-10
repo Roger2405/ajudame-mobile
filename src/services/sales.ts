@@ -1,6 +1,6 @@
 
 import { LastSaleProductProps, OrderProductProps, SaleProductProps } from "../@types/orderProduct";
-import { SalesResumeProps } from "../@types/sales";
+import { SaleOverviewProps, SalesResumeProps } from "../@types/sales";
 import api from "./api";
 import getUserID from "./getUserID";
 
@@ -72,6 +72,41 @@ export async function deleteLastSale() {
             })
             .catch(err => {
                 reject('Ocorreu um erro no servidor!')
+            })
+    })
+}
+
+export async function getHistoric() {
+    const ID_USER = await getUserID();
+
+    return new Promise((resolve, reject) => {
+        api.get(`/${ID_USER}/sales/historic`)
+            .then(res => {
+                if (res.data[0])
+                    resolve(res.data as SaleOverviewProps[]);
+                else {
+                    reject('Sem dados recebidos do servidor!')
+                }
+            })
+            .catch(err => {
+                reject(err)
+            })
+    })
+}
+export async function getOverview(date: string) {
+    const ID_USER = await getUserID();
+
+    return new Promise((resolve, reject) => {
+        api.get(`/${ID_USER}/sales/overview/${date}`)
+            .then(res => {
+                if (res.data[0])
+                    resolve(res.data[0] as SaleOverviewProps);
+                else {
+                    reject('Sem dados recebidos do servidor!')
+                }
+            })
+            .catch(err => {
+                reject(err)
             })
     })
 }

@@ -1,5 +1,5 @@
 
-import { ProductProps } from "../@types/product";
+import { ProductDetailsProps, ProductProps } from "../@types/product";
 import api from "./api";
 import getUserID from "./getUserID";
 
@@ -38,8 +38,7 @@ export async function getProduct(id_product: number) {
 
 
     const response = await api.get(`/${ID_USER}/products/${id_product}`)
-    console.log('response', response.data)
-    return response.data[0] as ProductProps;
+    return response.data[0] as ProductDetailsProps;
 }
 
 export async function deleteProduct(id_product: number) {
@@ -50,9 +49,6 @@ export async function deleteProduct(id_product: number) {
 }
 export async function updateProduct(data: {}, id: number) {
     const ID_USER = await getUserID();
-
-    //@ts-ignore
-    console.log(data.mainPrice)
 
     const response = await api.put(`/${ID_USER}/products/${id}`, data, {
         headers: {

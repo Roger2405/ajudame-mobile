@@ -1,15 +1,15 @@
 // import { axios } from 'axios';
 
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import { SaleProductProps } from '../@types/orderProduct';
-import { ButtonsContainer, DeleteButton, SingleButton } from '../components/common/Buttons';
+import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
-import { Feather, FontAwesome5 } from '@expo/vector-icons';
-import { deleteLastSale, getLastSale } from '../services/sales';
-import { SalesList, SalesListItem } from '../components/Home/SalesList';
+import { Feather } from '@expo/vector-icons';
+import { deleteLastSale } from '../services/sales';
+import { SalesList } from '../components/Home/SalesList';
 import { OverView } from '../components/Home/Overview';
 import { LastSale } from '../components/Home/LastSale';
 import { useRecentSales } from '../contexts/sales';
@@ -17,7 +17,6 @@ import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { useProducts } from '../contexts/products';
 import getGroupedArray from '../utils/groupArray';
 import { PieChartComponent } from '../components/common/PieChart';
-import { PieChartKitComponent } from '../components/common/PieChartKit';
 
 
 
@@ -26,7 +25,7 @@ export default function Home() {
   const colorScheme = useColorScheme();
 
   const { productTypes } = useProducts();
-  const { sales, lastSale, updateRecentSalesInContext, isLoading } = useRecentSales();
+  const { sales, noCostItems, lastSale, updateRecentSalesInContext, isLoading } = useRecentSales();
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
 
   const [dataPieChart, setDataPieChart] = useState<{
@@ -78,6 +77,7 @@ export default function Home() {
 
   }
 
+  const pluralSuffix = noCostItems && (noCostItems?.length) > 1 && 's';
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       {
@@ -85,12 +85,28 @@ export default function Home() {
           <ActivityIndicator />
           :
           <>
-            {/* <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} /> */}
+            <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
             <ScrollView contentContainerStyle={{ paddingBottom: 96 }} style={[{ width: '100%' }]}>
+
+              {//verifica se há produtos sem o custo informado, se houver, é exibida uma mensagem
+                (noCostItems && noCostItems.length > 0) &&
+                <View style={[styles.costInfo, { backgroundColor: Colors.lightRed }]}>
+                  <Text style={[styles.costInfoMessage, { color: Colors[colorScheme].itemColor }]}>Há {noCostItems?.length} produto{pluralSuffix} nas vendas sem custo informado!</Text>
+                  <Text style={[styles.costInfoMessage, { backgroundColor: Colors.lightRed, color: Colors[colorScheme].itemColor, marginBottom: 4 }]}>Informe o custo do{pluralSuffix} produto{pluralSuffix}: {noCostItems.map((item, index) => {
+                    const max_index = 4;
+                    if (index < max_index)
+                      return (index === 0 ? '' : ', ') + item.name_product
+                    else if (index == max_index) {
+                      const rest = noCostItems?.length - index;
+                      return ` + ${rest} ite${rest > 1 ? 'ns' : 'm'}`
+                    }
+                  })}</Text>
+                </View>
+              }
               {
                 sales?.length ?
                   <>
-                    <OverView salesOfDay={sales} />
+                    <OverView date={'2023-02-09'} />
                     {
                       lastSale &&
                       <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
@@ -134,5 +150,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.gray,
   },
+  costInfo: {
+    borderWidth: 1,
+    borderColor: Colors.red,
+    borderRadius: 8,
+    marginTop: 8,
+    paddingHorizontal: 4,
+  },
+  costInfoMessage: {
+    textAlign: 'center',
+    paddingVertical: 2,
+    borderRadius: 4
+  }
 });
 

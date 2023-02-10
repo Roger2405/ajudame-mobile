@@ -20,6 +20,7 @@ export type SaleProductProps = {
     count: number,
     id: number,
     name_product: string,
+    cost_product?: number,
     price_product: number,
     type_product: string,
 }

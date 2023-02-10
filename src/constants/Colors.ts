@@ -4,7 +4,7 @@ export default {
   primary: 'rgb(69, 197, 103)',
   lightPrimary: 'rgba(69, 197, 103, 0.35)',
   lightGray: 'rgba(136, 136, 136, 0.35)',
-  bgSmooth: 'rgba(0,0,0,0.45)',
+  bgSmooth: 'rgba(0,0,0,0.35)',
   gray: 'rgb(136, 136, 136)',
   red: 'rgb(229, 84, 84)',
   lightRed: 'rgba(229, 84, 84, 0.35)',
