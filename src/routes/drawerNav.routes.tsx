@@ -9,17 +9,18 @@ import { Text, StyleSheet, TouchableOpacity, Pressable, View } from "react-nativ
 import { Feather } from "@expo/vector-icons";
 import { useAuth } from "../contexts/auth";
 import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
 // import {} from '@reac'
 
 export function DrawerNav() {
     const Drawer = createDrawerNavigator();
-    const { signOut } = useAuth();
     return (
 
         <Drawer.Navigator
             drawerContent={(props: any) => <MenuItems {...props} />}
             initialRouteName="Main"
             defaultStatus={'closed'}
+            screenOptions={{ headerShown: false }}
         >
             <Drawer.Screen name="Main" component={AppRoutes} />
         </Drawer.Navigator>
@@ -28,10 +29,11 @@ export function DrawerNav() {
 
 function MenuItems({ navigation }: any) {
     const { user, signOut } = useAuth();
+    const colorSheme = useColorScheme();
     return (
         <DrawerContentScrollView
             style={{
-                backgroundColor: Colors.lightGray,
+                backgroundColor: Colors[colorSheme].background,
                 paddingHorizontal: 8,
                 paddingBottom: 40
             }}
