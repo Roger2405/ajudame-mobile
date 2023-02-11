@@ -23,7 +23,6 @@ export default function Historic() {
         React.useCallback(() => {
             getHistoric().then((res) => {
                 setSalesHistoric(res as SaleOverviewProps[])
-                console.log(res)
             }).catch(console.log)
         }, [sales])
     )

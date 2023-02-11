@@ -100,7 +100,6 @@ export default function ProductForm({ route }: Props) {
             const stockChanged = stock !== undefined;
             const costChanged = cost !== undefined && editableCost && cost !== productData.cost;
 
-            console.log('custo input', cost, costChanged)
             costChanged &&
                 formData.append('cost', cost?.toString())
 
@@ -161,7 +160,6 @@ export default function ProductForm({ route }: Props) {
         if (id_product)
             deleteProduct(id_product)
                 .then(res => {
-                    console.log(res.data)
                     navigation.navigate('Products');
                     updateProductsInContext();
                     updateStockInContext();

@@ -9,10 +9,13 @@ import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../.
 import useColorScheme from '../../hooks/useColorScheme';
 import OrderCard from '../../components/AddSales/OrderCard';
 import { useProducts } from '../../contexts/products';
-import OrderProducts, { Item } from '../../components/AddSales/OrderProducts';
+import OrderProducts, { EditableItem, Item } from '../../components/AddSales/OrderProducts';
 import { ModalSale } from '../../components/AddSales/AddSaleModal';
 import { useOrderProducts } from '../../contexts/order';
 import { useStock } from '../../contexts/stock';
+import { getProduct } from '../../services/products';
+import getGroupedArray from '../../utils/groupArray';
+import Animated from 'react-native-reanimated';
 
 // import { SwipeablePanel } from 'r';
 
@@ -33,42 +36,18 @@ export function NewSale() {
     // const [errorMessage, setErrorMessage] = useState<string>();
     //const [inputValue, setInputValue] = useState<string>('');
     // const [total, setTotal] = useState<number>();
-    // const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>([]);
-    // useEffect(() => {
-    //     getGroupedProducts().then(setProductsGroupedByType).catch(console.log)
-    // }, [])
     const { productsGroupedByType } = useProducts();
     const { stock } = useStock();
     const [productsFiltered, setProductsFiltered] = useState<ProductProps[][]>(productsGroupedByType)
-    // var productsFiltered: ProductProps[][] = [];
     const [hideNoStockProducts, setHideNoStockProducts] = useState(true);
     // const [completedOrder, setCompletedOrder] = useState(false);
 
-    // const [overflowX, setOverflowX] = useState(true);
     // const [priceModel, setPriceModel] = useState('main');
 
     useEffect(() => {
         console.log(productsFiltered)
     }, [productsFiltered])
     useEffect(() => {
-        // if (hideNoStockProducts) {
-        //     setProductsFiltered(productsFiltered => {
-        //         if (productsFiltered)
-        //             return productsFiltered.map((group, index) => {
-        //                 console.log(index, JSON.stringify(group[0].type_product))
-        //                 return group.filter(product => {
-        //                     const productStock = stock.find(item => item.id_product == product.id);
-        //                     return productStock?.quantity as number > 0;
-        //                 })
-        //             })
-        //         else {
-        //             return productsGroupedByType;
-        //         }
-        //     })
-        // }
-        // else {
-        //     setProductsFiltered(productsGroupedByType)
-        // }
         if (hideNoStockProducts)
             setProductsFiltered(
                 productsGroupedByType?.map((group, index) => {
@@ -119,8 +98,11 @@ export function NewSale() {
                             </View>
                         </View>
                         <ScrollView
+                            contentContainerStyle={{
+                                marginBottom: 120,
+                            }}
                             style={{
-                                marginBottom: 120
+                                height: 'auto'
                             }}
                         >
                             {
@@ -130,6 +112,15 @@ export function NewSale() {
                                 })
                             }
                         </ScrollView>
+                        {/* <ScrollView
+                            contentContainerStyle={{ marginBottom: 120, backgroundColor: Colors[colorScheme].itemColor }}>
+                            <Text style={{ fontSize: 32, textTransform: 'uppercase' }}>Pedido</Text>
+                            {
+                                orderProducts.map(orderProduct => {
+                                    return <EditableItem key={orderProduct.id_product} item={orderProduct} setOrderProducts={setOrderProducts} />
+                                })
+                            }
+                        </ScrollView> */}
                         <OrderCard />
                         <ButtonsContainer>
                             {

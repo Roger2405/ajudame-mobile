@@ -78,11 +78,10 @@ export async function deleteLastSale() {
 
 export async function getHistoric() {
     const ID_USER = await getUserID();
-    console.log(ID_USER)
+
     return new Promise((resolve, reject) => {
         api.get(`/${ID_USER}/sales/historic`)
             .then(res => {
-                console.log(res.data[0])
                 if (res.data[0]) {
                     resolve(res.data as SaleOverviewProps[]);
                 }
