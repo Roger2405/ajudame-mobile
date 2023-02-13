@@ -4,17 +4,18 @@ import Colors from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
     container: {
-        // paddingHorizontal: 8,
+         paddingHorizontal: 8,
         position: 'relative',
-        width: '100%',
     },
     item: {
+        height: 48,
         flexDirection: 'row',
         marginTop: 4,
-        padding: 8,
+        overflow: 'hidden',
+        // padding: 8,
         alignItems: 'center',
-        justifyContent: 'space-between',
-        borderRadius: 8,
+        // justifyContent: 'space-between',
+        borderRadius: 4,
         maxWidth: '100%',
 
         borderBottomWidth: 1,
@@ -24,22 +25,34 @@ export const styles = StyleSheet.create({
 
     },
     itemName: {
-        flexBasis: '50%',
+        fontWeight: 'bold',
+        fontSize: 12,
+        // color: Colors.lightGray,
+        // marginLeft: 4,
     },
     itemCount: {
-        padding: 4,
-        width: 50,
-        borderRadius: 16,
+        // padding: 4,
+        width: 40,
+        // borderRadius: 16,
         textAlign: 'center',
         fontWeight: '900',
     },
-    itemPrice: {
-        width: 70,
-        marginHorizontal: 8,
+    buttonCount: {
+        backgroundColor: Colors.lightGray,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: Colors.gray
+    },
+    itemSubtotal: {
+        paddingRight: 8,
+        flexBasis: 88,
+        flex: 1,
+        // marginHorizontal: 8,
+        color: Colors.primary,
+        fontWeight: 'bold',
         textAlign: 'right',
     },
     text: {
         textTransform: 'uppercase',
-        fontSize: 16,
     }
 })

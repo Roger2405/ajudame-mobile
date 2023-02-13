@@ -54,7 +54,7 @@ interface ItemProps {
     }>>
 }
 function ProductCell({ product, setModal }: ItemProps) {
-    const { orderProducts, setOrderProducts } = useOrderProducts();
+    const { orderProducts, addProductToOrder } = useOrderProducts();
     const { stock } = useStock();
 
     const colorScheme = useColorScheme();
@@ -81,7 +81,7 @@ function ProductCell({ product, setModal }: ItemProps) {
         priceColor = Colors.primary;
     }
     //valores
-    var product_count = orderProducts[getIndexInOrderProducts()]?.count;
+    var product_count = (orderProducts[getIndexInOrderProducts()]?.count);
     var product_price = product.main_price.toFixed(2);
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
     var objectStockFromContext = stock.find(item => item.id_product == product.id);
@@ -99,12 +99,12 @@ function ProductCell({ product, setModal }: ItemProps) {
             onLongPress={() => {
                 setModal({ options: { product: product, type: 'add' }, showModal: true })
             }}
-            onPress={() => _addProductToOrder(setOrderProducts, product)}>
+            onPress={() => addProductToOrder(product)}>
 
             <View style={styles.itemHeader}>
                 <Text style={[styles.itemName, { color: nameColor }]}>{product.name_product}</Text>
                 {
-                    product_count &&
+                    product_count > 0 &&
                     <Text style={styles.itemCount}>{product_count}</Text>
                 }
 
@@ -133,22 +133,3 @@ function ProductCell({ product, setModal }: ItemProps) {
     )
 }
 
-function _addProductToOrder(setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void, product: ProductProps,) {
-    setOrderProducts(orderProducts => {
-        const indexOfProduct = orderProducts.findIndex(item => item.id_product == product.id);
-
-        if (indexOfProduct != -1) {//caso encontre um produto já existente no array
-            orderProducts[indexOfProduct].count++;
-        }
-        else {//caso contrário adiciona no final do array
-            orderProducts.push({
-                id_product: product.id,
-                count: 1,
-                price_product: product.main_price,
-                name_product: product.name_product,
-                // cost_product: product.cost
-            })
-        }
-        return [...orderProducts]
-    })
-}

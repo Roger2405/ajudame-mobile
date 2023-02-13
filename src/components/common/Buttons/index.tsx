@@ -72,9 +72,14 @@ export function ConfirmButton({ onPress, disabled }: PressableProps) {
         <RoundedButton color={Colors.primary} disabled={disabled} buttonStyle='right' title="Confirmar" onPress={onPress} icon={<Feather size={32} name={'check'} color={Colors.white} />} />
     )
 }
-export function DeleteButton({ onPress }: PressableProps) {
+type DeleteButtonProps = {
+    onPress: () => void,
+    borderRadius: number,
+    backgroundColor: string,
+}
+export function DeleteButton({ onPress, borderRadius, backgroundColor }: DeleteButtonProps) {
     return (
-        <Pressable style={{ backgroundColor: Colors.red, height: '100%', alignItems: 'center', justifyContent: 'center', borderRadius: 4, aspectRatio: 1 / 1 }} onPress={onPress} >
+        <Pressable style={{ backgroundColor, height: '100%', alignItems: 'center', borderRadius, justifyContent: 'center', aspectRatio: 1 / 1 }} onPress={onPress} >
             <Feather size={24} name={'trash'} color={Colors.white} />
         </Pressable>
     )

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
-import { Text, View, Dimensions, Animated, StyleSheet } from "react-native";
+import { Text, View, Dimensions, Animated, StyleSheet, Button } from "react-native";
 
 import SlidingUpPanel from "rn-sliding-up-panel";
 import { OrderProductProps } from "../../../@types/orderProduct";
@@ -16,7 +16,8 @@ export default function OrderCard() {
     const { orderProducts, setOrderProducts } = useOrderProducts();
     const height = Layout.window.height;
     const draggableRange = { top: height / 2, bottom: 0 }
-    const [draggedValue, setDraggedValue] = useState(new Animated.Value(0))
+    // const [draggedValue, setDraggedValue] = useState(new Animated.Value(0))
+    const draggedValue = new Animated.Value(0)
     // var draggedValue = new Animated.Value(-Number.MIN_VALUE);
 
     var panel: SlidingUpPanel | null = {} as SlidingUpPanel;
@@ -31,13 +32,14 @@ export default function OrderCard() {
     return (
         <View style={styles.container} >
             <SlidingUpPanel
-                ref={c => {
-                    (panel = c)
-                }}
+                // ref={c => {
+                //     (panel = c)
+                // }}
                 draggableRange={draggableRange}
-                animatedValue={draggedValue}
+                // animatedValue={draggedValue}
                 // snappingPoints={[300]}
-                showBackdrop={true}
+                // showBackdrop={true}
+
                 allowMomentum={true}
             >
                 <View style={[styles.panel, { backgroundColor: Colors[colorScheme].itemColor }]}>
@@ -57,11 +59,12 @@ export default function OrderCard() {
                         </Animated.View>
                     </View>
                     <View style={{ marginBottom: 160, flex: 1 }}>
+                        {/* <Button title="Open" onPress={() => }></Button> */}
                         {
                             orderProducts.length ?
                                 <>
                                     <Text style={styles.hint}>Para remover um produto, clique sobre ele!</Text>
-                                    <OrderProducts sales={orderProducts} editable setOrderProducts={setOrderProducts} />
+                                    <OrderProducts editable />
                                 </>
                                 :
                                 <Text style={{ textAlign: "center", color: Colors[colorScheme].text }}>Adicione algum produto!</Text>
@@ -73,4 +76,3 @@ export default function OrderCard() {
         </View >
     );
 }
-

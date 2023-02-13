@@ -1,33 +1,28 @@
 import React from 'react';
-import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList, ScrollView, Pressable } from 'react-native';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 import { OrderProductProps } from '../../../@types/orderProduct';
 import { styles } from './styles';
+import { useOrderProducts } from '../../../contexts/order';
+import { DeleteButton } from '../../common/Buttons';
+import { Feather } from '@expo/vector-icons';
+import Animated, { Layout, FadeOutUp } from 'react-native-reanimated';
 
 interface Props {
-    sales: OrderProductProps[]
     editable?: boolean
-    setOrderProducts?: React.Dispatch<React.SetStateAction<OrderProductProps[]>>
 }
 
-export default function OrderProducts({ sales, editable, setOrderProducts }: Props) {
+export default function OrderProducts({ editable }: Props) {
+    const { orderProducts } = useOrderProducts();
     return (
-        // <FlatList
-        //     style={styles.container}
-        //     contentContainerStyle={{ paddingBottom: 150 }}
-        //     data={sales}    //v´`--if (editable === true) && |for passado o hook para alterar o OrderProducts| -> será renderizado o <EditableItem />
-        //     renderItem={i => (editable && setOrderProducts) ? <EditableItem item={i.item} setOrderProducts={setOrderProducts} /> : <Item item={i.item} />}
-        //     keyExtractor={item => item.name_product}
-        // />
         <ScrollView
             style={styles.container}
-            contentContainerStyle={{ paddingBottom: 150 }}
 
         >
             {
-                sales.map(sale => {
-                    return (editable && setOrderProducts) ? <EditableItem key={sale.id_product} item={sale} setOrderProducts={setOrderProducts} /> : <Item key={sale.id_product} item={sale} />
+                orderProducts.map(sale => {
+                    return <Item key={sale.id_product} item={sale} />
                 })
             }
         </ScrollView>
@@ -37,46 +32,78 @@ export default function OrderProducts({ sales, editable, setOrderProducts }: Pro
 interface ItemProps {
     item: OrderProductProps
 }
-
 export function Item({ item }: ItemProps) {
     const colorScheme = useColorScheme();
+    const subtotal = ((item.price_product * item.count).toFixed(2).replace('.', ',') || 0);
+    const { subProductOfOrder, addCountToOrderProduct } = useOrderProducts();
+    const price = (item.price_product)?.toFixed(2).replace('.', ',')
     return (
-        <View style={[{ backgroundColor: Colors[colorScheme].itemColor }, styles.item]}>
-            <Text
-                style={[styles.itemName, styles.text, { flexGrow: 1, color: Colors[colorScheme].text }]}
-            >{item.name_product}</Text>
-            <Text
-                style={[styles.text, styles.itemPrice, { color: Colors[colorScheme].text }]}
-            >R$ {item.price_product.toFixed(2)}</Text>
-            <Text
-                style={[styles.itemCount, { backgroundColor: Colors.bgSmooth, color: Colors[colorScheme].itemColor }]}
-            >x {item.count}</Text>
-        </View>
+        <Animated.View
+            layout={Layout}
+            exiting={FadeOutUp}
+        >
+            <View
+                style={[{ backgroundColor: Colors[colorScheme].itemColor }, styles.item]}
+            >
+
+                {/* <DeleteButton borderRadius={0} backgroundColor={Colors.lightGray} onPress={() => { }} /> */}
+
+                <View style={{ flexGrow: 1, flexBasis: '30%', marginLeft: 4 }}>
+                    <Text style={[styles.itemName, styles.text, { color: Colors.gray }]}>{item.name_product}</Text>
+                    <Text style={{ color: Colors.lightPrimary, fontWeight: 'bold', fontSize: 12 }}>R$ {price}</Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Pressable style={styles.buttonCount}
+                        onPress={() => subProductOfOrder(item.id_product)}
+                    ><Feather name='minus' size={24} color={Colors.white} /></Pressable>
+
+                    <Text style={[styles.itemCount, { color: Colors[colorScheme].text }]}>{(item.count.toString())}</Text>
+
+                    <Pressable style={styles.buttonCount}
+                        onPress={() => addCountToOrderProduct(item)}
+                    ><Feather name='plus' size={24} color={Colors.white} /></Pressable>
+                </View>
+
+                <Text style={[styles.text, styles.itemSubtotal]}>R$ {subtotal.toString()}</Text>
+            </View>
+        </Animated.View >
     );
 }
-interface EditableItemProps extends ItemProps {
-    setOrderProducts: React.Dispatch<React.SetStateAction<OrderProductProps[]>>
-}
+// interface EditableItemProps extends ItemProps {
+//     setOrderProducts: React.Dispatch<React.SetStateAction<OrderProductProps[]>>
+// }
 
-export function EditableItem({ item, setOrderProducts }: EditableItemProps) {
-    return (
-        <TouchableOpacity activeOpacity={0.5} onPress={() => _subProductToOrder(setOrderProducts, item)}>
-            <Item item={item} />
-        </TouchableOpacity>
+// export function EditableItem({ item, setOrderProducts }: EditableItemProps) {
+//     return (
+//         <TouchableOpacity activeOpacity={0.5} onPress={() => _subProductToOrder(setOrderProducts, item.id_product)}>
+//             <Item item={item} />
+//         </TouchableOpacity>
 
-    )
-}
+//     )
+// }
 
-function _subProductToOrder(setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void, product: OrderProductProps,) {
-    setOrderProducts(orderProducts => {
-        const indexOfProduct = orderProducts.findIndex(item => item.id_product == product.id_product);
-        const oldItem = orderProducts[indexOfProduct];
+// function _subProductToOrder(setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void, id_product: number) {
+//     setOrderProducts(orderProducts => {
+//         const indexOfProduct = orderProducts.findIndex(item => item.id_product == id_product);
+//         const oldItem = orderProducts[indexOfProduct];
 
-        oldItem.count--;
-        if (oldItem.count <= 0) {
-            orderProducts.splice(indexOfProduct, 1);
-        }
+//         oldItem.count--;
+//         if (oldItem.count <= 0) {
+//             orderProducts.splice(indexOfProduct, 1);
+//             // oldItem.count = 0;
+//         }
 
-        return [...orderProducts]
-    })
-}
+//         return [...orderProducts]
+//     })
+
+// }
+// function _addProductToOrder(setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void, id_product: number) {
+//     setOrderProducts(orderProducts => {
+//         const indexOfProduct = orderProducts.findIndex(item => item.id_product == id_product);
+//         const oldItem = orderProducts[indexOfProduct];
+
+//         oldItem.count++;
+//         return [...orderProducts]
+//     })
+// }

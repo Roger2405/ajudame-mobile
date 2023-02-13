@@ -9,7 +9,7 @@ import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../.
 import useColorScheme from '../../hooks/useColorScheme';
 import OrderCard from '../../components/AddSales/OrderCard';
 import { useProducts } from '../../contexts/products';
-import OrderProducts, { EditableItem, Item } from '../../components/AddSales/OrderProducts';
+import OrderProducts, { Item } from '../../components/AddSales/OrderProducts';
 import { ModalSale } from '../../components/AddSales/AddSaleModal';
 import { useOrderProducts } from '../../contexts/order';
 import { useStock } from '../../contexts/stock';
@@ -23,7 +23,7 @@ import Animated from 'react-native-reanimated';
 export function NewSale() {
     const navigation = useNavigation();
     // const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([]);
-    const { orderProducts, setOrderProducts } = useOrderProducts();
+    const { orderProducts, clearOrderProducts } = useOrderProducts();
     const [modal, setModal] = useState({} as {
         showModal: boolean;
         options: {
@@ -63,7 +63,6 @@ export function NewSale() {
     }, [hideNoStockProducts])
 
     const colorScheme = useColorScheme();
-    // const { stock } = useStock();
 
     return (
         <>
@@ -74,8 +73,8 @@ export function NewSale() {
                             modal.showModal &&
                             <ModalSale setModal={setModal} modal={modal} />
                         }
+                        {/* OPTIONS */}
                         <View style={{ flexDirection: 'row' }}>
-
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text>Ocultar sem estoque</Text>
                                 <Switch
@@ -99,10 +98,7 @@ export function NewSale() {
                         </View>
                         <ScrollView
                             contentContainerStyle={{
-                                marginBottom: 120,
-                            }}
-                            style={{
-                                height: 'auto'
+                                paddingBottom: 120
                             }}
                         >
                             {
@@ -112,21 +108,11 @@ export function NewSale() {
                                 })
                             }
                         </ScrollView>
-                        {/* <ScrollView
-                            contentContainerStyle={{ marginBottom: 120, backgroundColor: Colors[colorScheme].itemColor }}>
-                            <Text style={{ fontSize: 32, textTransform: 'uppercase' }}>Pedido</Text>
-                            {
-                                orderProducts.map(orderProduct => {
-                                    return <EditableItem key={orderProduct.id_product} item={orderProduct} setOrderProducts={setOrderProducts} />
-                                })
-                            }
-                        </ScrollView> */}
-                        <OrderCard />
                         <ButtonsContainer>
                             {
                                 //se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
                                 orderProducts.length ?
-                                    <CancelButton onPress={() => setOrderProducts([])} />
+                                    <CancelButton onPress={clearOrderProducts} />
                                     :
                                     <BackButton />
                                 //e se não há produtos no pedido, o botão de continuar é desativado
@@ -149,6 +135,7 @@ export function NewSale() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        height: '100%',
         paddingHorizontal: 8,
     },
     subTitle: {

@@ -28,7 +28,7 @@ export function OverView({ date }: Props) {
     return (
         <>
             {
-                overviewData?.total &&
+                overviewData && overviewData.total &&
                 <View style={[styles.container, { backgroundColor }]}>
                     <View style={styles.info}>
                         <View style={styles.group}>
@@ -36,7 +36,7 @@ export function OverView({ date }: Props) {
                             <Text style={[styles.value, { backgroundColor: Colors.lightGray, color: Colors.gray, fontSize: 20 }]}>R$ {overviewData?.total?.toFixed(2).replace('.', ',')}</Text>
                         </View>
                         {
-                            overviewData?.cost &&
+                            // overviewData.cost &&
                             <>
                                 <View style={styles.group}>
                                     <Text style={[styles.label, { fontSize: 16, color: Colors.red }]}>Custo:</Text>

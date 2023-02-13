@@ -34,9 +34,12 @@ export function LastSale({ data, handleDeleteSale }: Props) {
                         <Text style={styles.time}>{(data.header.time)}</Text>
                     </View>
                 </View>
-                <DeleteButton onPress={() => {
-                    setShowConfirmationModal(true)
-                }} />
+                <DeleteButton
+                    borderRadius={4}
+                    backgroundColor={Colors.red}
+                    onPress={() => {
+                        setShowConfirmationModal(true)
+                    }} />
             </View>
             <View style={{ paddingTop: 4 }}>
                 {
