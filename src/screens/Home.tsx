@@ -115,7 +115,10 @@ export default function Home() {
                     <OverView overviewData={overviewData} />
                     {
                       lastSale &&
-                      <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
+                      <>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>Última venda:</Text>
+                        <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
+                      </>
                     }
                     {
                       dataPieChart ?

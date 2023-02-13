@@ -19,24 +19,30 @@ interface Props {
 
 export function LastSale({ data, handleDeleteSale }: Props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const colorScheme = useColorScheme();
 
 
     return (
         <View style={styles.container} >
-            <View style={styles.header}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>
-                    Última venda:
-                </Text>
-                <View style={styles.headerInfo}>
 
+            <View style={styles.header}>
+                <View>
+
+                    <Text style={{ textTransform: 'uppercase', fontSize: 8, color: Colors[colorScheme].text }}>Modelo de preço</Text>
+                    {
+                        data.header.is_main_price ?
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', color: Colors.primary, textTransform: 'uppercase' }}>Principal</Text>
+                            :
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', color: Colors.gray, textTransform: 'uppercase' }}>Secundário</Text>
+                    }
+                </View>
+                <View style={styles.headerInfo}>
                     <View style={styles.timeContainer}>
                         <Feather name='clock' size={16} color={Colors.lightGray} />
                         <Text style={styles.time}>{(data.header.time)}</Text>
                     </View>
                 </View>
                 <DeleteButton
-                    borderRadius={4}
-                    backgroundColor={Colors.red}
                     onPress={() => {
                         setShowConfirmationModal(true)
                     }} />

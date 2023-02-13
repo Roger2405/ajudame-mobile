@@ -63,6 +63,10 @@ export const styles = StyleSheet.create({
     },
     itemPrice: {
         position: 'absolute',
+        borderTopLeftRadius: 16,
+        borderBottomRightRadius: 4,
+        // borderRadius: 4,
+        margin: 2,
         width: 100,
         padding: 8,
         bottom: 0,

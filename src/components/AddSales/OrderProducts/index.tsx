@@ -8,6 +8,7 @@ import { useOrderProducts } from '../../../contexts/order';
 import { DeleteButton } from '../../common/Buttons';
 import { Feather } from '@expo/vector-icons';
 import Animated, { Layout, FadeOutUp } from 'react-native-reanimated';
+import { ProductProps } from '../../../@types/product';
 
 interface Props {
     editable?: boolean
@@ -34,9 +35,10 @@ interface ItemProps {
 }
 export function Item({ item }: ItemProps) {
     const colorScheme = useColorScheme();
-    const subtotal = ((item.price_product * item.count).toFixed(2).replace('.', ',') || 0);
-    const { subProductOfOrder, addCountToOrderProduct } = useOrderProducts();
-    const price = (item.price_product)?.toFixed(2).replace('.', ',')
+    const { subProductOfOrder, addCountToOrderProduct, priceModel } = useOrderProducts();
+    const price_product = priceModel === 'main' ? item.main_price : item.secondary_price;
+    const subtotal = ((price_product * item.count).toFixed(2).replace('.', ',') || 0);
+    const price = (price_product)?.toFixed(2).replace('.', ',')
     return (
         <Animated.View
             layout={Layout}
@@ -70,40 +72,3 @@ export function Item({ item }: ItemProps) {
         </Animated.View >
     );
 }
-// interface EditableItemProps extends ItemProps {
-//     setOrderProducts: React.Dispatch<React.SetStateAction<OrderProductProps[]>>
-// }
-
-// export function EditableItem({ item, setOrderProducts }: EditableItemProps) {
-//     return (
-//         <TouchableOpacity activeOpacity={0.5} onPress={() => _subProductToOrder(setOrderProducts, item.id_product)}>
-//             <Item item={item} />
-//         </TouchableOpacity>
-
-//     )
-// }
-
-// function _subProductToOrder(setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void, id_product: number) {
-//     setOrderProducts(orderProducts => {
-//         const indexOfProduct = orderProducts.findIndex(item => item.id_product == id_product);
-//         const oldItem = orderProducts[indexOfProduct];
-
-//         oldItem.count--;
-//         if (oldItem.count <= 0) {
-//             orderProducts.splice(indexOfProduct, 1);
-//             // oldItem.count = 0;
-//         }
-
-//         return [...orderProducts]
-//     })
-
-// }
-// function _addProductToOrder(setOrderProducts: (value: React.SetStateAction<OrderProductProps[]>) => void, id_product: number) {
-//     setOrderProducts(orderProducts => {
-//         const indexOfProduct = orderProducts.findIndex(item => item.id_product == id_product);
-//         const oldItem = orderProducts[indexOfProduct];
-
-//         oldItem.count++;
-//         return [...orderProducts]
-//     })
-// }

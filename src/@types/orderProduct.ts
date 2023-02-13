@@ -1,6 +1,8 @@
 export type OrderProductProps = {
     id_product: number
-    price_product: number
+    // price_product: number
+    main_price: number,
+    secondary_price: number
     name_product: string
     cost_product?: number
     count: number
@@ -11,6 +13,7 @@ export type LastSaleProductProps = {
         id_sale: number,
         time: string,
         subtotal: number,
+        is_main_price: boolean,
         discounted_stock: boolean
     }
     products: SaleProductProps[]

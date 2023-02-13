@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Switch } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Switch, TouchableOpacity, Pressable } from 'react-native';
 import { ProductsGrid } from '../../components/AddSales/ProductsGrid';
 import Colors from '../../constants/Colors';
 import { ProductProps } from '../../@types/product';
@@ -16,6 +16,7 @@ import { useStock } from '../../contexts/stock';
 import { getProduct } from '../../services/products';
 import getGroupedArray from '../../utils/groupArray';
 import Animated from 'react-native-reanimated';
+import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
 
 // import { SwipeablePanel } from 'r';
 
@@ -42,11 +43,6 @@ export function NewSale() {
     const [hideNoStockProducts, setHideNoStockProducts] = useState(true);
     // const [completedOrder, setCompletedOrder] = useState(false);
 
-    // const [priceModel, setPriceModel] = useState('main');
-
-    useEffect(() => {
-        console.log(productsFiltered)
-    }, [productsFiltered])
     useEffect(() => {
         if (hideNoStockProducts)
             setProductsFiltered(
@@ -74,19 +70,10 @@ export function NewSale() {
                             <ModalSale setModal={setModal} modal={modal} />
                         }
                         {/* OPTIONS */}
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text>Ocultar sem estoque</Text>
-                                <Switch
-                                    trackColor={{ false: Colors.gray, true: Colors.primary }}
-                                    thumbColor={Colors[colorScheme].itemColor}
-                                    ios_backgroundColor={Colors.gray}
-                                    onValueChange={() => setHideNoStockProducts(!hideNoStockProducts)}
-                                    value={hideNoStockProducts}
-                                />
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text>Ocultar sem estoque</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginVertical: 4 }}>
+                            <PriceModelSelect />
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8 }}>
+                                <Text style={{ color: Colors[colorScheme].text }}>Ocultar produtos {'\n'}sem estoque</Text>
                                 <Switch
                                     trackColor={{ false: Colors.gray, true: Colors.primary }}
                                     thumbColor={Colors[colorScheme].itemColor}

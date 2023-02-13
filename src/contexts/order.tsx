@@ -1,5 +1,6 @@
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { OrderProductProps } from "../@types/orderProduct";
 import { ProductProps } from "../@types/product";
 
@@ -8,6 +9,8 @@ interface OrderProductsContextData {
     addProductToOrder: (product: ProductProps) => void,
     addCountToOrderProduct: (orderProduct: OrderProductProps) => void,
     subProductOfOrder: (id_product: number) => void,
+    priceModel: 'main' | 'secondary',
+    setPriceModel: React.Dispatch<React.SetStateAction<"main" | "secondary">>
     clearOrderProducts: () => void,
 }
 
@@ -17,6 +20,8 @@ interface Props {
 }
 export function OrderProductsProvider({ children }: Props) {
     const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([])
+    const [priceModel, setPriceModel] = useState<'main' | 'secondary'>('main');
+
     // const [isLoading, setIsLoading] = useState(false)
     function clearOrderProducts() {
         setOrderProducts([])
@@ -59,7 +64,8 @@ export function OrderProductsProvider({ children }: Props) {
                 orderProducts.push({
                     id_product: product.id,
                     count: 1,
-                    price_product: product.main_price,
+                    main_price: product.main_price,
+                    secondary_price: product.secondary_price || 0,
                     name_product: product.name_product,
                     // cost_product: product.cost
                 })
@@ -69,7 +75,7 @@ export function OrderProductsProvider({ children }: Props) {
     }
 
     return (
-        <OrderProductsContext.Provider value={{ addCountToOrderProduct, clearOrderProducts, subProductOfOrder, addProductToOrder, orderProducts }}>
+        <OrderProductsContext.Provider value={{ priceModel, setPriceModel, addCountToOrderProduct, clearOrderProducts, subProductOfOrder, addProductToOrder, orderProducts }}>
             {children}
         </OrderProductsContext.Provider>
     )

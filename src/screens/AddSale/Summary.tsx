@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Image, Keyboard, Switch } from 'react-native';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Animated, { FadeInDown, FadeOutUp, Layout } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOutDown, FadeOutUp, Layout } from 'react-native-reanimated';
 import OrderProducts from '../../components/AddSales/OrderProducts';
 import { BackButton, ButtonsContainer, CancelButton, ConfirmButton } from '../../components/common/Buttons';
 import Colors from '../../constants/Colors';
@@ -31,17 +31,16 @@ export function Summary() {
     const [paymentValue, setPaymentValue] = useState(0);
     const [keyboardIsHidden, setKeyboardIsHidden] = useState(true);
 
-    const { orderProducts, clearOrderProducts } = useOrderProducts();
+    const { orderProducts, clearOrderProducts, priceModel } = useOrderProducts();
     const { updateRecentSalesInContext } = useRecentSales();
     const { updateStockInContext } = useStock();
 
     const [discountStock, setDiscountStock] = useState<boolean>(true);
-
     const sourceArr = [money100, money50, money20, money10, money5, money2, money1, money05]
 
     function handleConfirmUpdateSales() {
         setIsLoading(true)
-        addSale(orderProducts)
+        addSale(orderProducts, priceModel)
             .then(res => {
                 updateRecentSalesInContext();
                 clearOrderProducts()
@@ -74,7 +73,7 @@ export function Summary() {
     const totalValue = useMemo(() => {
         let sum = 0;
         orderProducts.forEach(orderProduct => {
-            sum += orderProduct.price_product * orderProduct.count;
+            sum += (priceModel == 'main' ? orderProduct.main_price : orderProduct.secondary_price) * orderProduct.count;
         })
         return sum;
     }, [orderProducts])
@@ -124,7 +123,7 @@ export function Summary() {
                         <View style={{ borderWidth: 1, borderColor: Colors.gray, paddingVertical: 4, borderRadius: 8, margin: 4 }}>
                             <View style={styles.groupContainer}>
                                 <Text style={[styles.label]}>Valor pago: </Text>
-                                <TextInput style={{ backgroundColor: Colors[colorScheme].itemColor, width: 150, padding: 8, borderRadius: 4, textAlign: 'right', borderWidth: 1, borderColor: Colors.lightGray }} onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValueFormated} />
+                                <TextInput style={{ backgroundColor: Colors[colorScheme].itemColor, width: 150, padding: 8, borderRadius: 4, textAlign: 'right', borderWidth: 1, borderColor: Colors.lightGray }} keyboardType='decimal-pad' onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValue.toString()} />
                             </View>
                             <ScrollView horizontal style={{ paddingVertical: 4, marginVertical: 4 }} contentContainerStyle={{ paddingHorizontal: 8 }}>
                                 {
@@ -142,7 +141,7 @@ export function Summary() {
                                 (paymentValue > totalValue) &&
                                 <View style={[styles.groupContainer, { justifyContent: 'flex-end' }]}>
                                     <Text style={[styles.label, { fontWeight: 'bold', color: Colors[colorScheme].text }]}>Troco:</Text>
-                                    <Text style={{ fontSize: 28, fontWeight: 'bold', color: Colors[colorScheme].text, paddingHorizontal: 4, borderRadius: 4, backgroundColor: Colors.lightGray }}>R$ {(paymentValue - totalValue).toFixed(2).replace('.', ',')}</Text>
+                                    <Text style={{ fontSize: 28, fontWeight: 'bold', color: Colors[colorScheme].text, paddingHorizontal: 4, borderRadius: 4, backgroundColor: Colors.lightGray }}>R$ {(paymentValue - totalValue)}</Text>
                                 </View>
                             }
                         </View>
@@ -152,7 +151,7 @@ export function Summary() {
                                 style={{ marginTop: 'auto' }}
                                 layout={Layout}
                                 entering={FadeInDown}
-                                exiting={FadeOutUp}
+                                exiting={FadeOutDown}
                             >
 
                                 <ButtonsContainer>
@@ -162,7 +161,7 @@ export function Summary() {
                                             :
                                             <BackButton />
                                     }
-                                    <ConfirmButton onPress={() => handleConfirmUpdateSales()} />
+                                    <ConfirmButton disabled={orderProducts.length === 0} onPress={() => handleConfirmUpdateSales()} />
                                 </ButtonsContainer>
                             </Animated.View>
 

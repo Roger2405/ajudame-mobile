@@ -26,14 +26,15 @@ export async function getSalesResume() {
         })
     return salesResume
 }
-export async function addSale(orderProducts: OrderProductProps[]) {
+export async function addSale(orderProducts: OrderProductProps[], priceModel: 'main' | 'secondary') {
     const ID_USER = await getUserID();
 
     const strOrderProducts = JSON.stringify(Array.from(orderProducts));
 
     return new Promise((resolve, reject) => {
         api.post(`${ID_USER}/sales/last`, {
-            orderProducts: strOrderProducts
+            orderProducts: strOrderProducts,
+            is_main_price: priceModel === 'main'
         })
             .then(res => {
                 if (res.data.success)

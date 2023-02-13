@@ -54,7 +54,7 @@ interface ItemProps {
     }>>
 }
 function ProductCell({ product, setModal }: ItemProps) {
-    const { orderProducts, addProductToOrder } = useOrderProducts();
+    const { orderProducts, addProductToOrder, priceModel } = useOrderProducts();
     const { stock } = useStock();
 
     const colorScheme = useColorScheme();
@@ -69,20 +69,22 @@ function ProductCell({ product, setModal }: ItemProps) {
 
     //definindo cores
     var bgItemColor = Colors[colorScheme].itemColor;
-    var bgItemPriceColor = Colors.primary;
+    var bgItemPriceColor = priceModel == 'main' ? Colors.primary : Colors.gray;
     var priceColor = Colors[colorScheme].textContrast;
     var nameColor = Colors[colorScheme].text;
 
     //se o produto está no pedido outras cores são exibidas
     const productIsInTheOrder = isInTheOrder();
     if (productIsInTheOrder) {
-        bgItemColor = Colors.primary;
-        bgItemPriceColor = Colors.light.itemColor;
-        priceColor = Colors.primary;
+        bgItemColor = priceModel == 'main' ? Colors.lightPrimary : Colors.lightGray;
+        bgItemPriceColor = Colors.white;
+        priceColor = priceModel == 'main' ? Colors.primary : Colors.gray;
     }
     //valores
     var product_count = (orderProducts[getIndexInOrderProducts()]?.count);
-    var product_price = product.main_price.toFixed(2);
+    //se o modelo de preço selecionado for o principa, é exibido o main_price, caso contrário, é exibido o preço secundário
+    var price_product = (priceModel == 'main' ? product.main_price : (product.secondary_price || 0));
+    const priceProductFormated = price_product.toFixed(2).replace('.', ',')
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
     var objectStockFromContext = stock.find(item => item.id_product == product.id);
     var stockValue = objectStockFromContext?.quantity;
@@ -122,9 +124,12 @@ function ProductCell({ product, setModal }: ItemProps) {
                         <Text style={{ fontSize: 8, color: Colors.gray }}>estoque</Text>
                         <Text style={{ color: Colors.gray, textAlign: 'right' }}>{JSON.stringify(stockValue)}</Text>
                     </View>
-                    <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
-                        R$ {product_price}
-                    </Text>
+                    {
+                        price_product > 0 &&
+                        <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
+                            R$ {priceProductFormated}
+                        </Text>
+                    }
                 </View>
 
 
