@@ -8,7 +8,7 @@ import { SaleProductProps } from '../@types/orderProduct';
 import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { Feather } from '@expo/vector-icons';
-import { deleteLastSale } from '../services/sales';
+import { deleteLastSale, getOverview } from '../services/sales';
 import { SalesList } from '../components/Home/SalesList';
 import { OverView } from '../components/Home/Overview';
 import { LastSale } from '../components/Home/LastSale';
@@ -17,6 +17,7 @@ import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { useProducts } from '../contexts/products';
 import getGroupedArray from '../utils/groupArray';
 import { PieChartComponent } from '../components/common/PieChart';
+import { SaleOverviewProps } from '../@types/sales';
 
 
 
@@ -27,6 +28,8 @@ export default function Home() {
   const { productTypes } = useProducts();
   const { sales, noCostItems, lastSale, updateRecentSalesInContext, isLoading } = useRecentSales();
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
+
+  const [overviewData, setOverviewData] = useState<SaleOverviewProps>({} as SaleOverviewProps)
 
   const [dataPieChart, setDataPieChart] = useState<{
     label: string;
@@ -58,12 +61,14 @@ export default function Home() {
             sum,
           })
       }
-
-
-      // console.log(newData)
       setDataPieChart(newData)
     }
 
+    getOverview(formatedDate)
+      .then(res => {
+        setOverviewData(res as SaleOverviewProps)
+      })
+      .catch(alert)
   }, [sales])
 
   async function handleDeleteSale() {
@@ -90,7 +95,7 @@ export default function Home() {
             <ScrollView contentContainerStyle={{ paddingBottom: 96 }} style={[{ width: '100%' }]}>
 
               {//verifica se há produtos sem o custo informado, se houver, é exibida uma mensagem
-                (noCostItems && noCostItems.length > 0) &&
+                (noCostItems && noCostItems.length > 0 && overviewData.cost > 0) &&
                 <View style={[styles.costInfo, { backgroundColor: Colors.lightRed }]}>
                   <Text style={[styles.costInfoMessage, { color: Colors[colorScheme].itemColor }]}>Há {noCostItems?.length} produto{pluralSuffix} nas vendas sem custo informado!</Text>
                   <Text style={[styles.costInfoMessage, { backgroundColor: Colors.lightRed, color: Colors[colorScheme].itemColor, marginBottom: 4 }]}>Informe o custo do{pluralSuffix} produto{pluralSuffix}: {noCostItems.map((item, index) => {
@@ -107,7 +112,7 @@ export default function Home() {
               {
                 sales?.length ?
                   <>
-                    <OverView date={formatedDate} />
+                    <OverView overviewData={overviewData} />
                     {
                       lastSale &&
                       <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />

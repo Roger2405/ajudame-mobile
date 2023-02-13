@@ -8,19 +8,12 @@ import useColorScheme from "../../../hooks/useColorScheme";
 import { getOverview } from "../../../services/sales";
 
 interface Props {
-    date: string
+    overviewData: SaleOverviewProps
 }
 
-export function OverView({ date }: Props) {
-    const [overviewData, setOverviewData] = useState<SaleOverviewProps>({} as SaleOverviewProps)
+export function OverView({ overviewData }: Props) {
     const COST_PERCENT = overviewData?.cost ? ((overviewData?.cost / overviewData?.total) * 100) : 0;
-    useEffect(() => {
-        getOverview(date)
-            .then(res => {
-                setOverviewData(res as SaleOverviewProps)
-            })
-            .catch(alert)
-    }, [])
+
 
 
     const colorScheme = useColorScheme();
@@ -36,7 +29,7 @@ export function OverView({ date }: Props) {
                             <Text style={[styles.value, { backgroundColor: Colors.lightGray, color: Colors.gray, fontSize: 20 }]}>R$ {overviewData?.total?.toFixed(2).replace('.', ',')}</Text>
                         </View>
                         {
-                            // overviewData.cost &&
+                            (overviewData.cost > 0) &&
                             <>
                                 <View style={styles.group}>
                                     <Text style={[styles.label, { fontSize: 16, color: Colors.red }]}>Custo:</Text>
@@ -49,14 +42,18 @@ export function OverView({ date }: Props) {
                             </>
                         }
                     </View>
-                    <View style={{ width: '100%', flexDirection: 'row', height: 24 }}>
-                        <View style={{ backgroundColor: Colors.red, width: `${COST_PERCENT}%` }} >
-                            <Text style={styles.percent}>{COST_PERCENT.toFixed(2)}%</Text>
+                    {
+
+                        (overviewData.cost > 0) &&
+                        <View style={{ width: '100%', flexDirection: 'row', height: 24 }}>
+                            <View style={{ backgroundColor: Colors.red, width: `${COST_PERCENT}%` }} >
+                                <Text style={styles.percent}>{COST_PERCENT.toFixed(2)}%</Text>
+                            </View>
+                            <View style={{ backgroundColor: Colors.primary, flex: 1 }} >
+                                <Text style={styles.percent}>{(100 - COST_PERCENT).toFixed(2)}%</Text>
+                            </View>
                         </View>
-                        <View style={{ backgroundColor: Colors.primary, flex: 1 }} >
-                            <Text style={styles.percent}>{(100 - COST_PERCENT).toFixed(2)}%</Text>
-                        </View>
-                    </View>
+                    }
                 </View>
             }
         </>

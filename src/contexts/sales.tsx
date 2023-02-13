@@ -25,7 +25,7 @@ export function RecentSalesProvider({ children }: Props) {
     }, [])
 
     useEffect(() => {
-        setNoCostItems(sales?.filter(sale => !sale.cost_product))
+        setNoCostItems(sales?.filter(sale => sale.cost_product == null))
     }, [sales])
 
     async function updateRecentSalesInContext() {
