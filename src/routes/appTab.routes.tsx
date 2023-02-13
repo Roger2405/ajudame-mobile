@@ -20,7 +20,7 @@ export function TabRoutes() {
     const { Screen, Navigator, Group } = createBottomTabNavigator();
 
     const OPTIONS_ITEM_WIDTH = 48;
-    const TAB_BAR_HEIGHT = 84;
+    const TAB_BAR_HEIGHT = 48;
     return (
         <Navigator
             screenOptions={{
@@ -30,7 +30,7 @@ export function TabRoutes() {
                 tabBarActiveTintColor: Colors.primary,
                 tabBarInactiveTintColor: Colors[colorScheme].textContrast,
                 //estilos
-                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, paddingTop: 32, height: TAB_BAR_HEIGHT, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
+                tabBarStyle: { top: 0, position: "absolute", backgroundColor: Colors.primary, height: TAB_BAR_HEIGHT, paddingRight: OPTIONS_ITEM_WIDTH, shadowColor: Colors[colorScheme].background },
                 tabBarItemStyle: { borderTopLeftRadius: 8, borderTopRightRadius: 8, flexGrow: 1 },
                 tabBarLabelStyle: { fontSize: 12, textTransform: "uppercase", fontWeight: '700' },
             }}

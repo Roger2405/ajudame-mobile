@@ -20,6 +20,7 @@ export function DrawerNav() {
             drawerContent={(props: any) => <MenuItems {...props} />}
             initialRouteName="Main"
             defaultStatus={'closed'}
+            // useLegacyImplementation={true}
             screenOptions={{ headerShown: false }}
         >
             <Drawer.Screen name="Main" component={AppRoutes} />

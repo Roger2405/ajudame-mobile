@@ -16,23 +16,28 @@ export function AppRoutes() {
     return (
         <Navigator
             screenOptions={{
-                headerShown: true,
+                headerShown: false,
+
                 headerStyle: { backgroundColor: Colors.primary },
+                // contentStyle: { paddingTop: 80 },
                 // headerRight: () => <Button title="teste" />,
                 headerBlurEffect: "dark",
                 // headerTitleStyle: { color: Colors[colorScheme].textContrast },
-                statusBarTranslucent: true,
+                statusBarTranslucent: false,
+                statusBarColor: Colors.primary,
                 headerTintColor: Colors[colorScheme].textContrast,
                 // contentStyle: { backgroundColor: Colors.primary }
-            
+                // contentStyle: { paddingTop: 48 }
 
             }}
+
         >
             <Screen
                 name='Root'
                 component={TabRoutes}
                 options={{
                     headerShown: false,
+                    // contentStyle: { paddingTop: 0 }
                 }}
             />
             <Screen
