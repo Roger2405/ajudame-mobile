@@ -1,26 +1,27 @@
+import { styles } from './styles';
+
 import React from 'react';
-import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList, ScrollView, Pressable } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
+
+import Animated, { Layout, FadeOutUp } from 'react-native-reanimated';
+//ICONS
+import { Feather } from '@expo/vector-icons';
+//CORES E TEMA
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
+
 import { OrderProductProps } from '../../../@types/orderProduct';
-import { styles } from './styles';
+
 import { useOrderProducts } from '../../../contexts/order';
-import { DeleteButton } from '../../common/Buttons';
-import { Feather } from '@expo/vector-icons';
-import Animated, { Layout, FadeOutUp } from 'react-native-reanimated';
-import { ProductProps } from '../../../@types/product';
 
 interface Props {
     editable?: boolean
 }
 
-export default function OrderProducts({ editable }: Props) {
+export default function OrderProducts() {
     const { orderProducts } = useOrderProducts();
     return (
-        <ScrollView
-            style={styles.container}
-
-        >
+        <ScrollView style={styles.container}>
             {
                 orderProducts.map(sale => {
                     return <Item key={sale.id_product} item={sale} />
@@ -36,6 +37,7 @@ interface ItemProps {
 export function Item({ item }: ItemProps) {
     const colorScheme = useColorScheme();
     const { subProductOfOrder, addCountToOrderProduct, priceModel } = useOrderProducts();
+    
     const price_product = priceModel === 'main' ? item.main_price : item.secondary_price;
     const subtotal = ((price_product * item.count).toFixed(2).replace('.', ',') || 0);
     const price = (price_product)?.toFixed(2).replace('.', ',')
@@ -44,11 +46,7 @@ export function Item({ item }: ItemProps) {
             layout={Layout}
             exiting={FadeOutUp}
         >
-            <View
-                style={[{ backgroundColor: Colors[colorScheme].itemColor }, styles.item]}
-            >
-
-                {/* <DeleteButton borderRadius={0} backgroundColor={Colors.lightGray} onPress={() => { }} /> */}
+            <View style={[{ backgroundColor: price_product === 0 ? Colors.lightGray : Colors[colorScheme].itemColor }, styles.item]}>
 
                 <View style={{ flexGrow: 1, flexBasis: '30%', marginLeft: 4 }}>
                     <Text style={[styles.itemName, styles.text, { color: Colors.gray }]}>{item.name_product}</Text>

@@ -1,18 +1,22 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Image, Keyboard, Switch } from 'react-native';
-import { View, StyleSheet, Text, TextInput } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import Animated, { FadeInDown, FadeOutDown, FadeOutUp, Layout } from 'react-native-reanimated';
-import OrderProducts from '../../components/AddSales/OrderProducts';
-import { BackButton, ButtonsContainer, CancelButton, ConfirmButton } from '../../components/common/Buttons';
+import { View, StyleSheet, Text, TextInput, ActivityIndicator, TouchableOpacity, ScrollView, Image, Keyboard, Switch } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
+import Animated, { FadeInDown, FadeOutDown, Layout } from 'react-native-reanimated';
+
+import useColorScheme from '../../hooks/useColorScheme';
 import Colors from '../../constants/Colors';
+
+import { BackButton, ButtonsContainer, CancelButton, ConfirmButton } from '../../components/common/Buttons';
+import OrderProducts from '../../components/AddSales/OrderProducts';
+
+//CONTEXTS
 import { useOrderProducts } from '../../contexts/order';
 import { useRecentSales } from '../../contexts/sales';
 import { useStock } from '../../contexts/stock';
-import useColorScheme from '../../hooks/useColorScheme';
-import { addSale } from '../../services/sales';
+
 import { discountStockOfSaleItems } from '../../services/stock';
+import { addSale } from '../../services/sales';
 
 
 const money100 = require('../../../assets/images/money/100.jpg');
@@ -44,7 +48,7 @@ export function Summary() {
             .then(res => {
                 updateRecentSalesInContext();
                 clearOrderProducts()
-                navigation.navigate('Home')
+                navigation.navigate("Root")
                 if (discountStock) {
                     discountStockOfSaleItems()
                         .then(() => {
@@ -60,13 +64,13 @@ export function Summary() {
         Keyboard.addListener(
             'keyboardDidShow',
             () => {
-                setKeyboardIsHidden(false); // or some other action
+                setKeyboardIsHidden(false);
             }
         );
         Keyboard.addListener(
             'keyboardDidHide',
             () => {
-                setKeyboardIsHidden(true); // or some other action
+                setKeyboardIsHidden(true);
             }
         );
     }, [])
@@ -79,8 +83,7 @@ export function Summary() {
     }, [orderProducts])
 
 
-    const totalValueFormated = (totalValue).toFixed(2).replace('.', ',');
-    const paymentValueFormated = paymentValue?.toFixed(2).replace('.', ',');
+    const totalValueFormatted = (totalValue).toFixed(2).replace('.', ',');
     return (
         <View style={styles.container}>
             {
@@ -115,7 +118,7 @@ export function Summary() {
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={styles.label}>Total:</Text>
-                                <Text style={styles.total}>R$ {totalValueFormated}</Text>
+                                <Text style={styles.total}>R$ {totalValueFormatted}</Text>
                             </View>
                         </View>
 
@@ -123,7 +126,7 @@ export function Summary() {
                         <View style={{ borderWidth: 1, borderColor: Colors.gray, paddingVertical: 4, borderRadius: 8, margin: 4 }}>
                             <View style={styles.groupContainer}>
                                 <Text style={[styles.label]}>Valor pago: </Text>
-                                <TextInput style={{ backgroundColor: Colors[colorScheme].itemColor, width: 150, padding: 8, borderRadius: 4, textAlign: 'right', borderWidth: 1, borderColor: Colors.lightGray }} keyboardType='decimal-pad' onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValue.toString()} />
+                                <TextInput style={[styles.paymentInput, { backgroundColor: Colors[colorScheme].itemColor }]} keyboardType='decimal-pad' onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValue.toString()} />
                             </View>
                             <ScrollView horizontal style={{ paddingVertical: 4, marginVertical: 4 }} contentContainerStyle={{ paddingHorizontal: 8 }}>
                                 {
@@ -141,7 +144,7 @@ export function Summary() {
                                 (paymentValue > totalValue) &&
                                 <View style={[styles.groupContainer, { justifyContent: 'flex-end' }]}>
                                     <Text style={[styles.label, { fontWeight: 'bold', color: Colors[colorScheme].text }]}>Troco:</Text>
-                                    <Text style={{ fontSize: 28, fontWeight: 'bold', color: Colors[colorScheme].text, paddingHorizontal: 4, borderRadius: 4, backgroundColor: Colors.lightGray }}>R$ {(paymentValue - totalValue)}</Text>
+                                    <Text style={{ fontSize: 28, fontWeight: 'bold', color: Colors[colorScheme].text, paddingHorizontal: 4, borderRadius: 4, backgroundColor: Colors.lightGray }}>R$ {(paymentValue - totalValue).toFixed(2).replace('.', ',')}</Text>
                                 </View>
                             }
                         </View>
@@ -191,5 +194,6 @@ const styles = StyleSheet.create({
     },
     groupContainer: {
         flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 4,
-    }
+    },
+    paymentInput: { width: 150, padding: 8, fontSize: 20, borderRadius: 4, textAlign: 'right', borderWidth: 1, borderColor: Colors.lightGray }
 })

@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import { styles } from './styles';
+
+import React from 'react';
 import { View, Image, Text, FlatList, Pressable, TouchableOpacity, ScrollView } from 'react-native';
+
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
-import { OrderProductProps } from '../../../@types/orderProduct';
+//TYPES
 import { ProductProps } from '../../../@types/product';
-
-import { styles } from './styles';
-import api from '../../../services/api';
+//CONTEXTS
 import { useOrderProducts } from '../../../contexts/order';
 import { useStock } from '../../../contexts/stock';
+
+import api from '../../../services/api';
 
 interface Props {
     productsArr: ProductProps[]
@@ -22,7 +25,7 @@ interface Props {
     }>>
 }
 
-export function ProductsGrid({ productsArr, setModal }: Props) {
+export function ProductsTypeList({ productsArr, setModal }: Props) {
     const colorScheme = useColorScheme();
     return (
         <View>
@@ -33,7 +36,7 @@ export function ProductsGrid({ productsArr, setModal }: Props) {
             >
                 {
                     productsArr.map(product => {
-                        return <ProductCell setModal={setModal} key={product.id} product={product} />
+                        return <ProductItem setModal={setModal} key={product.id} product={product} />
                     })
                 }
             </ScrollView>
@@ -53,7 +56,7 @@ interface ItemProps {
         };
     }>>
 }
-function ProductCell({ product, setModal }: ItemProps) {
+function ProductItem({ product, setModal }: ItemProps) {
     const { orderProducts, addProductToOrder, priceModel } = useOrderProducts();
     const { stock } = useStock();
 
@@ -84,7 +87,7 @@ function ProductCell({ product, setModal }: ItemProps) {
     var product_count = (orderProducts[getIndexInOrderProducts()]?.count);
     //se o modelo de preço selecionado for o principa, é exibido o main_price, caso contrário, é exibido o preço secundário
     var price_product = (priceModel == 'main' ? product.main_price : (product.secondary_price || 0));
-    const priceProductFormated = price_product.toFixed(2).replace('.', ',')
+    const priceProductFormatted = price_product.toFixed(2).replace('.', ',')
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
     var objectStockFromContext = stock.find(item => item.id_product == product.id);
     var stockValue = objectStockFromContext?.quantity;
@@ -127,7 +130,7 @@ function ProductCell({ product, setModal }: ItemProps) {
                     {
                         price_product > 0 &&
                         <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
-                            R$ {priceProductFormated}
+                            R$ {priceProductFormatted}
                         </Text>
                     }
                 </View>

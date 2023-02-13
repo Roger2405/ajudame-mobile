@@ -11,7 +11,7 @@ interface Props {
     overviewData: SaleOverviewProps
 }
 
-export function OverView({ overviewData }: Props) {
+export default function OverView({ overviewData }: Props) {
     const COST_PERCENT = overviewData?.cost ? ((overviewData?.cost / overviewData?.total) * 100) : 0;
 
 

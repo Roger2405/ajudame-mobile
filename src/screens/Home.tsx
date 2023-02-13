@@ -9,16 +9,21 @@ import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { Feather } from '@expo/vector-icons';
 import { deleteLastSale, getOverview } from '../services/sales';
-import { SalesList } from '../components/Home/SalesList';
-import { OverView } from '../components/Home/Overview';
-import { LastSale } from '../components/Home/LastSale';
+
+import OverView from '../components/SalesAnalysis/Overview';
+import { LastSale } from '../components/SalesAnalysis/LastSale';
+import { SalesList } from '../components/SalesAnalysis/SalesList';
+
+
+
+
+
 import { useRecentSales } from '../contexts/sales';
 import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { useProducts } from '../contexts/products';
 import getGroupedArray from '../utils/groupArray';
-import { PieChartComponent } from '../components/common/PieChart';
+import { PieChartComponent } from '../components/SalesAnalysis/PieChart';
 import { SaleOverviewProps } from '../@types/sales';
-
 
 
 export default function Home() {
@@ -37,7 +42,7 @@ export default function Home() {
     sum: number;
   }[]>();
   const date = new Date();
-  const formatedDate = date.toISOString().split('T')[0];
+  const formattedDate = date.toISOString().split('T')[0];
 
   useEffect(() => {
     if (sales) {
@@ -52,7 +57,7 @@ export default function Home() {
 
         let sum = 0;
         groupedSales[i].forEach(sale => {
-          sum += sale.count * sale.price_product;
+          sum += sale.count * (sale.price_product - (sale.cost_product || 0));
         })
         newData?.push(
           {
@@ -64,7 +69,7 @@ export default function Home() {
       setDataPieChart(newData)
     }
 
-    getOverview(formatedDate)
+    getOverview(formattedDate)
       .then(res => {
         setOverviewData(res as SaleOverviewProps)
       })

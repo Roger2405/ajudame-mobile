@@ -8,8 +8,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import Colors from '../constants/Colors';
 
-import { RootStackParamList } from '../../types';
 import { ProductDetailsProps } from '../@types/product';
+import { RootStackParamList } from '../@types/navigation';
 
 import api from '../services/api';
 import { addProduct, deleteProduct, getProduct, updateProduct } from '../services/products';
@@ -25,8 +25,6 @@ import { ButtonsContainer, CancelButton, ConfirmButton, DeleteButton } from '../
 import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import ConfirmationModal from '../components/common/ConfirmationModal';
 
-// @ts-ignore
-import DatalistInput from '@avul/react-native-datalist-input';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductForm'>;
 
@@ -126,7 +124,7 @@ export default function ProductForm({ route }: Props) {
                     updateStockInContext();
                 if (costChanged)
                     updateRecentSalesInContext()
-                navigation.navigate('Products')
+                navigation.goBack()
 
             }
             else {
@@ -160,7 +158,7 @@ export default function ProductForm({ route }: Props) {
         if (id_product)
             deleteProduct(id_product)
                 .then(res => {
-                    navigation.navigate('Products');
+                    navigation.goBack();
                     updateProductsInContext();
                     updateStockInContext();
                 })

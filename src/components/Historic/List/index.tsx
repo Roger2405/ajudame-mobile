@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { SaleOverviewProps, SalesResumeProps } from '../../../@types/sales';
 import Colors from '../../../constants/Colors';
 
-import { styles } from '../../OptionsModal/styles';
 import useColorScheme from '../../../hooks/useColorScheme';
 import { FontAwesome5, Foundation } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
@@ -12,7 +11,7 @@ interface SalesListProps {
     salesHistoric: SaleOverviewProps[]
 }
 
-export function SalesHistoricList({ salesHistoric }: SalesListProps) {
+export function HistoricList({ salesHistoric }: SalesListProps) {
     return (
         <FlatList
             style={{ flex: 1 }}
@@ -29,7 +28,7 @@ interface SalesListItem {
 function Item({ salesHistoric }: SalesListItem) {
     const strDate = salesHistoric.ym_date;
     const [year, month] = strDate ? strDate.split('-') : '';
-    const formatedString = `${month}/${year}`;
+    const dateFormatted = `${month}/${year}`;
 
     const colorScheme = useColorScheme();
 
@@ -38,7 +37,7 @@ function Item({ salesHistoric }: SalesListItem) {
     const gainValue = salesHistoric.gain?.toFixed(2).replace('.', ',')
     return (
         <View style={[itemStyles.container]}>
-            <Text style={[itemStyles.text, itemStyles.date, { color: Colors[colorScheme].textContrast }]}>{formatedString}</Text>
+            <Text style={[itemStyles.text, itemStyles.date, { color: Colors[colorScheme].textContrast }]}>{dateFormatted}</Text>
             <View style={itemStyles.values}>
                 <Text style={[itemStyles.text, itemStyles.total, { color: Colors[colorScheme].text }]}>R$ {totalValue}</Text>
                 {

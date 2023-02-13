@@ -1,11 +1,11 @@
-import { parse } from 'expo-linking';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, TextInput } from 'react-native';
-import { OrderProductProps } from '../../../@types/orderProduct';
-import { ProductProps } from '../../../@types/product';
+//CORES E TEMA
 import Colors from '../../../constants/Colors';
-import { useOrderProducts } from '../../../contexts/order';
 import useColorScheme from '../../../hooks/useColorScheme';
+
+import { ProductProps } from '../../../@types/product';
+
 import { ButtonsContainer, CancelButton, ConfirmButton } from '../../common/Buttons';
 
 interface ModalSaleProps {
@@ -28,16 +28,17 @@ interface ModalSaleProps {
 }
 
 export function ModalSale({ modal, setModal }: ModalSaleProps) {
-    const { orderProducts, setOrderProducts } = useOrderProducts();
     const colorScheme = useColorScheme();
+    const [quantity, setQuantity] = useState<number | undefined>(undefined);
+
     const modalType = modal.options.type;
+
     const lightColor = modalType == 'add' ? Colors.lightPrimary : Colors.lightGray;
     const mainColor = modalType == 'add' ? Colors.primary : Colors.gray;
-    const [quantity, setQuantity] = useState(0);
 
     const initialCount = modal.options.initialCount;
 
-    const onCheckLimit = (value: number) => {
+    const checkLimit = (value: number) => {
         if (initialCount)
             if (value > initialCount) {
                 setQuantity(initialCount)
@@ -48,10 +49,10 @@ export function ModalSale({ modal, setModal }: ModalSaleProps) {
     function validateValue(e: string) {
         const parsedQty = Number.parseInt(e)
         if (Number.isNaN(parsedQty)) {
-            setQuantity(0) //setter for state
+            setQuantity(0)
         }
         else if (modalType == 'sub') {
-            onCheckLimit(parsedQty)
+            checkLimit(parsedQty)
         }
         else {
             setQuantity(parsedQty);
@@ -64,11 +65,7 @@ export function ModalSale({ modal, setModal }: ModalSaleProps) {
         setModal({ showModal: false, options: {} as { product: ProductProps, type: 'add' | 'sub', initialStock: number; } })
     }
     function updateModal() {
-        var newValue: number = modalType == 'add' ?
-            newValue = quantity :
-            newValue = quantity;
 
-        // setOrderProducts()
     }
 
     return (
@@ -95,7 +92,6 @@ export function ModalSale({ modal, setModal }: ModalSaleProps) {
                                 }}>Quantidade: </Text>
                         </View>
                         <TextInput
-                            // placeholder={`quantidade a ser ${modalType == 'add' ? 'adicionada' : 'subtraída'}`}
                             placeholderTextColor={lightColor}
                             cursorColor={Colors.primary}
                             keyboardType={'number-pad'}
@@ -118,10 +114,11 @@ export function ModalSale({ modal, setModal }: ModalSaleProps) {
                             onChangeText={(e) => {
                                 validateValue(e)
                             }}
-                            value={quantity.toString()}
+                            defaultValue={undefined}
+                            value={quantity?.toString()}
                         />
                     </View>
-                    <ButtonsContainer>
+                    <ButtonsContainer relative>
                         <CancelButton
                             onPress={() => {
                                 closeModal();
@@ -137,9 +134,6 @@ export function ModalSale({ modal, setModal }: ModalSaleProps) {
                 </View>
             </View>
         </Modal>
-        // <View style={styles.container}>
-
-        // </View>
     );
 }
 

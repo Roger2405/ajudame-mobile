@@ -1,30 +1,36 @@
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Switch, TouchableOpacity, Pressable } from 'react-native';
-import { ProductsGrid } from '../../components/AddSales/ProductsGrid';
-import Colors from '../../constants/Colors';
-import { ProductProps } from '../../@types/product';
-import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
+import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Switch } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
+
 import useColorScheme from '../../hooks/useColorScheme';
-import OrderCard from '../../components/AddSales/OrderCard';
-import { useProducts } from '../../contexts/products';
-import OrderProducts, { Item } from '../../components/AddSales/OrderProducts';
-import { ModalSale } from '../../components/AddSales/AddSaleModal';
-import { useOrderProducts } from '../../contexts/order';
-import { useStock } from '../../contexts/stock';
-import { getProduct } from '../../services/products';
-import getGroupedArray from '../../utils/groupArray';
-import Animated from 'react-native-reanimated';
+
+import { ProductProps } from '../../@types/product';
+
+import Colors from '../../constants/Colors';
+
+import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
+import { ProductsTypeList } from '../../components/AddSales/ProductsTypeList';
+import { ModalSale } from '../../components/AddSales/AddSaleModal';
 
-// import { SwipeablePanel } from 'r';
+import { useStock } from '../../contexts/stock';
+import { useOrderProducts } from '../../contexts/order';
+import { useProducts } from '../../contexts/products';
 
-//SWIPE UP ORDER PRODUCTS
+
 export function NewSale() {
     const navigation = useNavigation();
-    // const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([]);
+    const colorScheme = useColorScheme();
+
+    //CONTEXTS
     const { orderProducts, clearOrderProducts } = useOrderProducts();
+    const { productsGroupedByType: productsFromContext } = useProducts();
+    const { stock } = useStock();
+
+    const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>(productsFromContext)
+    const [hideNoStockProducts, setHideNoStockProducts] = useState(true);
+
     const [modal, setModal] = useState({} as {
         showModal: boolean;
         options: {
@@ -34,19 +40,10 @@ export function NewSale() {
         };
     })
 
-    // const [errorMessage, setErrorMessage] = useState<string>();
-    //const [inputValue, setInputValue] = useState<string>('');
-    // const [total, setTotal] = useState<number>();
-    const { productsGroupedByType } = useProducts();
-    const { stock } = useStock();
-    const [productsFiltered, setProductsFiltered] = useState<ProductProps[][]>(productsGroupedByType)
-    const [hideNoStockProducts, setHideNoStockProducts] = useState(true);
-    // const [completedOrder, setCompletedOrder] = useState(false);
-
     useEffect(() => {
         if (hideNoStockProducts)
-            setProductsFiltered(
-                productsGroupedByType?.map((group, index) => {
+            setProductsGroupedByType(
+                productsFromContext?.map((group, index) => {
                     return group.filter(product => {
                         const productStock = stock.find(item => item.id_product == product.id);
                         return productStock?.quantity as number > 0;
@@ -54,23 +51,22 @@ export function NewSale() {
                 })
             )
         else {
-            setProductsFiltered(productsGroupedByType)
+            setProductsGroupedByType(productsFromContext)
         }
     }, [hideNoStockProducts])
 
-    const colorScheme = useColorScheme();
 
     return (
-        <>
+        <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
             {
-                productsFiltered.length ?
-                    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+                productsGroupedByType.length ?
+                    <>
                         {
                             modal.showModal &&
                             <ModalSale setModal={setModal} modal={modal} />
                         }
                         {/* OPTIONS */}
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginVertical: 4 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginVertical: 4 }}>
                             <PriceModelSelect />
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8 }}>
                                 <Text style={{ color: Colors[colorScheme].text }}>Ocultar produtos {'\n'}sem estoque</Text>
@@ -83,15 +79,11 @@ export function NewSale() {
                                 />
                             </View>
                         </View>
-                        <ScrollView
-                            contentContainerStyle={{
-                                paddingBottom: 120
-                            }}
-                        >
+                        <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
                             {
-                                productsFiltered?.map(type => {
+                                productsGroupedByType?.map(type => {
                                     if (type.length)
-                                        return <ProductsGrid setModal={setModal} productsArr={type} key={type[0].type_product} />
+                                        return <ProductsTypeList setModal={setModal} productsArr={type} key={type[0].type_product} />
                                 })
                             }
                         </ScrollView>
@@ -111,11 +103,11 @@ export function NewSale() {
                                 }}
                             />
                         </ButtonsContainer>
-                    </View >
+                    </>
                     :
                     <ActivityIndicator />
             }
-        </>
+        </View >
     );
 }
 
