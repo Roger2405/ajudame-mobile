@@ -10,6 +10,7 @@ import { NewSale } from "../screens/AddSale/NewSale";
 import { Summary } from "../screens/AddSale/Summary";
 import { TabRoutes } from "./appTab.routes";
 import HistoricDetails from '../screens/HistoricDetails'
+import { Account } from "../screens/Account";
 
 
 export function AppRoutes() {
@@ -60,6 +61,13 @@ export function AppRoutes() {
                 name='HistoricDetails'
                 // @ts-ignore
                 component={HistoricDetails}
+            />
+            <Screen
+                name='Account'
+
+                options={{ headerShown: true, contentStyle: { paddingTop: 56 }, title: "Conta" }}
+                // @ts-ignore
+                component={Account}
             />
         </Navigator>
     )

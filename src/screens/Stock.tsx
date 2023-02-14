@@ -43,15 +43,17 @@ export default function Stock() {
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
       <ModalEditStock modal={modal} setModal={setModal} setNewStock={setNewStock} />
-      {showConfirmationModal &&
-        <ConfirmationModal
-          onConfirm={() => {
-            confirmChanges()
-            setShowConfirmationModal(false)
-            setEditMode(false)
-          }}
-          setShowConfirmationModal={setShowConfirmationModal}
-          showConfirmationModal={showConfirmationModal} />}
+      <View>
+        {showConfirmationModal &&
+          <ConfirmationModal
+            onConfirm={() => {
+              confirmChanges()
+              setShowConfirmationModal(false)
+              setEditMode(false)
+            }}
+            setShowConfirmationModal={setShowConfirmationModal}
+            showConfirmationModal={showConfirmationModal} />}
+      </View>
       {
         stockGroupedByType?.length
           ?

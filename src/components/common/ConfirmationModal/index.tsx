@@ -1,15 +1,18 @@
-import React, { useState } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View, ButtonProps } from "react-native";
+import React, { ReactNode, useState } from "react";
+import { Alert, Modal, StyleSheet, Text, Pressable, View, ButtonProps, ActivityIndicator } from "react-native";
 import Colors from "../../../constants/Colors";
 import { ButtonsContainer, CancelButton, ConfirmButton } from "../Buttons";
 
 interface ConfirmationModalProps {
     setShowConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>
     showConfirmationModal: boolean
-    onConfirm: () => void
+    message?: string
+    onConfirm: () => Promise<unknown> | void
+    children?: ReactNode
 }
 
-export default function ConfirmationModal({ showConfirmationModal, setShowConfirmationModal, onConfirm }: ConfirmationModalProps) {
+export default function ConfirmationModal({ showConfirmationModal, message, children, setShowConfirmationModal, onConfirm }: ConfirmationModalProps) {
+    const [isLoading, setIsLoading] = useState(false);
     return (
         <View style={styles.centeredView}>
             <Modal
@@ -20,16 +23,38 @@ export default function ConfirmationModal({ showConfirmationModal, setShowConfir
                 statusBarTranslucent
                 visible={showConfirmationModal}
                 onRequestClose={() => {
-                    setShowConfirmationModal(!showConfirmationModal);
+                    onConfirm()?.then(() => {
+                        setShowConfirmationModal(!showConfirmationModal);
+                    })
                 }}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.text}>Confirmar ação?</Text>
-                        <ButtonsContainer relative>
-                            <CancelButton onPress={() => setShowConfirmationModal(false)} />
-                            <ConfirmButton onPress={onConfirm} />
-                        </ButtonsContainer>
+                        {
+                            message &&
+                            <Text style={{ fontSize: 12, textAlign: "center", color: Colors.gray }}>{message}</Text>
+                        }
+
+                        {children}
+
+                        {
+                            isLoading ?
+                                <View style={{ padding: 16 }}>
+                                    <ActivityIndicator />
+                                </View>
+                                :
+                                <ButtonsContainer relative>
+                                    <CancelButton onPress={() => setShowConfirmationModal(false)} />
+                                    <ConfirmButton onPress={() => {
+                                        setIsLoading(true)
+                                        onConfirm()?.then(() => {
+                                            setShowConfirmationModal(false)
+                                        })
+                                            .finally(() => setIsLoading(false))
+                                    }} />
+                                </ButtonsContainer>
+                        }
 
                     </View>
                 </View>
@@ -44,6 +69,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: Colors.bgSmooth,
+        // padding: 20,
+        position: "absolute",
+
+        right: 0,
+        left: 0,
+        height: '100%',
+        width: '100%'
     },
     modalView: {
         margin: 20,

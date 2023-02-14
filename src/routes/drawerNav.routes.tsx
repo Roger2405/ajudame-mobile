@@ -6,7 +6,7 @@ import {
 
 import React from "react";
 import { Text, StyleSheet, TouchableOpacity, Pressable, View } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAuth } from "../contexts/auth";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -45,14 +45,18 @@ function MenuItems({ navigation }: any) {
             </Pressable>
             <View style={styles.content}>
                 <Text style={styles.email}>{user?.email}</Text>
-                {/* <TouchableOpacity style={styles.routeLink}>
-                    <Text style={{ fontSize: 16, textTransform: "uppercase" }}>Estoque</Text>
+                {/* <TouchableOpacity>
+                    <Text>Minha Conta</Text>
                 </TouchableOpacity> */}
+                <TouchableOpacity onPress={() => navigation.navigate('Account')} style={styles.routeLink}>
+                    <MaterialCommunityIcons name="account" size={24} color="black" />
+                    <Text style={{ fontSize: 16 }}>Minha Conta</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.separator} />
             <TouchableOpacity onPress={signOut} style={styles.signOut}>
                 <Feather name="log-out" size={24} color={Colors.gray} />
-                <Text style={{ fontSize: 16, marginLeft: 8, color: Colors.gray, fontWeight: 'bold' }}>Sair</Text>
+                <Text style={{ fontSize: 16, marginLeft: 16, color: Colors.gray, fontWeight: 'bold' }}>Sair</Text>
             </TouchableOpacity>
         </DrawerContentScrollView>
     )
@@ -73,11 +77,19 @@ const styles = StyleSheet.create({
     },
     email: {
     },
-    // routeLink: {
-    //     padding: 16,
-    //     backgroundColor: Colors.lightGray,
-    //     borderRadius: 4,
-    // },
+    routeLink: {
+        paddingVertical: 8,
+        marginVertical: 8,
+
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: Colors.lightGray,
+        flexDirection: "row",
+        alignItems: "center",
+
+        // backgroundColor: Colors.lightGray,
+        borderRadius: 4,
+    },
     separator: {
         height: 2,
         // marginHorizontal: 8,
