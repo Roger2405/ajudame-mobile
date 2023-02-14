@@ -1,16 +1,18 @@
+import { styles } from './styles';
 
-import { EvilIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
-import { LastSaleProductProps, SaleProductProps } from '../../../@types/orderProduct';
+
+import { Feather } from '@expo/vector-icons';
+
+import { LastSaleProductProps, SaleProductProps } from '../../../@types/sales';
+
 import Colors from '../../../constants/Colors';
-import { useRecentSales } from '../../../contexts/sales';
 import useColorScheme from '../../../hooks/useColorScheme';
+
 import { DeleteButton } from '../../common/Buttons';
 import ConfirmationModal from '../../common/ConfirmationModal';
-import { FeedbackMessage } from '../../common/FeedbackMessage';
 
-import { styles } from './styles';
 
 interface Props {
     data: LastSaleProductProps
@@ -20,8 +22,16 @@ interface Props {
 export function LastSale({ data, handleDeleteSale }: Props) {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const colorScheme = useColorScheme();
+    const datetime = new Date(data.header.datetime)
 
+    const timeOffsetInMinutes = datetime.getTimezoneOffset();
+    const timeOffset = timeOffsetInMinutes / 60;
 
+    const strHour = (datetime.getHours() - timeOffset).toString().padStart(2, '0');
+    const strMinutes = datetime.getMinutes().toString().padStart(2, '0');
+    const strSeconds = datetime.getSeconds().toString().padStart(2, '0');
+    const time = `${strHour}:${strMinutes}:${strSeconds}`;
+    
     return (
         <View style={styles.container} >
 
@@ -39,7 +49,7 @@ export function LastSale({ data, handleDeleteSale }: Props) {
                 <View style={styles.headerInfo}>
                     <View style={styles.timeContainer}>
                         <Feather name='clock' size={16} color={Colors.lightGray} />
-                        <Text style={styles.time}>{(data.header.time)}</Text>
+                        <Text style={styles.time}>{(time)}</Text>
                     </View>
                 </View>
                 <DeleteButton

@@ -1,6 +1,6 @@
 
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
-import { LastSaleProductProps, SaleProductProps } from "../@types/orderProduct";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { SaleProductProps, LastSaleProductProps } from "../@types/sales";
 import { getLastSale, getRecentSales } from "../services/sales";
 
 interface RecentSalesContextData {

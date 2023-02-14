@@ -1,6 +1,6 @@
 
-import { LastSaleProductProps, OrderProductProps, SaleProductProps } from "../@types/orderProduct";
-import { SaleOverviewProps, SalesResumeProps } from "../@types/sales";
+import { OrderProductProps } from "../@types/orderProduct";
+import { LastSaleProductProps, SaleOverviewProps, SaleProductProps } from "../@types/sales";
 import api from "./api";
 import getUserID from "./getUserID";
 
@@ -21,19 +21,6 @@ export async function getSalesByDate(date: string) {
     return sales;
 }
 
-export async function getSalesResume() {
-    const ID_USER = await getUserID();
-    const salesResume: SalesResumeProps[] = await api.get(`/${ID_USER}/sales`)
-        .then((response) => {
-            if (response.data[0]) {
-                return response.data;
-            }
-            else {
-                throw Error(response.data.msg);
-            }
-        })
-    return salesResume
-}
 export async function addSale(orderProducts: OrderProductProps[], priceModel: 'main' | 'secondary') {
     const ID_USER = await getUserID();
 

@@ -8,25 +8,6 @@ export type OrderProductProps = {
     count: number
 }
 
-export type LastSaleProductProps = {
-    header: {
-        id_sale: number,
-        time: string,
-        subtotal: number,
-        is_main_price: boolean,
-        discounted_stock: boolean
-    }
-    products: SaleProductProps[]
-}
-
-export type SaleProductProps = {
-    count: number,
-    id: number,
-    name_product: string,
-    cost_product?: number,
-    price_product: number,
-    type_product: string,
-}
 /*
     "id_sale": 102,
     "id_product": 5,

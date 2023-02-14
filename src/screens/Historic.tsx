@@ -8,7 +8,7 @@ import Colors from '../constants/Colors';
 import { SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { getHistoric } from '../services/sales';
-import { SaleOverviewProps, SalesResumeProps } from '../@types/sales';
+import { SaleOverviewProps } from '../@types/sales';
 import { HistoricList } from '../components/Historic/List';
 import { useRecentSales } from '../contexts/sales';
 

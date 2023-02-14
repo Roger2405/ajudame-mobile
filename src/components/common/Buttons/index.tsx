@@ -43,11 +43,11 @@ function RoundedButton({ title, color, onPress, icon, buttonStyle, disabled }: B
 
 export function SingleButton({ title, color, onPress, icon }: GenericButtonProps) {
     return (
-        <View style={styles.container}>
-            <RoundedButton buttonStyle='center' title={title} color={color} onPress={onPress}
-                icon={icon}
-            />
-        </View>
+        // <View style={styles.container}>
+        <RoundedButton buttonStyle='center' title={title} color={color} onPress={onPress}
+            icon={icon}
+        />
+        // </View>
     );
 }
 
