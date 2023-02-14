@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
-import { SaleProductProps } from '../@types/orderProduct';
 import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { Feather } from '@expo/vector-icons';
@@ -13,7 +12,7 @@ import { useRecentSales } from '../contexts/sales';
 import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { useProducts } from '../contexts/products';
 import getGroupedArray from '../utils/groupArray';
-import { SaleOverviewProps } from '../@types/sales';
+import { SaleOverviewProps, SaleProductProps } from '../@types/sales';
 import { LastSale } from '../components/SalesAnalysis/LastSale';
 import OverView from '../components/SalesAnalysis/Overview';
 import { PieChartComponent } from '../components/SalesAnalysis/PieChart';
@@ -36,9 +35,10 @@ export default function Home() {
     type: string,
     sum: number;
   }[]>();
-  const date = new Date().toLocaleDateString();
+  const date = new Date();
+  const localeDateString = date.toLocaleDateString()
   // console.log(date)
-  const [month, day, year] = date.split('/');
+  const [month, day, year] = localeDateString.split('/');
   // const formatedDate = date.toString().split('T')[0];
   const formatedDate = `20${year}-${month}-${day}`;
   // console.log(formatedDate)
