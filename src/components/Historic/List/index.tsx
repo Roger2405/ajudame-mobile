@@ -6,6 +6,7 @@ import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 import { FontAwesome5, Foundation } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 interface SalesListProps {
     salesHistoric: SaleOverviewProps[]
@@ -29,6 +30,7 @@ function Item({ salesHistoric }: SalesListItem) {
     const strDate = salesHistoric.ym_date;
     const [year, month] = strDate ? strDate.split('-') : '';
     const dateFormatted = `${month}/${year}`;
+    const navigation = useNavigation();
 
     const colorScheme = useColorScheme();
 
@@ -48,7 +50,9 @@ function Item({ salesHistoric }: SalesListItem) {
                     </>
                 }
             </View>
-            <Pressable style={[itemStyles.button, { borderColor: Colors[colorScheme].background }]}>
+            <Pressable
+                onPress={() => navigation.navigate('HistoricDetails', { date: strDate })}
+                style={[itemStyles.button, { borderColor: Colors[colorScheme].background }]}>
                 <Foundation name='graph-bar' size={32} color={Colors.white} />
             </Pressable>
         </View>

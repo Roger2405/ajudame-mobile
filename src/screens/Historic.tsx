@@ -16,7 +16,6 @@ import { useRecentSales } from '../contexts/sales';
 export default function Historic() {
     const [salesHistoric, setSalesHistoric] = useState<SaleOverviewProps[]>();
     const { sales } = useRecentSales();
-    const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(true);
     const colorScheme = useColorScheme();
 

@@ -1,13 +1,15 @@
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { Button } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
+
 import ProductForm from "../screens/ProductForm";
 import { NewSale } from "../screens/AddSale/NewSale";
 import { Summary } from "../screens/AddSale/Summary";
 import { TabRoutes } from "./appTab.routes";
+import HistoricDetails from '../screens/HistoricDetails'
 
 
 export function AppRoutes() {
@@ -17,17 +19,12 @@ export function AppRoutes() {
         <Navigator
             screenOptions={{
                 headerShown: false,
-
                 headerStyle: { backgroundColor: Colors.primary },
-                // contentStyle: { paddingTop: 80 },
-                // headerRight: () => <Button title="teste" />,
                 headerBlurEffect: "dark",
-                // headerTitleStyle: { color: Colors[colorScheme].textContrast },
+                headerTintColor: Colors[colorScheme].textContrast,
+
                 statusBarTranslucent: false,
                 statusBarColor: Colors.primary,
-                headerTintColor: Colors[colorScheme].textContrast,
-                // contentStyle: { backgroundColor: Colors.primary }
-                // contentStyle: { paddingTop: 48 }
 
             }}
 
@@ -59,7 +56,11 @@ export function AppRoutes() {
                 // @ts-ignore
                 component={ProductForm}
             />
-
+            <Screen
+                name='HistoricDetails'
+                // @ts-ignore
+                component={HistoricDetails}
+            />
         </Navigator>
     )
 }

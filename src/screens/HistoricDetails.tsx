@@ -1,48 +1,58 @@
 // import { axios } from 'axios';
 
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 import { SaleProductProps } from '../@types/orderProduct';
-import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
+import { BackButton, ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { Feather } from '@expo/vector-icons';
-import { deleteLastSale, getOverview } from '../services/sales';
-import { useRecentSales } from '../contexts/sales';
-import { FeedbackMessage } from '../components/common/FeedbackMessage';
-import { useProducts } from '../contexts/products';
-import getGroupedArray from '../utils/groupArray';
-import { SaleOverviewProps } from '../@types/sales';
-import { LastSale } from '../components/SalesAnalysis/LastSale';
+import { deleteLastSale, getOverview, getSalesByDate, getSalesResume } from '../services/sales';
+
 import OverView from '../components/SalesAnalysis/Overview';
-import { PieChartComponent } from '../components/SalesAnalysis/PieChart';
+import { LastSale } from '../components/SalesAnalysis/LastSale';
 import { SalesList } from '../components/SalesAnalysis/SalesList';
 
 
 
-export default function Home() {
+
+
+import { useRecentSales } from '../contexts/sales';
+import { FeedbackMessage } from '../components/common/FeedbackMessage';
+import { useProducts } from '../contexts/products';
+import getGroupedArray from '../utils/groupArray';
+import { PieChartComponent } from '../components/SalesAnalysis/PieChart';
+import { SaleOverviewProps } from '../@types/sales';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../@types/navigation';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'HistoricDetails'>;
+export default function HistoricDetails({ route }: Props) {
+  const date = route.params.date;
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
   const { productTypes } = useProducts();
-  const { sales, noCostItems, lastSale, updateRecentSalesInContext, isLoading } = useRecentSales();
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
-
+  const [sales, setSales] = useState<SaleProductProps[]>([]);
   const [overviewData, setOverviewData] = useState<SaleOverviewProps>({} as SaleOverviewProps)
+  const [noCostItems, setNoCostItems] = useState<SaleProductProps[]>()
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [dataPieChart, setDataPieChart] = useState<{
     label: string;
     type: string,
     sum: number;
   }[]>();
-  const date = new Date().toLocaleDateString();
-  // console.log(date)
-  const [month, day, year] = date.split('/');
-  // const formatedDate = date.toString().split('T')[0];
-  const formatedDate = `20${year}-${month}-${day}`;
-  // console.log(formatedDate)
 
+  useEffect(() => {
+    getSalesByDate(date)
+      .then(setSales)
+      .catch(alert)
+      .finally(() => setIsLoading(false))
+  }, [])
   useEffect(() => {
     if (sales) {
       const groupedSales: SaleProductProps[][] = getGroupedArray(sales, productTypes)
@@ -56,7 +66,7 @@ export default function Home() {
 
         let sum = 0;
         groupedSales[i].forEach(sale => {
-          sum += sale.count * sale.price_product;
+          sum += sale.count * (sale.price_product - (sale.cost_product || 0));
         })
         newData?.push(
           {
@@ -66,28 +76,15 @@ export default function Home() {
           })
       }
       setDataPieChart(newData)
+      setNoCostItems(sales?.filter(sale => sale.cost_product == null))
     }
 
-    getOverview(formatedDate)
+    getOverview(date)
       .then(res => {
-        console.log(formatedDate)
-        console.log(res)
         setOverviewData(res as SaleOverviewProps)
       })
       .catch(alert)
   }, [sales])
-
-  async function handleDeleteSale() {
-    deleteLastSale()
-      .then((res) => {
-        setFeedbackMessage({ type: 'info', msg: res as string })
-        updateRecentSalesInContext()
-      })
-      .catch(err => {
-        setFeedbackMessage({ type: 'error', msg: err })
-      })
-
-  }
 
   const pluralSuffix = noCostItems && (noCostItems?.length) > 1 && 's';
   return (
@@ -97,6 +94,7 @@ export default function Home() {
           <ActivityIndicator />
           :
           <>
+            <Text style={{ fontSize: 20 }}>Vendas de: {date.split('-').reverse().join('/')}</Text>
             <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
             <ScrollView contentContainerStyle={{ paddingBottom: 96 }} style={[{ width: '100%' }]}>
 
@@ -120,13 +118,6 @@ export default function Home() {
                   <>
                     <OverView overviewData={overviewData} />
                     {
-                      lastSale &&
-                      <>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>Última venda:</Text>
-                        <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
-                      </>
-                    }
-                    {
                       dataPieChart ?
                         dataPieChart.length > 1 ?
                           <PieChartComponent data={dataPieChart} />
@@ -145,7 +136,8 @@ export default function Home() {
           </>
       }
       <ButtonsContainer style={{ position: 'absolute', bottom: 0 }}>
-        <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.primary} title='Adicionar Venda' icon={<Feather name='plus' size={24} color={Colors.white} />} />
+        {/* <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.gray} title='Voltar' icon={<Feather name='plus' size={24} color={Colors.white} />} /> */}
+        <BackButton />
       </ButtonsContainer>
     </View>
   );
@@ -178,3 +170,4 @@ const styles = StyleSheet.create({
     borderRadius: 4
   }
 });
+

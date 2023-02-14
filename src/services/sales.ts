@@ -12,6 +12,14 @@ export async function getRecentSales() {
 
     return salesOfDay;
 }
+export async function getSalesByDate(date: string) {
+    const ID_USER = await getUserID();
+
+    console.log("Date", date)
+    const response = await api.get(`/${ID_USER}/sales/${date}`)
+    const sales: SaleProductProps[] = response.data;
+    return sales;
+}
 
 export async function getSalesResume() {
     const ID_USER = await getUserID();
@@ -83,6 +91,7 @@ export async function getHistoric() {
     return new Promise((resolve, reject) => {
         api.get(`/${ID_USER}/sales/historic`)
             .then(res => {
+                console.log(res.data)
                 if (res.data[0]) {
                     resolve(res.data as SaleOverviewProps[]);
                 }
