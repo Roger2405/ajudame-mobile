@@ -1,60 +1,75 @@
-// import { axios } from 'axios';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl } from 'react-native-gesture-handler';
+
 import Colors from '../constants/Colors';
-import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
+
 import { Feather } from '@expo/vector-icons';
-import { deleteLastSale, getOverview } from '../services/sales';
-import { useSales } from '../contexts/sales';
+
+import { SaleProductProps } from '../@types/sales';
+
+import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import { FeedbackMessage } from '../components/common/FeedbackMessage';
-import { useProducts } from '../contexts/products';
-import getGroupedArray from '../utils/groupArray';
-import { SaleOverviewProps, SaleProductProps } from '../@types/sales';
-import OverView from '../components/SalesAnalysis/Overview';
+
 import { PieChartComponent } from '../components/SalesAnalysis/PieChart';
+import OverView from '../components/SalesAnalysis/Overview';
 import { SalesList } from '../components/SalesAnalysis/SalesList';
 import { LastSale } from '../components/SalesAnalysis/LastSale';
-import { RefreshControl } from 'react-native-gesture-handler';
 import { NoCostAdvice } from '../components/SalesAnalysis/NoCostAdvice';
-import { useStock } from '../contexts/stock';
 
+import { deleteLastSale } from '../services/sales';
+//CONTEXT
+import { useSales } from '../contexts/sales';
+import { useProducts } from '../contexts/products';
+//UTILS
+import getGroupedArray from '../utils/groupArray';
+import { getPieChartData } from '../utils/sales';
 
 
 export default function Home() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
-  const { sales, noCostItems, lastSale, overviewData, dataPieChart, updateSales, isLoading } = useSales();
 
+  const { sales, lastSale, overviewData, updateSales, isLoading } = useSales();
+  const [dataPieChart, setDataPieChart] = useState<{
+    label: string;
+    type: string;
+    sum: number;
+  }[] | undefined>([]);
 
-  const date = new Date();
-  const localeDateString = date.toLocaleDateString()
-  const [month, day, year] = localeDateString.split('/');
-  const formatedDate = `20${year}-${month}-${day}`;
+  const { productTypes } = useProducts();
+  const [salesGroupedByType, setSalesGroupedByType] = useState<SaleProductProps[][]>([])
+
   useEffect(() => {
-    () => updateSales(formatedDate)
-  }, [])
+    if (sales) {
+      const salesGroupedByType = getGroupedArray(sales, productTypes)
+      setSalesGroupedByType(salesGroupedByType)
+      const dataPieChart = getPieChartData(salesGroupedByType)
+      setDataPieChart(dataPieChart)
+    }
+  }, [sales])
 
   async function handleDeleteSale() {
     if (lastSale?.header.discounted_stock) {
       lastSale.products.forEach(console.log)
 
     }
-    // deleteLastSale()
-    //   .then((res) => {
-    //     setFeedbackMessage({ type: 'info', msg: res as string })
-    //     updateRecentSalesInContext()
-    //   })
-    //   .catch(err => {
-    //     setFeedbackMessage({ type: 'error', msg: err })
-    //   })
+    deleteLastSale()
+      .then((res) => {
+        setFeedbackMessage({ type: 'info', msg: res as string })
+        updateSales()
+      })
+      .catch(err => {
+        setFeedbackMessage({ type: 'error', msg: err })
+      })
 
   }
   const onRefresh = React.useCallback(() => {
-    updateSales(formatedDate)
+    updateSales()
   }, []);
 
 
@@ -69,13 +84,13 @@ export default function Home() {
               <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
             }
           >
-            {//verifica se há produtos sem o custo informado, se houver, é exibida uma mensagem
-              (noCostItems && noCostItems.length > 0 && overviewData.cost > 0) &&
-              <NoCostAdvice noCostItems={noCostItems} />
-            }
             {
               sales?.length ?
                 <>
+                  {//verifica se há produtos sem o custo informado, se houver, é exibida uma mensagem
+                    (overviewData?.cost > 0) &&
+                    <NoCostAdvice sales={sales} />
+                  }
                   <OverView overviewData={overviewData} />
                   {
                     lastSale &&
@@ -88,7 +103,7 @@ export default function Home() {
                       <Text style={styles.chartError}>Não foi possível gerar o gráfico</Text>
                   }
                   <Text style={styles.title}>Produtos vendidos: </Text>
-                  <SalesList sales={sales} />
+                  <SalesList salesGroupedByType={salesGroupedByType} />
                 </>
                 :
                 <Text style={{ textAlign: 'center', marginTop: 300 }}>Não há nenhuma venda!</Text>

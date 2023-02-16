@@ -8,15 +8,14 @@ import getGroupedArray from '../../../utils/groupArray';
 import { styles } from './styles';
 
 interface Props {
-    sales: SaleProductProps[]
+    salesGroupedByType: SaleProductProps[][]
     editable?: boolean
     setOrderProducts?: React.Dispatch<React.SetStateAction<SaleProductProps[]>>
 }
 
-export function SalesList({ sales }: Props) {
+export function SalesList({ salesGroupedByType }: Props) {
     const { productTypes } = useProducts();
     const colorScheme = useColorScheme();
-    const salesGroupedByType = getGroupedArray(sales, productTypes) as SaleProductProps[][];
     return (
         <View>
             {

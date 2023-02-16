@@ -28,6 +28,7 @@ export type LastSaleProductProps = {
 export type SaleProductProps = {
     count: number,
     id: number,
+    is_main_price: boolean,
     name_product: string,
     cost_product?: number,
     price_product: number,

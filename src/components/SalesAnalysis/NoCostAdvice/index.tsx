@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SaleProductProps } from '../../../@types/sales';
 import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 
 interface Props {
-    noCostItems: SaleProductProps[]
+    sales: SaleProductProps[]
 }
-export function NoCostAdvice({ noCostItems }: Props) {
+export function NoCostAdvice({ sales }: Props) {
+    const [noCostItems, setNoCostItems] = useState<SaleProductProps[]>([])
+    useEffect(() => {
+        var arrNameProductsCostNull: string[] = [];
+        const arrCostNull = sales.filter(sale => {
+            if (!arrNameProductsCostNull.includes(sale.name_product)) {
+                arrNameProductsCostNull.push(sale.name_product)
+                return sale.cost_product === null
+            }
+            else {
+                return false
+            }
+        })
+        setNoCostItems(arrCostNull)
+    }, [])
 
     const colorScheme = useColorScheme();
     const pluralSuffix = noCostItems && (noCostItems?.length) > 1 && 's';

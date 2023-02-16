@@ -1,11 +1,8 @@
-import { SaleProductProps } from "../@types/sales";
+import { PriceModels, SaleProductProps } from "../@types/sales";
 import { useProducts } from "../contexts/products";
 import getGroupedArray from "./groupArray";
 
-export function getPieChartData(sales: SaleProductProps[]) {
-    const { productTypes } = useProducts();
-
-    const groupedSales: SaleProductProps[][] = getGroupedArray(sales, productTypes)
+export function getPieChartData(groupedSales: SaleProductProps[][]) {
     var newData: {
         label: string;
         type: string;
@@ -18,8 +15,10 @@ export function getPieChartData(sales: SaleProductProps[]) {
         const typeWrapped = type_products.split(' ');
         const label = typeWrapped.join('\n');
 
+        // let groupFilteredByPriceModel = group.filter(item => (priceModel == 'main' ? item.is_main_price : priceModel == 'secondary' ? !item.is_main_price : true))
+
         let sum = 0;
-        groupedSales[i].forEach(sale => {
+        group.forEach(sale => {
             sum += (sale.count * sale.price_product) - (sale.cost_product ?? 0 * sale.count);
         })
         newData?.push(
@@ -29,4 +28,5 @@ export function getPieChartData(sales: SaleProductProps[]) {
                 sum,
             })
     }
+    return newData;
 }

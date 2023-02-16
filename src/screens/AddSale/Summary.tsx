@@ -39,6 +39,7 @@ export function Summary() {
 
     const { orderProducts, clearOrderProducts, priceModel } = useOrderProducts();
     const { updateStockInContext } = useStock();
+    const { updateSales } = useSales();
 
     const [discountStock, setDiscountStock] = useState<boolean>(true);
     const sourceArr = [money100, money50, money20, money10, money5, money2, money1, money05]
@@ -50,9 +51,13 @@ export function Summary() {
                 clearOrderProducts()
                 if (discountStock) {
                     discountStockOfSaleItems()
+
                 }
             })
-            .then(() => updateStockInContext())
+            .then(() => {
+                updateStockInContext()
+                updateSales();
+            })
             .then(() => navigation.navigate("Root"))
             .catch(alert)
             .finally(() => setIsLoading(false))
