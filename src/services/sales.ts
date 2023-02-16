@@ -1,6 +1,6 @@
 
 import { OrderProductProps } from "../@types/orderProduct";
-import { LastSaleProductProps, SaleOverviewProps, SaleProductProps } from "../@types/sales";
+import { HistoricDetailsItemProps, LastSaleProductProps, SaleOverviewProps, SaleProductProps } from "../@types/sales";
 import api from "./api";
 import getUserID from "./getUserID";
 
@@ -99,6 +99,24 @@ export async function getOverview(date: string) {
             .then(res => {
                 if (res.data[0])
                     resolve(res.data[0] as SaleOverviewProps);
+                else {
+                    reject('Sem dados recebidos do servidor!')
+                }
+            })
+            .catch(err => {
+                reject(err)
+            })
+    })
+}
+export async function getHistoricDetails(yearMonth: string) {
+    const ID_USER = await getUserID();
+
+    return new Promise((resolve, reject) => {
+        api.get(`/${ID_USER}/sales/historic/${yearMonth}`)
+            .then(res => {
+                console.log("DETALHES do histórico", res.data)
+                if (res.data[0])
+                    resolve(res.data as HistoricDetailsItemProps[]);
                 else {
                     reject('Sem dados recebidos do servidor!')
                 }
