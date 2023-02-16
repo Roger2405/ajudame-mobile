@@ -8,6 +8,12 @@ export const styles = StyleSheet.create({
         position: 'relative',
         width: '100%',
     },
+    typeContainer: {
+        backgroundColor: Colors.lightGray,
+        padding: 8,
+        marginTop: 8,
+        borderRadius: 8
+    },
     item: {
         flexDirection: 'row',
         marginTop: 4,

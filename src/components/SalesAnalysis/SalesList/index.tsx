@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, ListRenderItemInfo, TouchableOpacity, FlatList } from 'react-native';
-import { LastSaleProductProps, SaleProductProps } from '../../../@types/orderProduct';
+import { View, Text } from 'react-native';
+import { SaleProductProps } from '../../../@types/sales';
 import Colors from '../../../constants/Colors';
+import { useProducts } from '../../../contexts/products';
 import useColorScheme from '../../../hooks/useColorScheme';
+import getGroupedArray from '../../../utils/groupArray';
 import { styles } from './styles';
 
 interface Props {
@@ -12,15 +14,26 @@ interface Props {
 }
 
 export function SalesList({ sales }: Props) {
+    const { productTypes } = useProducts();
+    const colorScheme = useColorScheme();
+    const salesGroupedByType = getGroupedArray(sales, productTypes) as SaleProductProps[][];
     return (
         <View>
             {
-                sales.length &&
-                sales.map(item => {
-                    return <SalesListItem item={item} key={item.id} />
+                salesGroupedByType.map(groupOfTytpe => {
+                    return (
+                        <View key={groupOfTytpe[0].type_product} style={styles.typeContainer}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors[colorScheme].text }}>{groupOfTytpe[0].type_product}</Text>
+                            {
+                                groupOfTytpe.map(item => {
+                                    return <SalesListItem item={item} key={item.id} />
+                                })
+                            }
+
+                        </View>)
                 })
             }
-        </View>
+        </View >
     )
 }
 
