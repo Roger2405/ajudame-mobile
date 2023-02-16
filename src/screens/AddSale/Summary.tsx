@@ -12,11 +12,13 @@ import OrderProducts from '../../components/AddSales/OrderProducts';
 
 //CONTEXTS
 import { useOrderProducts } from '../../contexts/order';
-import { useRecentSales } from '../../contexts/sales';
+import { useSales } from '../../contexts/sales';
 import { useStock } from '../../contexts/stock';
 
 import { discountStockOfSaleItems } from '../../services/stock';
 import { addSale } from '../../services/sales';
+import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
+import { FlatList } from 'react-native-gesture-handler';
 
 
 const money100 = require('../../../assets/images/money/100.jpg');
@@ -36,7 +38,6 @@ export function Summary() {
     const [keyboardIsHidden, setKeyboardIsHidden] = useState(true);
 
     const { orderProducts, clearOrderProducts, priceModel } = useOrderProducts();
-    const { updateRecentSalesInContext } = useRecentSales();
     const { updateStockInContext } = useStock();
 
     const [discountStock, setDiscountStock] = useState<boolean>(true);
@@ -46,17 +47,13 @@ export function Summary() {
         setIsLoading(true)
         addSale(orderProducts, priceModel)
             .then(res => {
-                updateRecentSalesInContext();
                 clearOrderProducts()
-                navigation.navigate("Root")
                 if (discountStock) {
                     discountStockOfSaleItems()
-                        .then(() => {
-                            updateStockInContext()
-                        })
-                        .catch(alert)
                 }
             })
+            .then(() => updateStockInContext())
+            .then(() => navigation.navigate("Root"))
             .catch(alert)
             .finally(() => setIsLoading(false))
     }
@@ -80,7 +77,7 @@ export function Summary() {
             sum += (priceModel == 'main' ? orderProduct.main_price : orderProduct.secondary_price) * orderProduct.count;
         })
         return sum;
-    }, [orderProducts])
+    }, [orderProducts, priceModel])
 
 
     const totalValueFormatted = (totalValue).toFixed(2).replace('.', ',');
@@ -91,11 +88,11 @@ export function Summary() {
 
                     <ActivityIndicator size={32} />
                     :
-                    <View style={[styles.container, {}]}>
+                    <View style={[styles.container, { flex: 1 }]}>
                         <View
                             style={{ flexBasis: '50%' }}
                         >
-                            <Text style={{ textAlign: 'center', color: Colors.gray, fontSize: 10 }}>Você ainda pode voltar e editar a venda!</Text>
+                            <Text style={{ textAlign: 'center', color: Colors.gray, fontSize: 10 }}>Você ainda pode voltar e adicionar produtos!</Text>
                             <Text style={{ fontSize: 32, textTransform: 'uppercase', textAlign: 'center', fontWeight: 'bold', color: Colors.gray }}>Pedido</Text>
 
                             <OrderProducts />
@@ -116,11 +113,13 @@ export function Summary() {
                                 </View>
                                 <Text style={{ fontSize: 8, color: Colors.gray }}>caso não queira alterar o estoque com {'\n'}essa venda, desabilite a opção acima </Text>
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={styles.label}>Total:</Text>
-                                <Text style={styles.total}>R$ {totalValueFormatted}</Text>
-                            </View>
+                            <PriceModelSelect />
                         </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 8 }}>
+                            <Text style={styles.label}>Total:</Text>
+                            <Text style={styles.total}>R$ {totalValueFormatted}</Text>
+                        </View>
+
 
 
                         <View style={{ borderWidth: 1, borderColor: Colors.gray, paddingVertical: 4, borderRadius: 8, margin: 4 }}>
@@ -128,18 +127,16 @@ export function Summary() {
                                 <Text style={[styles.label]}>Valor pago: </Text>
                                 <TextInput style={[styles.paymentInput, { backgroundColor: Colors[colorScheme].itemColor }]} keyboardType='decimal-pad' onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValue.toString()} />
                             </View>
-                            <ScrollView horizontal style={{ paddingVertical: 4, marginVertical: 4 }} contentContainerStyle={{ paddingHorizontal: 8 }}>
-                                {
-                                    [100, 50, 20, 10, 5, 2, 1, 0.5].map((value, index) => {
-                                        return (
-                                            <TouchableOpacity key={value} style={{ marginLeft: 8, }} onPress={() => setPaymentValue(oldValue => oldValue += value)}>
-                                                <Image style={{ resizeMode: 'contain' }} source={sourceArr[index]} />
-                                            </TouchableOpacity>
-                                        )
-
-                                    })
-                                }
-                            </ScrollView>
+                            <FlatList
+                                horizontal style={{ paddingVertical: 4, marginVertical: 4 }} contentContainerStyle={{ paddingHorizontal: 8 }}
+                                data={[100, 50, 20, 10, 5, 2, 1, 0.5]}
+                                keyExtractor={item => item.toString()}
+                                renderItem={({ item, index }) => {
+                                    return <TouchableOpacity key={item} style={{ marginLeft: 8, }} onPress={() => setPaymentValue(oldValue => oldValue += item)}>
+                                        <Image style={{ resizeMode: 'contain' }} source={sourceArr[index]} />
+                                    </TouchableOpacity>
+                                }}
+                            />
                             {
                                 (paymentValue > totalValue) &&
                                 <View style={[styles.groupContainer, { justifyContent: 'flex-end' }]}>

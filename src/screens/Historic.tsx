@@ -10,12 +10,12 @@ import useColorScheme from '../hooks/useColorScheme';
 import { getHistoric } from '../services/sales';
 import { SaleOverviewProps } from '../@types/sales';
 import { HistoricList } from '../components/Historic/List';
-import { useRecentSales } from '../contexts/sales';
+import { useSales } from '../contexts/sales';
 
 
 export default function Historic() {
     const [salesHistoric, setSalesHistoric] = useState<SaleOverviewProps[]>();
-    const { sales } = useRecentSales();
+    const { sales } = useSales();
     const [isLoading, setIsLoading] = useState(true);
     const colorScheme = useColorScheme();
 

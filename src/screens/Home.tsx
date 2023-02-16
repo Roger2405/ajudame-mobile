@@ -8,7 +8,7 @@ import { ButtonsContainer, SingleButton } from '../components/common/Buttons';
 import useColorScheme from '../hooks/useColorScheme';
 import { Feather } from '@expo/vector-icons';
 import { deleteLastSale, getOverview } from '../services/sales';
-import { useRecentSales } from '../contexts/sales';
+import { useSales } from '../contexts/sales';
 import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { useProducts } from '../contexts/products';
 import getGroupedArray from '../utils/groupArray';
@@ -18,70 +18,30 @@ import { PieChartComponent } from '../components/SalesAnalysis/PieChart';
 import { SalesList } from '../components/SalesAnalysis/SalesList';
 import { LastSale } from '../components/SalesAnalysis/LastSale';
 import { RefreshControl } from 'react-native-gesture-handler';
+import { NoCostAdvice } from '../components/SalesAnalysis/NoCostAdvice';
+import { useStock } from '../contexts/stock';
 
 
 
 export default function Home() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
-
-  const { productTypes } = useProducts();
-  const { sales, noCostItems, lastSale, updateRecentSalesInContext, isLoading } = useRecentSales();
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
+  const { sales, noCostItems, lastSale, overviewData, dataPieChart, updateSales, isLoading } = useSales();
 
-  const [overviewData, setOverviewData] = useState<SaleOverviewProps>({} as SaleOverviewProps)
 
-  const [dataPieChart, setDataPieChart] = useState<{
-    label: string;
-    type: string,
-    sum: number;
-  }[]>();
   const date = new Date();
   const localeDateString = date.toLocaleDateString()
-  // console.log(date)
   const [month, day, year] = localeDateString.split('/');
-  // const formatedDate = date.toString().split('T')[0];
   const formatedDate = `20${year}-${month}-${day}`;
-  // console.log(formatedDate)
-
   useEffect(() => {
-    if (sales) {
-      const groupedSales: SaleProductProps[][] = getGroupedArray(sales, productTypes)
-      var newData = [] as typeof dataPieChart;
-
-      for (let i = 0; i < groupedSales.length; i++) {
-        const group = groupedSales[i];
-        const type_products = group[0].type_product;
-        const typeWrapped = type_products.split(' ');
-        const label = typeWrapped.join('\n');
-
-        let sum = 0;
-        groupedSales[i].forEach(sale => {
-          sum += sale.count * sale.price_product;
-        })
-        newData?.push(
-          {
-            label,
-            type: type_products,
-            sum,
-          })
-      }
-      setDataPieChart(newData)
-    }
-
-    getOverview(formatedDate)
-      .then(res => {
-        console.log(formatedDate)
-        console.log(res)
-        setOverviewData(res as SaleOverviewProps)
-      })
-      .catch(alert)
-  }, [sales])
+    () => updateSales(formatedDate)
+  }, [])
 
   async function handleDeleteSale() {
     if (lastSale?.header.discounted_stock) {
       lastSale.products.forEach(console.log)
-      
+
     }
     // deleteLastSale()
     //   .then((res) => {
@@ -94,11 +54,11 @@ export default function Home() {
 
   }
   const onRefresh = React.useCallback(() => {
-    updateRecentSalesInContext()
+    updateSales(formatedDate)
   }, []);
 
 
-  const pluralSuffix = noCostItems && (noCostItems?.length) > 1 && 's';
+
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       {
@@ -111,18 +71,7 @@ export default function Home() {
           >
             {//verifica se há produtos sem o custo informado, se houver, é exibida uma mensagem
               (noCostItems && noCostItems.length > 0 && overviewData.cost > 0) &&
-              <View style={[styles.costInfo, { backgroundColor: Colors.lightRed }]}>
-                <Text style={[styles.costInfoMessage, { color: Colors[colorScheme].itemColor }]}>Há {noCostItems?.length} produto{pluralSuffix} nas vendas sem custo informado!</Text>
-                <Text style={[styles.costInfoMessage, { backgroundColor: Colors.lightRed, color: Colors[colorScheme].itemColor, marginBottom: 4 }]}>Informe o custo do{pluralSuffix} produto{pluralSuffix}: {noCostItems.map((item, index) => {
-                  const max_index = 4;
-                  if (index < max_index)
-                    return (index === 0 ? '' : ', ') + item.name_product
-                  else if (index == max_index) {
-                    const rest = noCostItems?.length - index;
-                    return ` + ${rest} ite${rest > 1 ? 'ns' : 'm'}`
-                  }
-                })}</Text>
-              </View>
+              <NoCostAdvice noCostItems={noCostItems} />
             }
             {
               sales?.length ?
@@ -130,19 +79,13 @@ export default function Home() {
                   <OverView overviewData={overviewData} />
                   {
                     lastSale &&
-                    <View>
-                      <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>Última venda:</Text>
-                      <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
-                    </View>
+                    <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
                   }
                   {
-                    dataPieChart ?
-                      dataPieChart.length > 1 ?
-                        <PieChartComponent data={dataPieChart} />
-                        :
-                        <></>
+                    dataPieChart && dataPieChart?.length > 1 ?
+                      <PieChartComponent data={dataPieChart} />
                       :
-                      <Text style={{ textAlign: 'center', padding: 8, color: Colors.red, backgroundColor: Colors.lightRed, borderRadius: 8, marginVertical: 8 }}>Não foi possível gerar o gráfico</Text>
+                      <Text style={styles.chartError}>Não foi possível gerar o gráfico</Text>
                   }
                   <Text style={styles.title}>Produtos vendidos: </Text>
                   <SalesList sales={sales} />
@@ -174,16 +117,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.gray,
   },
-  costInfo: {
-    borderWidth: 1,
-    borderColor: Colors.red,
-    borderRadius: 8,
-    marginTop: 8,
-    paddingHorizontal: 4,
-  },
-  costInfoMessage: {
-    textAlign: 'center',
-    paddingVertical: 2,
-    borderRadius: 4
+  chartError: {
+    textAlign: 'center', padding: 8, color: Colors.red, backgroundColor: Colors.lightRed, borderRadius: 8, marginVertical: 8
   }
+
 });

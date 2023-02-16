@@ -1,4 +1,13 @@
 
+export type HistoricDetailsItemProps = {
+    total: number
+    cost: number
+    gain: number
+    day: string
+
+}
+export type PriceModels = 'main' | 'secondary'
+
 export type SaleOverviewProps = {
     total: number
     cost: number
