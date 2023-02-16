@@ -39,12 +39,12 @@ export function PasswordInput({ placeholder, onChangeText, value, label }: Field
   const [hidePassword, setHidePassword] = useState(true)
 
   return (
-    <InputField label={label} onChangeText={onChangeText} value={value} secureTextEntry={hidePassword} placeholder={placeholder}
+    <InputField label={label} onChangeText={onChangeText} value={value} maxLength={64} secureTextEntry={hidePassword} placeholder={placeholder}
       icon={<Foundation style={styles.icon} name={'lock'} size={20} />}
     >
       <TouchableOpacity onPress={() => {
         setHidePassword(!hidePassword)
-      }} style={[styles.icon, { alignItems: 'center', width: 50 }]}>
+      }} style={[styles.icon, { alignItems: 'center', marginLeft: 'auto', width: 50 }]}>
         <FontAwesome5 name={hidePassword ? 'eye' : 'eye-slash'} size={20} />
       </TouchableOpacity>
     </InputField >

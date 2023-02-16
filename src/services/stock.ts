@@ -33,8 +33,11 @@ export function groupStockByProductType(arrProductStock: StockProps[]) {
     }
     return arrayStockGrouped;
 }
+export async function addStock(mapIdCount: Map<number, number>) {
+    const ID_USER = await getUserID();
 
-export async function updateQuantitiesOnDB(newStock: Map<number, number>) {
+}
+export async function updateStock(newStock: Map<number, number>) {
 
     let strArrayQuantities = JSON.stringify(Array.from(newStock))
 

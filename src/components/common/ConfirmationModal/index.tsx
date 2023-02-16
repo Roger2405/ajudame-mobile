@@ -14,51 +14,53 @@ interface ConfirmationModalProps {
 export default function ConfirmationModal({ showConfirmationModal, message, children, setShowConfirmationModal, onConfirm }: ConfirmationModalProps) {
     const [isLoading, setIsLoading] = useState(false);
     return (
-        <View style={styles.centeredView}>
-            <Modal
-                animationType="none"
+        <View>
 
-                transparent
-                style={{ backgroundColor: Colors.gray }}
-                statusBarTranslucent
-                visible={showConfirmationModal}
-                onRequestClose={() => {
-                    onConfirm()?.then(() => {
-                        setShowConfirmationModal(!showConfirmationModal);
-                    })
-                }}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.text}>Confirmar ação?</Text>
-                        {
-                            message &&
-                            <Text style={{ fontSize: 12, textAlign: "center", color: Colors.gray }}>{message}</Text>
-                        }
+            <View style={styles.centeredView}>
+                <Modal
+                    animationType="none"
 
-                        {children}
+                    transparent
+                    style={{ backgroundColor: Colors.gray }}
+                    statusBarTranslucent
+                    visible={showConfirmationModal}
+                    onRequestClose={() => {
+                        onConfirm()?.then(() => {
+                            setShowConfirmationModal(!showConfirmationModal);
+                        })
+                    }}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.text}>Confirmar ação?</Text>
+                            {
+                                message &&
+                                <Text style={{ fontSize: 12, textAlign: "center", color: Colors.gray }}>{message}</Text>
+                            }
+                            {children}
 
-                        {
-                            isLoading ?
-                                <View style={{ padding: 16 }}>
-                                    <ActivityIndicator />
-                                </View>
-                                :
-                                <ButtonsContainer relative>
-                                    <CancelButton onPress={() => setShowConfirmationModal(false)} />
-                                    <ConfirmButton onPress={() => {
-                                        setIsLoading(true)
-                                        onConfirm()?.then(() => {
-                                            setShowConfirmationModal(false)
-                                        })
-                                            .finally(() => setIsLoading(false))
-                                    }} />
-                                </ButtonsContainer>
-                        }
+                            {
+                                isLoading ?
+                                    <View style={{ padding: 16 }}>
+                                        <ActivityIndicator />
+                                    </View>
+                                    :
+                                    <ButtonsContainer relative>
+                                        <CancelButton onPress={() => setShowConfirmationModal(false)} />
+                                        <ConfirmButton onPress={() => {
+                                            setIsLoading(true)
+                                            onConfirm()?.then(() => {
+                                                setShowConfirmationModal(false)
+                                            })
+                                                .finally(() => setIsLoading(false))
+                                        }} />
+                                    </ButtonsContainer>
+                            }
 
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            </View>
         </View>
     );
 };

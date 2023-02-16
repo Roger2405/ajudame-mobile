@@ -7,7 +7,7 @@ import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import { ModalEditStock } from '../components/Stock/StockModal';
 import { StockList } from '../components/Stock/StockList';
 import Colors from '../constants/Colors';
-import { updateQuantitiesOnDB } from '../services/stock';
+import { updateStock } from '../services/stock';
 import { useStock } from '../contexts/stock';
 import useColorScheme from '../hooks/useColorScheme';
 
@@ -31,7 +31,7 @@ export default function Stock() {
 
   function confirmChanges() {
     setLoading(true)
-    updateQuantitiesOnDB(newStock).then((response) => {
+    updateStock(newStock).then((response) => {
       setNewStock(new Map());
       setFeedbackMessage({ type: 'info', msg: 'Estoque atualizado com sucesso!' });
       updateStockInContext();

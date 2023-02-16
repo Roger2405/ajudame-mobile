@@ -30,7 +30,7 @@ export function FeedbackMessage({ feedbackMessage, setFeedbackMessage }: Feedbac
     }, [feedbackMessage])
 
     return (
-        <View style={{ width: '100%' }}>
+        <View style={{ width: '100%', marginVertical: 4 }}>
             {
                 feedbackMessage.msg && //mensagem de errro
                 < Text style={[styles.feedBack, feedbackMessage.type == 'error' ? styles.error : styles.info]}>{feedbackMessage.msg}</Text>

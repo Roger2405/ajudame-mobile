@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     field: {
         marginBottom: 8,
-
+        width: '100%',
         position: 'relative',
     },
     label: {
@@ -11,7 +11,9 @@ export const styles = StyleSheet.create({
     },
     input: {
         padding: 8,
-        flexGrow: 1,
+        flex: 1,
+
+        // overflow: 'hidden',
     },
     icon: {
         padding: 8,
@@ -20,7 +22,6 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 4,
-        overflow: 'hidden',
-
+        width: '100%'
     },
 })
