@@ -93,67 +93,68 @@ export function Summary() {
 
                     <ActivityIndicator size={32} />
                     :
-                    <View style={[styles.container, { flex: 1 }]}>
+                    <View style={[styles.container, { flex: 1, flexBasis: '100%' }]}>
                         <View
-                            style={{ flexBasis: '50%' }}
+                            style={{ flexShrink: 10 }}
                         >
                             <Text style={{ textAlign: 'center', color: Colors.gray, fontSize: 10 }}>Você ainda pode voltar e adicionar produtos!</Text>
                             <Text style={{ fontSize: 32, textTransform: 'uppercase', textAlign: 'center', fontWeight: 'bold', color: Colors.gray }}>Pedido</Text>
 
                             <OrderProducts />
                         </View>
-
-                        <View style={[styles.groupContainer, { alignItems: 'flex-start' }]}>
-                            <View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ color: Colors.gray }}>descontar {'\n'}estoque</Text>
-                                    <Switch
-                                        trackColor={{ false: Colors.gray, true: Colors.primary }}
-                                        thumbColor={Colors[colorScheme].itemColor}
-                                        // style={{ width: 32 }}
-                                        ios_backgroundColor={Colors.gray}
-                                        onValueChange={() => setDiscountStock(!discountStock)}
-                                        value={discountStock}
-                                    />
+                        <ScrollView style={{ flexGrow: 100 }} contentContainerStyle={{ paddingBottom: 120 }}>
+                            <View style={[styles.groupContainer, { alignItems: 'flex-start' }]}>
+                                <View>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Text style={{ color: Colors.gray }}>descontar {'\n'}estoque</Text>
+                                        <Switch
+                                            trackColor={{ false: Colors.gray, true: Colors.primary }}
+                                            thumbColor={Colors[colorScheme].itemColor}
+                                            // style={{ width: 32 }}
+                                            ios_backgroundColor={Colors.gray}
+                                            onValueChange={() => setDiscountStock(!discountStock)}
+                                            value={discountStock}
+                                        />
+                                    </View>
+                                    <Text style={{ fontSize: 8, color: Colors.gray }}>caso não queira alterar o estoque com {'\n'}essa venda, desabilite a opção acima </Text>
                                 </View>
-                                <Text style={{ fontSize: 8, color: Colors.gray }}>caso não queira alterar o estoque com {'\n'}essa venda, desabilite a opção acima </Text>
+                                <PriceModelSelect />
                             </View>
-                            <PriceModelSelect />
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 8 }}>
-                            <Text style={styles.label}>Total:</Text>
-                            <Text style={styles.total}>R$ {totalValueFormatted}</Text>
-                        </View>
-
-
-
-                        <View style={{ borderWidth: 1, borderColor: Colors.gray, paddingVertical: 4, borderRadius: 8, margin: 4 }}>
-                            <View style={styles.groupContainer}>
-                                <Text style={[styles.label]}>Valor pago: </Text>
-                                <TextInput style={[styles.paymentInput, { backgroundColor: Colors[colorScheme].itemColor }]} keyboardType='decimal-pad' onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValue.toString()} />
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 8 }}>
+                                <Text style={styles.label}>Total:</Text>
+                                <Text style={styles.total}>R$ {totalValueFormatted}</Text>
                             </View>
-                            <FlatList
-                                horizontal style={{ paddingVertical: 4, marginVertical: 4 }} contentContainerStyle={{ paddingHorizontal: 8 }}
-                                data={[100, 50, 20, 10, 5, 2, 1, 0.5]}
-                                keyExtractor={item => item.toString()}
-                                renderItem={({ item, index }) => {
-                                    return <TouchableOpacity key={item} style={{ marginLeft: 8, }} onPress={() => setPaymentValue(oldValue => oldValue += item)}>
-                                        <Image style={{ resizeMode: 'contain' }} source={sourceArr[index]} />
-                                    </TouchableOpacity>
-                                }}
-                            />
-                            {
-                                (paymentValue > totalValue) &&
-                                <View style={[styles.groupContainer, { justifyContent: 'flex-end' }]}>
-                                    <Text style={[styles.label, { fontWeight: 'bold', color: Colors[colorScheme].text }]}>Troco:</Text>
-                                    <Text style={{ fontSize: 28, fontWeight: 'bold', color: Colors[colorScheme].text, paddingHorizontal: 4, borderRadius: 4, backgroundColor: Colors.lightGray }}>R$ {(paymentValue - totalValue).toFixed(2).replace('.', ',')}</Text>
+
+
+
+                            <View style={{ borderWidth: 1, borderColor: Colors.gray, paddingVertical: 4, borderRadius: 8, margin: 4 }}>
+                                <View style={styles.groupContainer}>
+                                    <Text style={[styles.label]}>Valor pago: </Text>
+                                    <TextInput style={[styles.paymentInput, { backgroundColor: Colors[colorScheme].itemColor }]} keyboardType='decimal-pad' onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValue.toString()} />
                                 </View>
-                            }
-                        </View>
+                                <FlatList
+                                    horizontal style={{ paddingVertical: 4, marginVertical: 4 }} contentContainerStyle={{ paddingHorizontal: 8 }}
+                                    data={[100, 50, 20, 10, 5, 2, 1, 0.5]}
+                                    keyExtractor={item => item.toString()}
+                                    renderItem={({ item, index }) => {
+                                        return <TouchableOpacity key={item} style={{ marginLeft: 8, }} onPress={() => setPaymentValue(oldValue => oldValue += item)}>
+                                            <Image style={{ resizeMode: 'contain' }} source={sourceArr[index]} />
+                                        </TouchableOpacity>
+                                    }}
+                                />
+                                {
+                                    (paymentValue > totalValue) &&
+                                    <View style={[styles.groupContainer, { justifyContent: 'flex-end' }]}>
+                                        <Text style={[styles.label, { fontWeight: 'bold', color: Colors[colorScheme].text }]}>Troco:</Text>
+                                        <Text style={{ fontSize: 28, fontWeight: 'bold', color: Colors[colorScheme].text, paddingHorizontal: 4, borderRadius: 4, backgroundColor: Colors.lightGray }}>R$ {(paymentValue - totalValue).toFixed(2).replace('.', ',')}</Text>
+                                    </View>
+                                }
+                            </View>
+                        </ScrollView>
                         {
                             keyboardIsHidden &&
                             <Animated.View
-                                style={{ marginTop: 'auto' }}
+                                // style={{ position: 'relative', bottom: 0, zIndex: 10 }}
                                 layout={Layout}
                                 entering={FadeInDown}
                                 exiting={FadeOutDown}
