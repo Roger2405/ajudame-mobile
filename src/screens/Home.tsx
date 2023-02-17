@@ -97,8 +97,11 @@ export default function Home() {
                     <LastSale data={lastSale} handleDeleteSale={handleDeleteSale} />
                   }
                   {
-                    dataPieChart && dataPieChart?.length > 1 ?
-                      <PieChartComponent data={dataPieChart} />
+                    dataPieChart ?
+                      dataPieChart?.length > 1 ?
+                        <PieChartComponent data={dataPieChart} />
+                        :
+                        <></>
                       :
                       <Text style={styles.chartError}>Não foi possível gerar o gráfico</Text>
                   }
