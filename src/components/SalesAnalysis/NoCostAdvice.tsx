@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { SaleProductProps } from '../../../@types/sales';
-import Colors from '../../../constants/Colors';
-import useColorScheme from '../../../hooks/useColorScheme';
+
+import Colors from '../../constants/Colors';
+import useColorScheme from '../../hooks/useColorScheme';
+
+import { SaleProductProps } from '../../@types/sales';
 
 interface Props {
     sales: SaleProductProps[]

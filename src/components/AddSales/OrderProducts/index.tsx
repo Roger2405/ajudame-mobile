@@ -14,9 +14,6 @@ import { OrderProductProps } from '../../../@types/orderProduct';
 
 import { useOrderProducts } from '../../../contexts/order';
 
-interface Props {
-    editable?: boolean
-}
 
 export default function OrderProducts() {
     const { orderProducts } = useOrderProducts();

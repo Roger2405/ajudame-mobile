@@ -85,7 +85,7 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
         bgColor = defaultItemBg
 
     return (
-        <View style={[itemStyles.item, { backgroundColor: bgColor }]}>
+        <View style={[itemStyles.item, { backgroundColor: bgColor, opacity: stock.quantity > 0 ? 1 : .35 }]}>
 
             <Text style={itemStyles.name}>
                 {stock.name_product}

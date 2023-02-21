@@ -1,6 +1,6 @@
 
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
-import { SaleProductProps, LastSaleProductProps, PriceModels, SaleOverviewProps } from "../@types/sales";
+import { SaleProductProps, SaleOverviewProps, DetailedSaleProps } from "../@types/sales";
 import { getLastSale, getOverview, getSalesByDate } from "../services/sales";
 import { getCurrentDate } from "../utils/date";
 import getGroupedArray from "../utils/groupArray";
@@ -9,7 +9,7 @@ import { useProducts } from "./products";
 
 interface RecentSalesContextData {
     sales: SaleProductProps[] | undefined,
-    lastSale: LastSaleProductProps | undefined,
+    lastSale: DetailedSaleProps | undefined,
     overviewData: SaleOverviewProps
     updateSales: () => Promise<void>,
     isLoading: boolean
@@ -20,10 +20,10 @@ interface Props {
 }
 export function SalesProvider({ children }: Props) {
     const [overviewData, setOverviewData] = useState<SaleOverviewProps>({} as SaleOverviewProps)
-    const [lastSale, setLastSale] = useState<LastSaleProductProps | undefined>()
+    const [lastSale, setLastSale] = useState<DetailedSaleProps | undefined>()
     const [sales, setSales] = useState<SaleProductProps[] | undefined>()
     const [isLoading, setIsLoading] = useState(false)
-    
+
     useEffect(() => {
         updateSales()
     }, [])

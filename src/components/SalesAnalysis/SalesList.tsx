@@ -1,20 +1,15 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { SaleProductProps } from '../../../@types/sales';
-import Colors from '../../../constants/Colors';
-import { useProducts } from '../../../contexts/products';
-import useColorScheme from '../../../hooks/useColorScheme';
-import getGroupedArray from '../../../utils/groupArray';
-import { styles } from './styles';
+import { View, Text, StyleSheet } from 'react-native';
+import { SaleProductProps } from '../../@types/sales';
+import Colors from '../../constants/Colors';
+import useColorScheme from '../../hooks/useColorScheme';
+
 
 interface Props {
     salesGroupedByType: SaleProductProps[][]
-    editable?: boolean
-    setOrderProducts?: React.Dispatch<React.SetStateAction<SaleProductProps[]>>
 }
 
 export function SalesList({ salesGroupedByType }: Props) {
-    const { productTypes } = useProducts();
     const colorScheme = useColorScheme();
     return (
         <View>
@@ -56,3 +51,47 @@ export function SalesListItem({ item }: ItemProps) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        position: 'relative',
+        width: '100%',
+    },
+    typeContainer: {
+        backgroundColor: Colors.lightGray,
+        padding: 8,
+        marginTop: 8,
+        borderRadius: 8
+    },
+    item: {
+        flexDirection: 'row',
+        marginTop: 4,
+        padding: 8,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderRadius: 8,
+        maxWidth: '100%',
+
+        borderBottomWidth: 1,
+        borderColor: Colors.lightGray
+    },
+    itemName: {
+        flexBasis: '50%',
+    },
+    itemCount: {
+        padding: 4,
+        width: 50,
+        borderRadius: 16,
+        textAlign: 'center',
+        fontWeight: '900',
+    },
+    itemPrice: {
+        width: 70,
+        marginHorizontal: 8,
+        textAlign: 'right',
+    },
+    text: {
+        textTransform: 'uppercase',
+        fontSize: 16,
+    }
+})

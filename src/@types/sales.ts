@@ -14,7 +14,7 @@ export type SaleOverviewProps = {
     gain: number
     ym_date: string
 }
-export type LastSaleProductProps = {
+export type DetailedSaleProps = {
     header: {
         id_sale: number,
         datetime: string,

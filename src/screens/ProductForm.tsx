@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Button, ActivityIndicator, Switch, FlatList, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Button, ActivityIndicator, Switch, FlatList, KeyboardAvoidingView, Platform, Keyboard, Pressable } from 'react-native';
 //hooks
 import { useNavigation } from '@react-navigation/native';
 import useColorScheme from '../hooks/useColorScheme';
@@ -23,6 +23,8 @@ import { Feather, FontAwesome5 } from '@expo/vector-icons';
 import { ButtonsContainer, CancelButton, ConfirmButton, DeleteButton } from '../components/common/Buttons';
 import { FeedbackMessage } from '../components/common/FeedbackMessage';
 import ConfirmationModal from '../components/common/ConfirmationModal';
+import Animated, { FadeInDown, FadeOutDown, Layout } from 'react-native-reanimated';
+import { MaskedTextInput } from 'react-native-mask-text';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductForm'>;
@@ -30,7 +32,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ProductForm'>;
 export default function ProductForm({ route }: Props) {
     const id_product = route.params.id;
 
-    const [updateCostInSales, setUpdateCostInSales] = useState<boolean>();
+
 
     const [inputValues, setInputValues] = useState<ProductDetailsProps>({} as ProductDetailsProps)
     const [productData, setProductData] = useState<ProductDetailsProps>({} as ProductDetailsProps);
@@ -171,6 +173,7 @@ export default function ProductForm({ route }: Props) {
                 </View>
                 :
                 <View style={styles.container}>
+                    <Text style={[styles.title, { color: Colors[colorScheme].text }]}>{id_product ? 'Editar produto' : 'Adicionar produto'}</Text>
                     <FeedbackMessage feedbackMessage={feedbackMessage} setFeedbackMessage={setFeedbackMessage} />
                     <View>
                         <View>
@@ -206,11 +209,11 @@ export default function ProductForm({ route }: Props) {
                                         contentContainerStyle={{ paddingBottom: 16 }}
                                         style={[{ maxHeight: 64 }]}
                                         renderItem={({ item }) =>
-                                            <TouchableOpacity
+                                            <Pressable
                                                 onPress={() => setInputValues(oldValues => { return { ...oldValues, type_product: item } })}
                                                 style={[{ padding: 8, borderRadius: 4, marginTop: 1, backgroundColor: Colors.lightGray }]}>
                                                 <Text style={{ color: Colors.gray }}>{item}</Text>
-                                            </TouchableOpacity>
+                                            </Pressable>
                                         }
                                     />
 
@@ -253,37 +256,59 @@ export default function ProductForm({ route }: Props) {
                                     <View>
                                         <Text style={[styles.label, { color }]}>Principal: </Text>
                                         <Text style={styles.required}>(obrigatório)</Text>
-                                        <TextInput
-                                            onChangeText={(e) =>
+                                        <MaskedTextInput
+                                            type="currency"
+                                            defaultValue={((inputValues.main_price * 100) || undefined)?.toString()}
+                                            selection={{ start: 100, end: 100 }}
+                                            // value={((inputValues.main_price * 100)?.toString())}
+                                            options={{
+                                                prefix: 'R$ ',
+                                                decimalSeparator: ',',
+                                                groupSeparator: '.',
+                                                precision: 2,
+                                            }}
+                                            onChangeText={(value, rawText) => {
                                                 setInputValues((oldValues) => {
-                                                    const newValue = parseFloat(e);
+                                                    const newValue = parseFloat(rawText) / 100;
                                                     return { ...oldValues, main_price: (isNaN(newValue) ? 0 : newValue) }
-                                                })}
-                                            defaultValue={(inputValues.main_price || 0).toString()}
-                                            keyboardType='number-pad'
-                                            style={[styles.input, { backgroundColor }]}
-                                            placeholder='Padrão: 0' />
+                                                })
+                                            }}
+                                            keyboardType="numeric"
+                                            style={styles.input}
+                                            placeholder='Padrão: 0'
+                                        />
                                     </View>
 
                                     <View>
                                         <Text style={[styles.label, { color }]}>Secundário: </Text>
-                                        <TextInput
-                                            onChangeText={(e) =>
+                                        <MaskedTextInput
+                                            type="currency"
+                                            selection={{ start: 100, end: 100 }}
+                                            defaultValue={(((inputValues.secondary_price ? inputValues.secondary_price : 0) * 100)?.toString())}
+                                            options={{
+                                                prefix: 'R$ ',
+                                                decimalSeparator: ',',
+                                                groupSeparator: '.',
+                                                precision: 2,
+                                            }}
+                                            onChangeText={(value, rawText) => {
                                                 setInputValues((oldValues) => {
-                                                    const newValue = parseFloat(e);
-                                                    return { ...oldValues, secondary_price: (isNaN(newValue) ? undefined : newValue) }
-                                                })}
-                                            defaultValue={inputValues.secondary_price?.toString()}
-                                            keyboardType='number-pad'
-                                            style={[styles.input, { backgroundColor }]}
-                                            placeholder='Padrão: 0' />
+                                                    console.log(value)
+                                                    const newValue = parseFloat(rawText) / 100;
+                                                    return { ...oldValues, secondary_price: (isNaN(newValue) ? 0 : newValue) }
+                                                })
+                                            }}
+                                            keyboardType="numeric"
+                                            style={styles.input}
+                                            placeholder='Padrão: 0'
+                                        />
                                     </View>
                                 </View>
                                 {/* CUSTO  */}
                                 <View style={{ borderBottomWidth: 1, marginTop: 16, marginBottom: 8 }} />
                                 <View style={{}}>
                                     <Text style={[styles.label, { fontWeight: '700' }]}>Custo:</Text>
-                                    <TextInput
+                                    {/* <TextInput
                                         editable={!!editableCost}
                                         onChangeText={(e) =>
                                             setInputValues((oldValues) => {
@@ -293,7 +318,28 @@ export default function ProductForm({ route }: Props) {
                                         defaultValue={inputValues.cost?.toString()}
                                         keyboardType='number-pad'
                                         style={[styles.input, { backgroundColor: editableCost ? backgroundColor : Colors[colorScheme].background }]}
-                                        placeholder='Padrão: 0' />
+                                        placeholder='' /> */}
+                                    <MaskedTextInput
+                                        editable={!!editableCost}
+                                        type="currency"
+                                        selection={{ start: 100, end: 100 }}
+                                        defaultValue={(((inputValues.cost ? inputValues.cost : 0) * 100)?.toString())}
+                                        options={{
+                                            prefix: 'R$ ',
+                                            decimalSeparator: ',',
+                                            groupSeparator: '.',
+                                            precision: 2,
+                                        }}
+                                        onChangeText={(value, rawText) => {
+                                            setInputValues((oldValues) => {
+                                                const newValue = parseFloat(rawText) / 100;
+                                                return { ...oldValues, cost: (isNaN(newValue) ? 0 : newValue) }
+                                            })
+                                        }}
+                                        keyboardType="numeric"
+                                        style={styles.input}
+                                        placeholder='Padrão: 0'
+                                    />
                                 </View>
 
                             </View>
@@ -302,16 +348,17 @@ export default function ProductForm({ route }: Props) {
                         {//switch custo (condicional) e botão DELETE  
                             id_product &&
                             <>
-                                {
+                                {//se o custo não foi definido e seu valor agora foi informado, é exibido o toggle
                                     productData.cost == undefined && inputValues.cost !== null &&
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Switch
-                                            trackColor={{ false: Colors.gray, true: Colors.primary }}
-                                            thumbColor={updateCostInSales ? Colors.white : Colors[colorScheme].background}
-                                            ios_backgroundColor={Colors.gray}
-                                            onValueChange={() => setUpdateCostInSales(!updateCostInSales)} value={updateCostInSales} />
-                                        <Text style={{ fontSize: 12, flex: 1 }}>Atualizar o custo em todas as vendas já registradas com esse produto sem o custo informado!</Text>
+                                        <Text style={{ fontSize: 12, flex: 1 }}>O custo será atualizado em todas as vendas (sem o custo informado) já registradas com esse produto!</Text>
                                     </View>
+                                    //     <Switch
+                                    //         trackColor={{ false: Colors.gray, true: Colors.primary }}
+                                    //         thumbColor={updateCostInSales ? Colors.white : Colors[colorScheme].background}
+                                    //         ios_backgroundColor={Colors.gray}
+                                    //         onValueChange={() => setUpdateCostInSales(!updateCostInSales)} value={updateCostInSales} />
+                                    //     <Text style={{ fontSize: 12, flex: 1 }}>Atualizar o custo em todas as vendas já registradas com esse produto sem o custo informado!</Text>
                                 }
                                 <View style={{ marginTop: 8 }}>
                                     <Button color={Colors.red} title='Deletar produto' onPress={() => setShowModalConfirmation(true)} />
@@ -324,15 +371,20 @@ export default function ProductForm({ route }: Props) {
                         }
                     </View>
                     {
-                        isKeyboardVisible ?
-                            <></>
-                            :
+                        !isKeyboardVisible &&
+                        <Animated.View
+                            style={{ marginTop: 'auto' }}
+                            layout={Layout}
+                            entering={FadeInDown}
+                            exiting={FadeOutDown}
+                        >
                             <ButtonsContainer>
                                 <CancelButton onPress={() => {
                                     navigation.goBack();
                                 }} />
                                 <ConfirmButton onPress={handleSubmitForm} />
                             </ButtonsContainer>
+                        </Animated.View>
                     }
 
                 </View >}
@@ -346,25 +398,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 8,
-        // paddingVertical: 16,
         height: '100%',
         width: '100%',
+    },
+    title: {
+        fontSize: 28, textTransform: 'uppercase', fontWeight: 'bold', textAlign: 'center', marginVertical: 8,
     },
     group: {
         flexDirection: 'row',
         alignItems: 'center',
         borderBottomWidth: 1,
         borderColor: Colors.lightGray,
-        // paddingTop: 4,
-        // marginTop: 4,
         paddingBottom: 4,
         marginBottom: 4,
-
-    },
-    datalist: {
-        // position: 'absolute',
-        // bottom: 0,
-        // height: 'auto'
 
     },
     label: {
@@ -386,8 +432,6 @@ const styles = StyleSheet.create({
 
     },
     input: {
-        // elevation: 4,
-        // maxWidth: 200,
         borderColor: Colors.lightGray,
         borderWidth: 1,
         borderRadius: 4,
@@ -406,7 +450,6 @@ const styles = StyleSheet.create({
     },
     image: {
         resizeMode: 'contain',
-        // backgroundColor: Colors.lightGray,
         height: '100%',
         width: '100%'
 

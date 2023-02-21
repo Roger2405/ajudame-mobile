@@ -8,11 +8,14 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         bottom: 0,
         paddingTop: 32,
-        paddingHorizontal: 8,
+        // paddingHorizontal: 8,
+
+        alignSelf: 'center',
         marginTop: 'auto'
     },
     button: {
         height: 64,
+
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',

@@ -1,7 +1,7 @@
 import React from "react"
-import { ScrollView, View, StyleSheet } from "react-native";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
 
-import Colors from "../../../constants/Colors";
+import Colors from "../../constants/Colors";
 
 import { VictoryPie } from "victory-native";
 
@@ -13,7 +13,7 @@ interface Props {
     }[]
 }
 
-export function PieChartComponent({ data }: Props) {
+export function PieChart({ data }: Props) {
     const colors = ['#F1E15B', '#E55454', '#E8C1A0', '#E8A838', '#4597C5', '#444']
 
     return (
@@ -42,6 +42,7 @@ export function PieChartComponent({ data }: Props) {
                         }
                     }}
                 />
+                <Text style={{ fontSize: 10, textAlign: "center", color: Colors.white }}>Representação visual da porcentagem dos lucros das vendas, {'\n'}agrupados por tipo/categoria do produto.</Text>
             </View>
         </ScrollView>
     )

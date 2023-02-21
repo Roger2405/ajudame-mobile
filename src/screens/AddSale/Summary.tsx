@@ -19,6 +19,7 @@ import { discountStockOfSaleItems } from '../../services/stock';
 import { addSale } from '../../services/sales';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
 import { FlatList } from 'react-native-gesture-handler';
+import { MaskedTextInput } from 'react-native-mask-text';
 
 
 const money100 = require('../../../assets/images/money/100.jpg');
@@ -36,13 +37,13 @@ export function Summary() {
     const [isLoading, setIsLoading] = useState(false);
     const [paymentValue, setPaymentValue] = useState(0);
     const [keyboardIsHidden, setKeyboardIsHidden] = useState(true);
+    const [imgSrcArr, setImgSrcArr] = useState([money100, money50, money20, money10, money5, money2, money1, money05])
 
     const { orderProducts, clearOrderProducts, priceModel } = useOrderProducts();
     const { updateStockInContext } = useStock();
     const { updateSales } = useSales();
 
     const [discountStock, setDiscountStock] = useState<boolean>(true);
-    const sourceArr = [money100, money50, money20, money10, money5, money2, money1, money05]
 
     function handleConfirmUpdateSales() {
         setIsLoading(true)
@@ -58,9 +59,11 @@ export function Summary() {
                 updateStockInContext()
                 updateSales();
             })
-            .then(() => navigation.navigate("Root"))
             .catch(alert)
-            .finally(() => setIsLoading(false))
+            .finally(() => {
+                setIsLoading(false)
+                navigation.navigate("Root")
+            })
     }
     useEffect(() => {
         Keyboard.addListener(
@@ -76,6 +79,10 @@ export function Summary() {
             }
         );
     }, [])
+
+
+
+
     const totalValue = useMemo(() => {
         let sum = 0;
         orderProducts.forEach(orderProduct => {
@@ -84,25 +91,29 @@ export function Summary() {
         return sum;
     }, [orderProducts, priceModel])
 
+    useEffect(() => {
+        console.log('teste teclado')
+    }, [keyboardIsHidden])
 
     const totalValueFormatted = (totalValue).toFixed(2).replace('.', ',');
     return (
         <View style={styles.container}>
             {
                 isLoading ?
-
-                    <ActivityIndicator size={32} />
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <ActivityIndicator size={32} />
+                    </View>
                     :
                     <View style={[styles.container, { flex: 1, flexBasis: '100%' }]}>
                         <View
-                            style={{ flexShrink: 10 }}
+                            style={{ flexShrink: 1, flexBasis: '50%' }}
                         >
                             <Text style={{ textAlign: 'center', color: Colors.gray, fontSize: 10 }}>Você ainda pode voltar e adicionar produtos!</Text>
                             <Text style={{ fontSize: 32, textTransform: 'uppercase', textAlign: 'center', fontWeight: 'bold', color: Colors.gray }}>Pedido</Text>
 
                             <OrderProducts />
                         </View>
-                        <ScrollView style={{ flexGrow: 100 }} contentContainerStyle={{ paddingBottom: 120 }}>
+                        <ScrollView style={{ flexGrow: 1 }} contentContainerStyle={{ paddingBottom: 120 }}>
                             <View style={[styles.groupContainer, { alignItems: 'flex-start' }]}>
                                 <View>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -130,7 +141,23 @@ export function Summary() {
                             <View style={{ borderWidth: 1, borderColor: Colors.gray, paddingVertical: 4, borderRadius: 8, margin: 4 }}>
                                 <View style={styles.groupContainer}>
                                     <Text style={[styles.label]}>Valor pago: </Text>
-                                    <TextInput style={[styles.paymentInput, { backgroundColor: Colors[colorScheme].itemColor }]} keyboardType='decimal-pad' onChangeText={(e) => setPaymentValue(parseFloat(e))} value={paymentValue.toString()} />
+                                    <MaskedTextInput
+                                        type="currency"
+                                        selection={{ start: 100, end: 100 }}
+                                        value={(paymentValue * 100).toString()}
+                                        options={{
+                                            prefix: 'R$ ',
+                                            decimalSeparator: ',',
+                                            groupSeparator: '.',
+                                            precision: 2,
+                                        }}
+                                        onChangeText={(value, rawText) => {
+                                            setPaymentValue(parseFloat(rawText) / 100)
+                                            console.log(rawText)
+                                        }}
+                                        keyboardType="numeric"
+                                        style={styles.paymentInput}
+                                    />
                                 </View>
                                 <FlatList
                                     horizontal style={{ paddingVertical: 4, marginVertical: 4 }} contentContainerStyle={{ paddingHorizontal: 8 }}
@@ -138,7 +165,7 @@ export function Summary() {
                                     keyExtractor={item => item.toString()}
                                     renderItem={({ item, index }) => {
                                         return <TouchableOpacity key={item} style={{ marginLeft: 8, }} onPress={() => setPaymentValue(oldValue => oldValue += item)}>
-                                            <Image style={{ resizeMode: 'contain' }} source={sourceArr[index]} />
+                                            <Image style={{ resizeMode: 'contain' }} source={imgSrcArr[index]} />
                                         </TouchableOpacity>
                                     }}
                                 />
@@ -181,6 +208,7 @@ export function Summary() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingHorizontal: 4,
     },
     total: {
         backgroundColor: Colors.primary,

@@ -1,28 +1,30 @@
-// import { axios } from 'axios';
-
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Colors from '../constants/Colors';
-import { BackButton, ButtonsContainer } from '../components/common/Buttons';
-import useColorScheme from '../hooks/useColorScheme';
-import { getHistoricDetails, getOverview, getSalesByDate } from '../services/sales';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
+import { VictoryBar, VictoryChart } from 'victory-native';
+
+import Colors from '../constants/Colors';
+import useColorScheme from '../hooks/useColorScheme';
+
+import { BackButton, ButtonsContainer } from '../components/common/Buttons';
+import { FeedbackMessage } from '../components/common/FeedbackMessage';
+
+import { NoCostAdvice } from '../components/SalesAnalysis/NoCostAdvice';
 import OverView from '../components/SalesAnalysis/Overview';
 import { SalesList } from '../components/SalesAnalysis/SalesList';
+import { PieChart } from '../components/SalesAnalysis/PieChart';
 
 
-import { FeedbackMessage } from '../components/common/FeedbackMessage';
-import { PieChartComponent } from '../components/SalesAnalysis/PieChart';
 import { HistoricDetailsItemProps, PriceModels, SaleOverviewProps, SaleProductProps } from '../@types/sales';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../@types/navigation';
-import { Bar, VictoryBar, VictoryChart, VictoryLabel } from 'victory-native';
-import { useSales } from '../contexts/sales';
+
 import { useProducts } from '../contexts/products';
+
 import { getPieChartData } from '../utils/sales';
 import getGroupedArray from '../utils/groupArray';
-import { NoCostAdvice } from '../components/SalesAnalysis/NoCostAdvice';
+
+import { getHistoricDetails, getOverview, getSalesByDate } from '../services/sales';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'HistoricDetails'>;
 export default function HistoricDetails({ route }: Props) {
@@ -65,7 +67,6 @@ export default function HistoricDetails({ route }: Props) {
       .finally(() => setIsLoading(false))
   }, [])
 
-  const pluralSuffix = noCostItems && (noCostItems?.length) > 1 && 's';
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       {
@@ -88,7 +89,7 @@ export default function HistoricDetails({ route }: Props) {
                     {
                       dataPieChart ?
                         dataPieChart.length > 1 ?
-                          <PieChartComponent data={dataPieChart} />
+                          <PieChart data={dataPieChart} />
                           :
                           <></>
                         :
@@ -99,7 +100,6 @@ export default function HistoricDetails({ route }: Props) {
                         <VictoryChart>
                           <VictoryBar
                             domainPadding={{ x: 24 }}
-                            // labels={({ datum }) => datum.total.toFixed(2)}
                             style={{
                               data: {
                                 fill: Colors.primary
@@ -111,7 +111,6 @@ export default function HistoricDetails({ route }: Props) {
                           />
                           <VictoryBar
                             domainPadding={{ x: 24 }}
-                            // labels={({ datum }) => datum.total.toFixed(2)}
                             style={{
                               data: {
                                 fill: Colors.red
@@ -137,7 +136,6 @@ export default function HistoricDetails({ route }: Props) {
           </>
       }
       <ButtonsContainer style={{ position: 'absolute', bottom: 0 }}>
-        {/* <SingleButton onPress={() => navigation.navigate('NewSale')} color={Colors.gray} title='Voltar' icon={<Feather name='plus' size={24} color={Colors.white} />} /> */}
         <BackButton />
       </ButtonsContainer>
     </View>

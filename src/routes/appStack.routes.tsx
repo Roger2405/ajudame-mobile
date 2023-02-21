@@ -11,6 +11,7 @@ import { Summary } from "../screens/AddSale/Summary";
 import { TabRoutes } from "./appTab.routes";
 import HistoricDetails from '../screens/HistoricDetails'
 import { Account } from "../screens/Account";
+import { DetailedSales } from "../screens/DetailedSales";
 
 
 export function AppRoutes() {
@@ -26,7 +27,6 @@ export function AppRoutes() {
 
                 statusBarTranslucent: false,
                 statusBarColor: Colors.primary,
-
             }}
 
         >
@@ -35,8 +35,12 @@ export function AppRoutes() {
                 component={TabRoutes}
                 options={{
                     headerShown: false,
-                    // contentStyle: { paddingTop: 0 }
                 }}
+            />
+            <Screen
+                name="DetailedSales"
+                component={DetailedSales}
+
             />
             <Screen
                 name='NewSale'

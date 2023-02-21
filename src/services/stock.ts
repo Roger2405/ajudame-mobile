@@ -65,7 +65,6 @@ export async function discountStockOfSaleItems() {
     await new Promise((resolve, reject) => {
         api.post(`/${ID_USER}/stock/discount`)
             .then(res => {
-                console.log(res.data)
                 if (res.data.success) {
                     resolve(res.data.msg)
                 }

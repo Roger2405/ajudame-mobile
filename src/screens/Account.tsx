@@ -14,7 +14,6 @@ export function Account() {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const colorScheme = useColorScheme();
     const { signOut } = useAuth();
-
     async function handleDeleteAccount() {
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -29,6 +28,7 @@ export function Account() {
             <View>
                 <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Email:</Text>
                 <Text>{user?.email}</Text>
+
             </View>
             <Button title='Deletar conta' color={Colors.red} onPress={() => setShowConfirmationModal(true)} />
             <View>

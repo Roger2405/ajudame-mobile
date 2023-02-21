@@ -14,6 +14,7 @@ export type RootParamList = {
 
 export type RootStackParamList = {
     Root: NavigatorScreenParams<RootTabParamList> | undefined;
+    DetailedSales: undefined;
     NewSale: undefined;
     ProductForm: { id?: number };
     HistoricDetails: { date: string }

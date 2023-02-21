@@ -56,6 +56,7 @@ export function NewSale() {
     }, [hideNoStockProducts])
 
 
+
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
             {
@@ -99,7 +100,7 @@ export function NewSale() {
                             <ContinueButton
                                 disabled={!orderProducts.length}
                                 onPress={() => {
-                                    navigation.navigate('Summary', orderProducts)
+                                    navigation.navigate('Summary')
                                 }}
                             />
                         </ButtonsContainer>

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Animated, { Layout, FadeIn, FadeOut } from 'react-native-reanimated'
+import Animated, { Layout, FadeIn, FadeOut, FadeOutUp, FadeInDown, FadeInUp, FadeOutDown } from 'react-native-reanimated'
 import Colors from '../../../constants/Colors';
 
 // import { styles } from './styles';
@@ -25,17 +25,17 @@ export function FeedbackMessage({ feedbackMessage, setFeedbackMessage }: Feedbac
         if (feedbackMessage.msg) {
             setTimeout(() => {
                 setFeedbackMessage({} as { type: 'error' | 'info', msg: string });
-            }, 5000);
+            }, 50000);
         }
     }, [feedbackMessage])
 
     return (
-        <View style={{ width: '100%', marginVertical: 4 }}>
+        <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOutDown} style={{ width: '100%', marginVertical: 4 }}>
             {
                 feedbackMessage.msg && //mensagem de errro
                 < Text style={[styles.feedBack, feedbackMessage.type == 'error' ? styles.error : styles.info]}>{feedbackMessage.msg}</Text>
             }
-        </View>
+        </Animated.View>
     );
 }
 
@@ -51,6 +51,10 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 4,
         marginTop: 4,
+        top: 0,
+        position: 'absolute',
+        zIndex: 1000,
+        height: 80
     },
     info: {
         backgroundColor: Colors.lightPrimary,

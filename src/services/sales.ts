@@ -1,6 +1,6 @@
 
 import { OrderProductProps } from "../@types/orderProduct";
-import { HistoricDetailsItemProps, LastSaleProductProps, SaleOverviewProps, SaleProductProps } from "../@types/sales";
+import { DetailedSaleProps, HistoricDetailsItemProps, SaleOverviewProps, SaleProductProps } from "../@types/sales";
 import api from "./api";
 import getUserID from "./getUserID";
 
@@ -15,7 +15,6 @@ export async function getRecentSales() {
 export async function getSalesByDate(date: string) {
     const ID_USER = await getUserID();
 
-    console.log("Date", date)
     const response = await api.get(`/${ID_USER}/sales/${date}`)
     const sales: SaleProductProps[] = response.data;
     return sales;
@@ -39,7 +38,6 @@ export async function addSale(orderProducts: OrderProductProps[], priceModel: 'm
                 }
             })
             .catch(err => {
-                console.log(err)
                 reject(err)
             })
     })
@@ -48,16 +46,20 @@ export async function addSale(orderProducts: OrderProductProps[], priceModel: 'm
 export async function getLastSale() {
     const ID_USER = await getUserID();
     const response = await api.get(`/${ID_USER}/sales/last`)
-    const lastSale: LastSaleProductProps = response.data;
+    const lastSale: DetailedSaleProps = response.data;
 
     return lastSale;
 }
-
-export async function deleteLastSale() {
+export async function getDetailedSalesOfDay(date: string) {
+    const ID_USER = await getUserID();
+    const response = await api.get(`/${ID_USER}/sales/${date}/details`)
+    return response.data as DetailedSaleProps[];
+}
+export async function deleteSale(id_sale: number) {
     const ID_USER = await getUserID();
 
     return new Promise((resolve, reject) => {
-        api.delete(`/${ID_USER}/sales/last/`)
+        api.delete(`/${ID_USER}/sales/${id_sale}`)
             .then(res => {
                 if (res.data.success) {
                     resolve(res.data.msg);
@@ -78,7 +80,6 @@ export async function getHistoric() {
     return new Promise((resolve, reject) => {
         api.get(`/${ID_USER}/sales/historic`)
             .then(res => {
-                console.log(res.data)
                 if (res.data[0]) {
                     resolve(res.data as SaleOverviewProps[]);
                 }
@@ -114,7 +115,6 @@ export async function getHistoricDetails(yearMonth: string) {
     return new Promise((resolve, reject) => {
         api.get(`/${ID_USER}/sales/historic/${yearMonth}`)
             .then(res => {
-                console.log("DETALHES do histórico", res.data)
                 if (res.data[0])
                     resolve(res.data as HistoricDetailsItemProps[]);
                 else {

@@ -85,13 +85,12 @@ function ProductItem({ product, setModal }: ItemProps) {
     }
     //valores
     var product_count = (orderProducts[getIndexInOrderProducts()]?.count);
-    //se o modelo de preço selecionado for o principa, é exibido o main_price, caso contrário, é exibido o preço secundário
+    //se o modelo de preço selecionado for o principal, é exibido o main_price, caso contrário, é exibido o preço secundário
     var price_product = (priceModel == 'main' ? product.main_price : (product.secondary_price || 0));
     const priceProductFormatted = price_product.toFixed(2).replace('.', ',')
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
-    var objectStockFromContext = stock.find(item => item.id_product == product.id);
+    var objectStockFromContext = stock.find(item => item.id_product === product.id);
     var stockValue = objectStockFromContext?.quantity;
-    // const hideProduct = hideNoStockProducts && stockValue == 0;
     return (
 
         <Pressable
@@ -140,4 +139,5 @@ function ProductItem({ product, setModal }: ItemProps) {
         </Pressable >
     )
 }
+// React.memo(ProductItem);
 

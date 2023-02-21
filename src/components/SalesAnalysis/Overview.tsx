@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
-import { View, Text } from "react-native";
-import { SaleProductProps } from "../../../@types/orderProduct";
-import { SaleOverviewProps } from "../../../@types/sales";
-import Colors from "../../../constants/Colors";
-import useColorScheme from "../../../hooks/useColorScheme";
-import { getOverview } from "../../../services/sales";
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
+
+import { SaleOverviewProps } from "../../@types/sales";
+
+import Colors from "../../constants/Colors";
+import useColorScheme from "../../hooks/useColorScheme";
 
 interface Props {
     overviewData: SaleOverviewProps
@@ -13,8 +12,6 @@ interface Props {
 
 export default function OverView({ overviewData }: Props) {
     const COST_PERCENT = overviewData?.cost ? ((overviewData?.cost / overviewData?.total) * 100) : 0;
-
-
 
     const colorScheme = useColorScheme();
     const backgroundColor = Colors[colorScheme].itemColor
