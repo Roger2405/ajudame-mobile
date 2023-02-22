@@ -39,6 +39,11 @@ export function NewSale() {
             initialCount?: number;
         };
     })
+    useEffect(() => {
+        const noOneStock = stock.every(item => item.quantity === 0)
+        if (noOneStock)
+            setHideNoStockProducts(false)
+    }, [])
 
     useEffect(() => {
         if (hideNoStockProducts)

@@ -25,7 +25,7 @@ export function FeedbackMessage({ feedbackMessage, setFeedbackMessage }: Feedbac
         if (feedbackMessage.msg) {
             setTimeout(() => {
                 setFeedbackMessage({} as { type: 'error' | 'info', msg: string });
-            }, 50000);
+            }, 3000);
         }
     }, [feedbackMessage])
 
@@ -51,10 +51,6 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 4,
         marginTop: 4,
-        top: 0,
-        position: 'absolute',
-        zIndex: 1000,
-        height: 80
     },
     info: {
         backgroundColor: Colors.lightPrimary,
