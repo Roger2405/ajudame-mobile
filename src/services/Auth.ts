@@ -1,3 +1,4 @@
+import { User } from "../@types/user";
 import api from "./api";
 
 interface Response {
@@ -32,4 +33,19 @@ export async function signUp(email: string, password: string) {
     catch (error) {
         throw (error);
     }
+}
+export async function deleteUser(user: User, password: string) {
+    return new Promise((resolve, reject) => {
+        signIn(user.email, password)
+            .then(res => {
+                if (res.success)
+                    api.delete(`${user.id}/user/`)
+                        .then((res) => resolve(res.data.msg))
+                        .catch((res) => reject(res.msg))
+                else
+                    reject(res.msg)
+            })
+            .catch(reject)
+    })
+
 }

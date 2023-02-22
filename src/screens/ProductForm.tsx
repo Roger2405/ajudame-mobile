@@ -351,7 +351,7 @@ export default function ProductForm({ route }: Props) {
                                 {//se o custo não foi definido e seu valor agora foi informado, é exibido o toggle
                                     productData.cost == undefined && inputValues.cost !== null &&
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text style={{ fontSize: 12, flex: 1 }}>O custo será atualizado em todas as vendas (sem o custo informado) já registradas com esse produto!</Text>
+                                        <Text style={{ fontSize: 12, flex: 1 }}>O custo será atualizado em todas as vendas já registradas com esse produto e que ainda não têm o custo informado!</Text>
                                     </View>
                                     //     <Switch
                                     //         trackColor={{ false: Colors.gray, true: Colors.primary }}

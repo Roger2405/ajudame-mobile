@@ -9,10 +9,10 @@ interface ConfirmationModalProps {
     message?: string
     onConfirm: () => Promise<unknown> | void
     children?: ReactNode
+    isLoading?: boolean
 }
 
-export default function ConfirmationModal({ showConfirmationModal, message, children, setShowConfirmationModal, onConfirm }: ConfirmationModalProps) {
-    const [isLoading, setIsLoading] = useState(false);
+export default function ConfirmationModal({ showConfirmationModal, message, children, setShowConfirmationModal, onConfirm, isLoading }: ConfirmationModalProps) {
     return (
         <View>
 
@@ -24,11 +24,7 @@ export default function ConfirmationModal({ showConfirmationModal, message, chil
                     style={{ backgroundColor: Colors.gray }}
                     statusBarTranslucent
                     visible={showConfirmationModal}
-                    onRequestClose={() => {
-                        onConfirm()?.then(() => {
-                            setShowConfirmationModal(!showConfirmationModal);
-                        })
-                    }}
+                    onRequestClose={onConfirm}
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
@@ -47,13 +43,7 @@ export default function ConfirmationModal({ showConfirmationModal, message, chil
                                     :
                                     <ButtonsContainer relative>
                                         <CancelButton onPress={() => setShowConfirmationModal(false)} />
-                                        <ConfirmButton onPress={() => {
-                                            setIsLoading(true)
-                                            onConfirm()?.then(() => {
-                                                setShowConfirmationModal(false)
-                                            })
-                                                .finally(() => setIsLoading(false))
-                                        }} />
+                                        <ConfirmButton onPress={onConfirm} />
                                     </ButtonsContainer>
                             }
 
@@ -61,7 +51,7 @@ export default function ConfirmationModal({ showConfirmationModal, message, chil
                     </View>
                 </Modal>
             </View>
-        </View>
+        </View >
     );
 };
 
@@ -83,6 +73,7 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: "white",
         borderRadius: 8,
+        padding: 4,
         // paddingHorizontal: 8,
         paddingBottom: 0,
         alignItems: "center",

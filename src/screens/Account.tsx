@@ -7,21 +7,31 @@ import ConfirmationModal from '../components/common/ConfirmationModal';
 import Colors from '../constants/Colors';
 import { useAuth } from '../contexts/auth';
 import useColorScheme from '../hooks/useColorScheme';
+import { deleteUser } from '../services/auth';
 
 
 export function Account() {
     const { user } = useAuth();
     const [showConfirmationModal, setShowConfirmationModal] = useState(false)
     const colorScheme = useColorScheme();
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     const { signOut } = useAuth();
     async function handleDeleteAccount() {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve('Sucesso')
-            }, 2000)
-        })
-            .then(alert)
-            .then(() => signOut())
+        if (user) {
+            setIsLoading(true)
+            deleteUser(user, password)
+                .then((res) => {
+                    // setShowConfirmationModal(false)
+                    signOut()
+                    alert(res)
+                })
+                .catch((err) => {
+                    setErrorMessage(err)
+                })
+                .finally(() => setIsLoading(false))
+        }
     }
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
@@ -34,9 +44,13 @@ export function Account() {
             <View>
                 {
                     showConfirmationModal &&
-                    <ConfirmationModal message='Você está prestes a excluir a sua conta e todos os dados relacionados à ela!' onConfirm={handleDeleteAccount} setShowConfirmationModal={setShowConfirmationModal} showConfirmationModal={showConfirmationModal} >
+                    <ConfirmationModal isLoading={isLoading} message='Você está prestes a excluir a sua conta e todos os dados relacionados à ela!' onConfirm={handleDeleteAccount} setShowConfirmationModal={setShowConfirmationModal} showConfirmationModal={showConfirmationModal} >
                         {/* <Text>Digite a sua senha para confirmar:</Text> */}
-                        <PasswordInput style={{ maxWidth: '100%' }} label='Digite a sua senha para confirmar:' />
+                        <PasswordInput value={password} onChangeText={setPassword} style={{ maxWidth: '100%' }} label='Digite a sua senha para confirmar:' />
+                        {
+                            errorMessage &&
+                            <Text style={{ color: Colors.red }}>{errorMessage}</Text>
+                        }
                         {/* <View style={{ width: '100%', flexDirection: 'row' }}>
                             <TextInput style={{ backgroundColor: Colors[colorScheme].background, borderRadius: 4, flex: 1, marginHorizontal: 8, padding: 8 }} />
                         </View> */}
