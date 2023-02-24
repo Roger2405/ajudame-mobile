@@ -22,10 +22,7 @@ export function DetailedSales() {
                 setDetailedSales(res)
             })
     }, [sales])
-    useEffect(() => {
-        if (detailedSales)
-            console.log((detailedSales[0].products))
-    }, [detailedSales])
+    
     async function handleDeleteSale(id_sale: number) {
         deleteSale(id_sale)
             .then((res) => {

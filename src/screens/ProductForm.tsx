@@ -101,8 +101,7 @@ export default function ProductForm({ route }: Props) {
             costChanged &&
                 formData.append('cost', cost?.toString())
 
-            stockChanged &&
-                formData.append('stock', stock?.toString())
+            formData.append('stock', (stock?.toString() || '0'))
 
             if (image_path !== productData.image_path && !!image_path) {
                 let localUri = image_path;
@@ -119,9 +118,8 @@ export default function ProductForm({ route }: Props) {
             const response = await (id_product ? updateProduct(formData, id_product) : addProduct(formData))
 
             if (response.success) {
+                updateStockInContext();
                 updateProductsInContext();
-                if (stockChanged)
-                    updateStockInContext();
                 navigation.goBack()
 
             }
@@ -293,7 +291,6 @@ export default function ProductForm({ route }: Props) {
                                             }}
                                             onChangeText={(value, rawText) => {
                                                 setInputValues((oldValues) => {
-                                                    console.log(value)
                                                     const newValue = parseFloat(rawText) / 100;
                                                     return { ...oldValues, secondary_price: (isNaN(newValue) ? 0 : newValue) }
                                                 })

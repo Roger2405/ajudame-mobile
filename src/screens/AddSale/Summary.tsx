@@ -52,13 +52,12 @@ export function Summary() {
                 clearOrderProducts()
                 if (discountStock) {
                     discountStockOfSaleItems()
-
                 }
             })
             .then(() => {
                 updateStockInContext()
-                updateSales();
             })
+            .then(() => updateSales())
             .catch(alert)
             .finally(() => {
                 setIsLoading(false)
@@ -91,9 +90,6 @@ export function Summary() {
         return sum;
     }, [orderProducts, priceModel])
 
-    useEffect(() => {
-        console.log('teste teclado')
-    }, [keyboardIsHidden])
 
     const totalValueFormatted = (totalValue).toFixed(2).replace('.', ',');
     return (
@@ -153,7 +149,6 @@ export function Summary() {
                                         }}
                                         onChangeText={(value, rawText) => {
                                             setPaymentValue(parseFloat(rawText) / 100)
-                                            console.log(rawText)
                                         }}
                                         keyboardType="numeric"
                                         style={styles.paymentInput}
