@@ -23,13 +23,13 @@ export function Routes() {
         <ProductsProvider>
             <SalesProvider>
                 <StockProvider>
-                    <OrderProductsProvider>
+                     <OrderProductsProvider>
                         <DrawerNav />
 
-                    </OrderProductsProvider>
+                     </OrderProductsProvider>
                 </StockProvider>
-            </SalesProvider>
-        </ProductsProvider>
+             </SalesProvider>
+         </ProductsProvider>
         :
         <AuthRoutes />
 

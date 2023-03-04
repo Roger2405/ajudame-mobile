@@ -17,7 +17,7 @@ import React from "react";
 
 export function TabRoutes() {
     const colorScheme = useColorScheme();
-    const { Screen, Navigator, Group } = createBottomTabNavigator();
+    const { Screen, Navigator } = createBottomTabNavigator();
 
     const OPTIONS_ITEM_WIDTH = 48;
     const TAB_BAR_HEIGHT = 48;
@@ -57,9 +57,6 @@ export function TabRoutes() {
 
 
             />
-            {/* <Group screenOptions={}>
-
-            </Group> */}
 
             <Screen
                 name='TopTabBar'

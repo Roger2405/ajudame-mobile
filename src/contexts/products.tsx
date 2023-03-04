@@ -22,8 +22,8 @@ export function ProductsProvider({ children }: Props) {
     useEffect(() => {
         updateProductsInContext();
     }, [])
-
-
+    
+    
     async function updateProductsInContext() {
         setIsLoading(true)
         getProducts()

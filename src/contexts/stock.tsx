@@ -1,5 +1,5 @@
 
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { StockProps } from "../@types/stock";
 import { getStock, groupStockByProductType } from "../services/stock";
 
@@ -13,21 +13,20 @@ interface Props {
     children: ReactNode
 }
 export function StockProvider({ children }: Props) {
-    const [stockGroupedByType, setStockGroupedByType] = useState<StockProps[][] | null>(null)
     const [stock, setStock] = useState<StockProps[]>([]);
 
-    useEffect(() => {
+    const stockGroupedByType = useMemo(() => {
+        return groupStockByProductType(stock)
+    }, [stock])
+
+    useLayoutEffect(() => {
         updateStockInContext();
     }, [])
-
     async function updateStockInContext() {
-        getStock()
-            .then(res => {
-                setStock(res)
-                let stockGrouped = groupStockByProductType(res);
-                setStockGroupedByType(stockGrouped)
-            })
+        const stockResponse = await getStock();
+        setStock(stockResponse);
     }
+
     return (
         <StockContext.Provider value={{ stockGroupedByType, stock, updateStockInContext }}>
             {children}

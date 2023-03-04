@@ -20,15 +20,15 @@ export default function Stock() {
   const [loading, setLoading] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
-  const [newStock, setNewStock] = useState<Map<number, number>>(new Map());
   const [modal, setModal] = useState<{ showModal: boolean, options: { productId: number, type: 'add' | 'sub', initialStock: number } }>
     ({ showModal: false, options: {} as { productId: number, type: 'add' | 'sub', initialStock: number } });
 
+  const [newStock, setNewStock] = useState<Map<number, number>>(new Map());
   const { stockGroupedByType, updateStockInContext } = useStock();
 
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
-
-
+  
+  
   function confirmChanges() {
     setLoading(true)
     updateStock(newStock).then((response) => {
