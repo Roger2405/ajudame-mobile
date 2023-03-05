@@ -36,7 +36,7 @@ export function TabRoutes() {
             }}
             initialRouteName="TopTabBar"
             sceneContainerStyle={{ paddingTop: TAB_BAR_HEIGHT }}
-
+            safeAreaInsets={{top: 0, bottom: 0, left: 0, right: 0}}
 
         >
             <Screen

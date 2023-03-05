@@ -25,7 +25,6 @@ export function Routes() {
                 <StockProvider>
                      <OrderProductsProvider>
                         <DrawerNav />
-
                      </OrderProductsProvider>
                 </StockProvider>
              </SalesProvider>

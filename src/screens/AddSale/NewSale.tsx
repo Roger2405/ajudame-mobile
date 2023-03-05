@@ -11,7 +11,7 @@ import Colors from '../../constants/Colors';
 
 import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
-import { ProductsTypeList } from '../../components/AddSales/ProductsTypeList';
+import { ProductTypeListMemo } from '../../components/AddSales/ProductsTypeList';
 import { ModalSale } from '../../components/AddSales/AddSaleModal';
 
 import { useStock } from '../../contexts/stock';
@@ -62,7 +62,6 @@ export function NewSale() {
     }, [hideNoStockProducts, productsFromContext, stock])
 
 
-
     return (
         <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
             {
@@ -97,7 +96,7 @@ export function NewSale() {
                                         {
                                             productsGroupedByType?.map(type => {
                                                 if (type.length)
-                                                    return <ProductsTypeList setModal={setModal} productsArr={type} key={type[0].type_product} />
+                                                    return <ProductTypeListMemo setModal={setModal} productsArr={type} key={type[0].type_product} />
                                             })
                                         }
                                     </ScrollView>

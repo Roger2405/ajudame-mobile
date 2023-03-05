@@ -104,7 +104,7 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
                             onLongPress={() => {
                                 setModal({ showModal: true, options: { productId: stock.id_product, type: 'sub', initialStock: stock.quantity } })
                             }}
-                            delayLongPress={3000}
+                            delayLongPress={2500}
                             onPress={() => {
                                 var newStockValue = stock.quantity - 1
                                 if (stockValueInState != null)
@@ -136,7 +136,7 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
                                 setModal({ showModal: true, options: { productId: stock.id_product, type: 'add', initialStock: stock.quantity } })
 
                             }}
-                            delayLongPress={3000}
+                            delayLongPress={2500}
                             onPress={() => {
                                 var newStockValue = stock.quantity + 1
                                 if (stockValueInState != null)

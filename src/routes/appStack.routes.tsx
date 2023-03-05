@@ -28,7 +28,7 @@ export function AppRoutes() {
                 statusBarTranslucent: false,
                 statusBarColor: Colors.primary,
             }}
-
+            initialRouteName="Root"
         >
             <Screen
                 name='Root'

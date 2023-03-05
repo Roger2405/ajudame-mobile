@@ -1,6 +1,6 @@
 import { styles } from './styles';
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Image, Text, FlatList, Pressable, TouchableOpacity, ScrollView } from 'react-native';
 
 import Colors from '../../../constants/Colors';
@@ -24,9 +24,12 @@ interface Props {
         };
     }>>
 }
+export const ProductTypeListMemo = memo(ProductsTypeList)
 
-export function ProductsTypeList({ productsArr, setModal }: Props) {
+function ProductsTypeList({ productsArr, setModal }: Props) {
     const colorScheme = useColorScheme();
+    const { orderProducts, addProductToOrder, priceModel } = useOrderProducts();
+
     return (
         <View>
             <Text style={{ fontWeight: '700', fontSize: 24, color: Colors[colorScheme].text }}>{productsArr[0].type_product}</Text>
@@ -36,7 +39,9 @@ export function ProductsTypeList({ productsArr, setModal }: Props) {
             >
                 {
                     productsArr.map(product => {
-                        return <ProductItem setModal={setModal} key={product.id} product={product} />
+                        const index = orderProducts.findIndex(item => item.id_product == product.id)
+                        var product_count = (orderProducts[index]?.count);
+                        return <Item key={product.id} product_count={product_count} product={product} setModal={setModal} />
                     })
                 }
             </ScrollView>
@@ -44,6 +49,7 @@ export function ProductsTypeList({ productsArr, setModal }: Props) {
     );
 }
 
+const Item = memo(ProductItem);
 
 interface ItemProps {
     product: ProductProps
@@ -55,8 +61,10 @@ interface ItemProps {
             initialCount?: number;
         };
     }>>
+    product_count: number
 }
-function ProductItem({ product, setModal }: ItemProps) {
+
+function ProductItem({ product, product_count, setModal }: ItemProps) {
     const { orderProducts, addProductToOrder, priceModel } = useOrderProducts();
     const { stock } = useStock();
 
@@ -66,9 +74,7 @@ function ProductItem({ product, setModal }: ItemProps) {
     function isInTheOrder() {
         return orderProducts.some(item => item.id_product == product.id)
     }
-    function getIndexInOrderProducts() {
-        return orderProducts.findIndex(item => item.id_product == product.id)
-    }
+
 
     //definindo cores
     var bgItemColor = Colors[colorScheme].itemColor;
@@ -84,15 +90,16 @@ function ProductItem({ product, setModal }: ItemProps) {
         priceColor = priceModel == 'main' ? Colors.primary : Colors.gray;
     }
     //valores
-    var product_count = (orderProducts[getIndexInOrderProducts()]?.count);
+
     //se o modelo de preço selecionado for o principal, é exibido o main_price, caso contrário, é exibido o preço secundário
     var price_product = (priceModel == 'main' ? product.main_price : (product.secondary_price || 0));
     const priceProductFormatted = price_product.toFixed(2).replace('.', ',')
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
     var objectStockFromContext = stock.find(item => item.id_product === product.id);
     var stockValue = objectStockFromContext?.quantity;
-    return (
 
+    console.log(product.name_product)
+    return (
         <Pressable
             style={({ pressed }) => [
                 {
@@ -103,6 +110,7 @@ function ProductItem({ product, setModal }: ItemProps) {
             onLongPress={() => {
                 setModal({ options: { product: product, type: 'add' }, showModal: true })
             }}
+            delayLongPress={250}
             onPress={() => addProductToOrder(product)}>
 
             <View style={styles.itemHeader}>
