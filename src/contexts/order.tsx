@@ -9,7 +9,7 @@ interface OrderProductsContextData {
     orderProducts: OrderProductProps[],
     addProductToOrder: (product: ProductProps) => void,
     addCountToOrderProduct: (orderProduct: OrderProductProps) => void,
-    subProductOfOrder: (id_product: number) => void,
+    subProductOfOrder: (id: number) => void,
     priceModel: PriceModels,
     setPriceModel: React.Dispatch<React.SetStateAction<PriceModels>>
     clearOrderProducts: () => void,
@@ -31,7 +31,7 @@ export function OrderProductsProvider({ children }: Props) {
 
     function subProductOfOrder(id_product: number) {
         setOrderProducts(orderProducts => {
-            const indexOfProduct = orderProducts.findIndex(item => item.id_product == id_product);
+            const indexOfProduct = orderProducts.findIndex(item => item.id == id_product);
             const oldItem = orderProducts[indexOfProduct];
 
             oldItem.count--;
@@ -45,7 +45,7 @@ export function OrderProductsProvider({ children }: Props) {
     }
     function addCountToOrderProduct(orderProduct: OrderProductProps) {
         setOrderProducts(orderProducts => {
-            const indexOfProduct = orderProducts.findIndex(item => item.id_product == orderProduct.id_product);
+            const indexOfProduct = orderProducts.findIndex(item => item.id == orderProduct.id);
 
             if (indexOfProduct != -1) {//caso encontre um produto já existente no array
                 orderProducts[indexOfProduct].count++;
@@ -57,23 +57,17 @@ export function OrderProductsProvider({ children }: Props) {
 
     function addProductToOrder(product: ProductProps) {
         setOrderProducts(orderProducts => {
-            const indexOfProduct = orderProducts.findIndex(item => item.id_product == product.id);
+            const indexOfProduct = orderProducts.findIndex(item => item.id === product.id);
 
             if (indexOfProduct != -1) {//caso encontre um produto já existente no array
                 orderProducts[indexOfProduct].count++;
             }
             else {//caso contrário adiciona no final do array
-                orderProducts.push({
-                    id_product: product.id,
-                    count: 1,
-                    main_price: product.main_price,
-                    secondary_price: product.secondary_price || 0,
-                    name_product: product.name_product,
-                    // cost_product: product.cost
-                })
+                orderProducts.push({ ...product, count: 1 })
             }
             return [...orderProducts]
         })
+
     }
 
     return (

@@ -96,8 +96,10 @@ export function NewSale() {
                                     <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
                                         {
                                             productsGroupedByType?.map(type => {
-                                                if (type.length)
-                                                    return <ProductsTypeList orderProducts={orderProducts} productsArr={type} key={type[0].type_product} />
+                                                if (type.length) {
+                                                    const orderProductsOfType = orderProducts.filter(item => item.type_product == type[0].type_product);
+                                                    return <ProductsTypeList orderProducts={orderProductsOfType} productsArr={type} key={type[0].type_product} />
+                                                }
                                             })
                                         }
                                     </ScrollView>

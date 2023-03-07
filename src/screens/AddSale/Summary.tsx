@@ -85,7 +85,7 @@ export function Summary() {
     const totalValue = useMemo(() => {
         let sum = 0;
         orderProducts.forEach(orderProduct => {
-            sum += (priceModel == 'main' ? orderProduct.main_price : orderProduct.secondary_price) * orderProduct.count;
+            sum += (priceModel == 'main_price' ? orderProduct.main_price : (orderProduct.secondary_price || 0)) * orderProduct.count;
         })
         return sum;
     }, [orderProducts, priceModel])

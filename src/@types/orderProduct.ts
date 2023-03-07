@@ -1,10 +1,13 @@
-export type OrderProductProps = {
-    id_product: number
+import { ProductProps } from "./product"
+
+
+export interface OrderProductProps extends ProductProps {
+    // id_product: number
     // price_product: number
-    main_price: number,
-    secondary_price: number
-    name_product: string
-    cost_product?: number
+    // main_price: number,
+    // secondary_price: number
+    // name_product: string
+    // cost_product?: number
     count: number
 }
 

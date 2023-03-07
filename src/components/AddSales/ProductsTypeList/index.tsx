@@ -51,7 +51,7 @@ function Itens({ productsArr, orderProducts }: Props) {
         <>
             {
                 productsArr.map(product => {
-                    const orderItem = orderProducts.find(item => item.id_product == product.id)
+                    const orderItem = orderProducts.find(item => item.id == product.id)
                     var productCount = (orderItem?.count) || 0;
                     return <Item key={product.id} productCount={productCount} product={product} />
                 })
@@ -88,13 +88,11 @@ function ProductItem({ product, productCount }: ItemProps) {
 
     console.log(productCount)
 
-    useEffect(() => {
-        if (productCount > 0) {
-            bgItemColor = priceModel == 'main_price' ? Colors.primary : Colors.gray;
-            bgItemPriceColor = Colors.white;
-            priceColor = priceModel == 'main_price' ? Colors.primary : Colors.gray;
-        }
-    }, [])
+    if (productCount > 0) {
+        bgItemColor = priceModel == 'main_price' ? Colors.primary : Colors.gray;
+        bgItemPriceColor = Colors.white;
+        priceColor = priceModel == 'main_price' ? Colors.primary : Colors.gray;
+    }
     //se o produto está no pedido outras cores são exibidas
     //valores
 
@@ -103,7 +101,7 @@ function ProductItem({ product, productCount }: ItemProps) {
     const priceProductFormatted = price_product.toFixed(2).replace('.', ',')
     var image_url = `${api.defaults.baseURL}${product.image_path}`;
 
-    // var objectStockFromContext = stock.find(item => item.id_product === product.id);
+    // var objectStockFromContext = stock.find(item => item.id === product.id);
     // var stockValue = objectStockFromContext?.quantity;
 
     const stockValue = stockMap.get(product.id);
@@ -120,7 +118,9 @@ function ProductItem({ product, productCount }: ItemProps) {
             //     setModal({ options: { product: product, type: 'add' }, showModal: true })
             // }}
             delayLongPress={250}
-            onPress={() => addProductToOrder(product)}>
+            onPress={() => {
+                addProductToOrder(product)
+            }}>
 
             <View style={styles.itemHeader}>
                 <Text style={[styles.itemName, { color: nameColor }]}>{product.name_product}</Text>

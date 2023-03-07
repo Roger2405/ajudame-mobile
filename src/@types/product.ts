@@ -1,4 +1,4 @@
-export type ProductProps = {
+export interface ProductProps {
     id: number
     name_product: string
     type_product: string

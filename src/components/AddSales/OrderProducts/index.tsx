@@ -21,22 +21,24 @@ export default function OrderProducts() {
         <ScrollView style={styles.container}>
             {
                 orderProducts.map(sale => {
-                    return <Item key={sale.id_product} item={sale} />
+                    return <Item key={sale.id} item={sale} />
                 })
             }
         </ScrollView>
     )
 }
 
+
+
 interface ItemProps {
     item: OrderProductProps
 }
-export function Item({ item }: ItemProps) {
+function Item({ item }: ItemProps) {
     const colorScheme = useColorScheme();
     const { subProductOfOrder, addCountToOrderProduct, priceModel } = useOrderProducts();
     
-    const price_product = priceModel === 'main' ? item.main_price : item.secondary_price;
-    const subtotal = ((price_product * item.count).toFixed(2).replace('.', ',') || 0);
+    const price_product = item[priceModel];
+    const subtotal = (((price_product || 0) * item.count).toFixed(2).replace('.', ',') || 0);
     const price = (price_product)?.toFixed(2).replace('.', ',')
     return (
         <Animated.View
@@ -52,7 +54,7 @@ export function Item({ item }: ItemProps) {
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Pressable style={styles.buttonCount}
-                        onPress={() => subProductOfOrder(item.id_product)}
+                        onPress={() => subProductOfOrder(item.id)}
                     ><Feather name='minus' size={24} color={Colors.white} /></Pressable>
 
                     <Text style={[styles.itemCount, { color: Colors[colorScheme].text }]}>{(item.count.toString())}</Text>

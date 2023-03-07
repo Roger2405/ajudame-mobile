@@ -1,6 +1,6 @@
 
 import { OrderProductProps } from "../@types/orderProduct";
-import { DetailedSaleProps, HistoricDetailsItemProps, SaleOverviewProps, SaleProductProps } from "../@types/sales";
+import { DetailedSaleProps, HistoricDetailsItemProps, PriceModels, SaleOverviewProps, SaleProductProps } from "../@types/sales";
 import api from "./api";
 import getUserID from "./getUserID";
 
@@ -20,7 +20,7 @@ export async function getSalesByDate(date: string) {
     return sales;
 }
 
-export async function addSale(orderProducts: OrderProductProps[], priceModel: 'main' | 'secondary') {
+export async function addSale(orderProducts: OrderProductProps[], priceModel: PriceModels) {
     const ID_USER = await getUserID();
 
     const strOrderProducts = JSON.stringify(Array.from(orderProducts));
@@ -28,7 +28,7 @@ export async function addSale(orderProducts: OrderProductProps[], priceModel: 'm
     return new Promise((resolve, reject) => {
         api.post(`${ID_USER}/sales/last`, {
             orderProducts: strOrderProducts,
-            is_main_price: priceModel === 'main'
+            is_main_price: priceModel === 'main_price'
         })
             .then(res => {
                 if (res.data.success)
