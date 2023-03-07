@@ -3,14 +3,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { OrderProductProps } from "../@types/orderProduct";
 import { ProductProps } from "../@types/product";
+import { PriceModels } from "../@types/sales";
 
 interface OrderProductsContextData {
     orderProducts: OrderProductProps[],
     addProductToOrder: (product: ProductProps) => void,
     addCountToOrderProduct: (orderProduct: OrderProductProps) => void,
     subProductOfOrder: (id_product: number) => void,
-    priceModel: 'main' | 'secondary',
-    setPriceModel: React.Dispatch<React.SetStateAction<"main" | "secondary">>
+    priceModel: PriceModels,
+    setPriceModel: React.Dispatch<React.SetStateAction<PriceModels>>
     clearOrderProducts: () => void,
 }
 
@@ -20,12 +21,13 @@ interface Props {
 }
 export function OrderProductsProvider({ children }: Props) {
     const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([])
-    const [priceModel, setPriceModel] = useState<'main' | 'secondary'>('main');
+    const [priceModel, setPriceModel] = useState<PriceModels>('main_price');
 
     // const [isLoading, setIsLoading] = useState(false)
     function clearOrderProducts() {
         setOrderProducts([])
     }
+
 
     function subProductOfOrder(id_product: number) {
         setOrderProducts(orderProducts => {

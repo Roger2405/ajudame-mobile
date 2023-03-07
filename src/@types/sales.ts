@@ -6,7 +6,7 @@ export type HistoricDetailsItemProps = {
     day: string
 
 }
-export type PriceModels = 'main' | 'secondary'
+export type PriceModels = 'main_price' | 'secondary_price'
 
 export type SaleOverviewProps = {
     total: number

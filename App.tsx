@@ -1,6 +1,6 @@
+// "rn-sliding-up-panel": "^2.4.6";
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Routes } from './src/routes';
 import { AuthProvider } from './src/contexts/auth';

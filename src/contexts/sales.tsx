@@ -22,23 +22,26 @@ export function SalesProvider({ children }: Props) {
     const [overviewData, setOverviewData] = useState<SaleOverviewProps>({} as SaleOverviewProps)
     const [lastSale, setLastSale] = useState<DetailedSaleProps | undefined>()
     const [sales, setSales] = useState<SaleProductProps[] | undefined>()
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true);
+    const [date] = useState(getCurrentDate());
 
     useEffect(() => {
         updateSales()
     }, [])
 
+    useEffect(() => {
+        if (sales?.length) {
+            getOverview(date)
+                .then((res) => setOverviewData(res as SaleOverviewProps))
+                .then(() => getLastSale())
+                .then(setLastSale)
+        }
+    }, [sales])
 
     async function updateSales() {
-        setIsLoading(true)
-        const date = getCurrentDate()
-
+        !isLoading && setIsLoading(true)
         getSalesByDate(date)
             .then(setSales)
-            .then(() => getOverview(date))
-            .then((res) => setOverviewData(res as SaleOverviewProps))
-            .then(() => getLastSale())
-            .then(setLastSale)
             .catch(alert)
             .finally(() => setIsLoading(false))
     }

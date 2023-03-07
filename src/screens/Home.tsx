@@ -32,6 +32,7 @@ import { DetailedSale } from '../components/SalesAnalysis/DetailedSale';
 export default function Home() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
+
   const [feedbackMessage, setFeedbackMessage] = useState<{ type: 'error' | 'info', msg: string }>({} as { type: 'error' | 'info', msg: string });
 
   const { sales, lastSale, overviewData, updateSales, isLoading } = useSales();
@@ -42,7 +43,10 @@ export default function Home() {
   }[] | undefined>([]);
 
   const { productTypes } = useProducts();
+
   const [salesGroupedByType, setSalesGroupedByType] = useState<SaleProductProps[][]>([])
+  
+  
 
   useEffect(() => {
     if (sales) {
@@ -62,8 +66,8 @@ export default function Home() {
       .catch(err => {
         setFeedbackMessage({ type: 'error', msg: err })
       })
-
   }
+  
   const onRefresh = React.useCallback(() => {
     updateSales()
   }, []);

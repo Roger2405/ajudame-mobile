@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useAuth } from "../contexts/auth";
 import { OrderProductsProvider } from "../contexts/order";
@@ -12,8 +12,8 @@ import { DrawerNav } from "./drawerNav.routes";
 
 export function Routes() {
 
-    const { signed, loading } = useAuth()
-
+    const { signed, loading } = useAuth();
+    
     if (loading) {
         <View>
             <ActivityIndicator />

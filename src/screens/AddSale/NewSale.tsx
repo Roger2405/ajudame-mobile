@@ -11,7 +11,7 @@ import Colors from '../../constants/Colors';
 
 import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
-import { ProductTypeListMemo } from '../../components/AddSales/ProductsTypeList';
+import { ProductsTypeList } from '../../components/AddSales/ProductsTypeList';
 import { ModalSale } from '../../components/AddSales/AddSaleModal';
 
 import { useStock } from '../../contexts/stock';
@@ -45,6 +45,7 @@ export function NewSale() {
             setHideNoStockProducts(false)
         }
     }, [])
+    console.log('---------------------------------------------')
 
     useEffect(() => {
         if (hideNoStockProducts)
@@ -96,7 +97,7 @@ export function NewSale() {
                                         {
                                             productsGroupedByType?.map(type => {
                                                 if (type.length)
-                                                    return <ProductTypeListMemo setModal={setModal} productsArr={type} key={type[0].type_product} />
+                                                    return <ProductsTypeList orderProducts={orderProducts} productsArr={type} key={type[0].type_product} />
                                             })
                                         }
                                     </ScrollView>

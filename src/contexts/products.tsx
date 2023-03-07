@@ -17,15 +17,15 @@ interface Props {
 export function ProductsProvider({ children }: Props) {
     const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>([])
     const [productTypes, setProductTypes] = useState<string[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         updateProductsInContext();
     }, [])
-    
-    
+
+
     async function updateProductsInContext() {
-        setIsLoading(true)
+        !isLoading && setIsLoading(true)
         getProducts()
             .then(products => {
                 const productTypes = getProductTypes(products)

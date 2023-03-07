@@ -42,8 +42,8 @@ export function AuthProvider({ children }: Props) {
     async function signIn(email: string, password: string) {
         const response = await auth.signIn(email, password);
         if (response.success) {
-            setUser(response.user)
             await AsyncStorage.setItem('@AjudaME:user', JSON.stringify(response.user))
+            setUser(response.user)
         }
         else {
             throw Error(response.msg)

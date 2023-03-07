@@ -7,6 +7,7 @@ interface StockContextData {
     stockGroupedByType: StockProps[][] | null,
     stock: StockProps[],
     updateStockInContext: () => void,
+    stockMap: Map<number, number>
 }
 const StockContext = createContext<StockContextData>({} as StockContextData);
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 }
 export function StockProvider({ children }: Props) {
     const [stock, setStock] = useState<StockProps[]>([]);
+    const [stockMap, setStockMap] = useState(new Map<number, number>())
 
     const stockGroupedByType = useMemo(() => {
         return groupStockByProductType(stock)
@@ -22,13 +24,26 @@ export function StockProvider({ children }: Props) {
     useLayoutEffect(() => {
         updateStockInContext();
     }, [])
+
+    useEffect(() => {
+        let map = new Map();
+        stock.map((item) => {
+            map.set(item.id_product, item.quantity);
+        })
+        setStockMap(map)
+    }, [stock])
+
+    useEffect(() => {
+        console.log("stock map:", stockMap)
+    }, [stockMap])
+
     async function updateStockInContext() {
         const stockResponse = await getStock();
         setStock(stockResponse);
     }
 
     return (
-        <StockContext.Provider value={{ stockGroupedByType, stock, updateStockInContext }}>
+        <StockContext.Provider value={{ stockMap, stockGroupedByType, stock, updateStockInContext }}>
             {children}
         </StockContext.Provider>
     )
