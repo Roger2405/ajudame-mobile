@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
     itemPrice: {
         position: 'absolute',
         borderTopLeftRadius: 16,
-        borderBottomRightRadius: 4,
+        borderBottomRightRadius: 2,
         // borderRadius: 4,
         margin: 2,
         width: 100,

@@ -20,6 +20,7 @@ import { addSale } from '../../services/sales';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
 import { FlatList } from 'react-native-gesture-handler';
 import { MaskedTextInput } from 'react-native-mask-text';
+import { TotalValue } from '../../components/AddSales/TotalValue';
 
 
 const money100 = require('../../../assets/images/money/100.jpg');
@@ -39,7 +40,7 @@ export function Summary() {
     const [keyboardIsHidden, setKeyboardIsHidden] = useState(true);
     const [imgSrcArr, setImgSrcArr] = useState([money100, money50, money20, money10, money5, money2, money1, money05])
 
-    const { orderProducts, clearOrderProducts, priceModel } = useOrderProducts();
+    const { orderProducts, clearOrderProducts, priceModel, totalValue } = useOrderProducts();
     const { updateStockInContext } = useStock();
     const { updateSales } = useSales();
 
@@ -79,19 +80,6 @@ export function Summary() {
         );
     }, [])
 
-
-
-
-    const totalValue = useMemo(() => {
-        let sum = 0;
-        orderProducts.forEach(orderProduct => {
-            sum += (priceModel == 'main_price' ? orderProduct.main_price : (orderProduct.secondary_price || 0)) * orderProduct.count;
-        })
-        return sum;
-    }, [orderProducts, priceModel])
-
-
-    const totalValueFormatted = (totalValue).toFixed(2).replace('.', ',');
     return (
         <View style={styles.container}>
             {
@@ -127,11 +115,7 @@ export function Summary() {
                                 </View>
                                 <PriceModelSelect />
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingHorizontal: 8 }}>
-                                <Text style={styles.label}>Total:</Text>
-                                <Text style={styles.total}>R$ {totalValueFormatted}</Text>
-                            </View>
-
+                            <TotalValue relative />
 
 
                             <View style={{ borderWidth: 1, borderColor: Colors.gray, paddingVertical: 4, borderRadius: 8, margin: 4 }}>

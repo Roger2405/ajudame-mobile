@@ -1,6 +1,6 @@
 import { styles } from './styles';
 
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { View, Image, Text, FlatList, Pressable, TouchableOpacity, ScrollView } from 'react-native';
 
 import Colors from '../../../constants/Colors';
@@ -14,6 +14,7 @@ import { useStock } from '../../../contexts/stock';
 import api from '../../../services/api';
 import { OrderProductProps } from '../../../@types/orderProduct';
 import { StockProps } from '../../../@types/stock';
+import { PriceModels } from '../../../@types/sales';
 
 interface Props {
     productsArr: ProductProps[]
@@ -39,28 +40,30 @@ export function ProductsTypeList({ productsArr, orderProducts }: Props) {
                 horizontal
                 style={styles.grid}
             >
-                <ItensMemo orderProducts={orderProducts} productsArr={productsArr} />
+                <Itens orderProducts={orderProducts} productsArr={productsArr} />
             </ScrollView>
         </View>
     );
 }
 
-const ItensMemo = memo(Itens)
 function Itens({ productsArr, orderProducts }: Props) {
+    const { stockMap } = useStock();
+    const { addProductToOrder, priceModel } = useOrderProducts();
+
     return (
         <>
             {
                 productsArr.map(product => {
                     const orderItem = orderProducts.find(item => item.id == product.id)
-                    var productCount = (orderItem?.count) || 0;
-                    return <Item key={product.id} productCount={productCount} product={product} />
+                    const productCount = (orderItem?.count) || 0;
+                    const stockValue = stockMap.get(product.id) || 0;
+                    return <ItemMemo key={product.id} stockValue={stockValue} addProductToOrder={addProductToOrder} priceModel={priceModel} productCount={productCount} product={product} />
                 })
             }
         </>
     )
 }
 
-const Item = memo(ProductItem);
 
 interface ItemProps {
     product: ProductProps
@@ -72,45 +75,46 @@ interface ItemProps {
     //         initialCount?: number;
     //     };
     // }>>
+    stockValue: number
+    addProductToOrder: (product: ProductProps) => void
+    priceModel: PriceModels
     productCount: number
 }
 
-function ProductItem({ product, productCount }: ItemProps) {
-    const { addProductToOrder, priceModel } = useOrderProducts();
-    const { stockMap } = useStock();
+
+const ItemMemo = memo(ItemComponent, (prevProps, nextProps) => (prevProps.productCount === nextProps.productCount) && (prevProps.priceModel === nextProps.priceModel));
+
+function ItemComponent({ product, stockValue, productCount, priceModel, addProductToOrder }: ItemProps) {
     const colorScheme = useColorScheme();
 
-    //definindo cores
-    var bgItemColor = Colors[colorScheme].itemColor;
-    var bgItemPriceColor = priceModel == 'main_price' ? Colors.primary : Colors.gray;
-    var priceColor = Colors[colorScheme].textContrast;
-    var nameColor = Colors[colorScheme].text;
-
-    console.log(productCount)
-
-    if (productCount > 0) {
-        bgItemColor = priceModel == 'main_price' ? Colors.primary : Colors.gray;
-        bgItemPriceColor = Colors.white;
-        priceColor = priceModel == 'main_price' ? Colors.primary : Colors.gray;
+    const initialColors = {
+        background: Colors[colorScheme].itemColor,
+        backgroundPrice: priceModel == 'main_price' ? Colors.primary : Colors.gray,
+        price: Colors[colorScheme].textContrast,
+        name: Colors[colorScheme].text
+    }
+    const orderedColors = {
+        background: priceModel == 'main_price' ? Colors.primary : Colors.gray,
+        backgroundPrice: Colors.white,
+        price: priceModel == 'main_price' ? Colors.primary : Colors.gray,
+        name: Colors[colorScheme].text
     }
     //se o produto está no pedido outras cores são exibidas
-    //valores
+    const itemColors  = useMemo(() => {
+        return productCount > 0 ? orderedColors : initialColors
+    }, [productCount, priceModel]);
+
 
     //se o modelo de preço selecionado for o principal, é exibido o main_price, caso contrário, é exibido o preço secundário
-    var price_product = (product[priceModel] || 0);
+    const price_product = (product[priceModel] || 0);
     const priceProductFormatted = price_product.toFixed(2).replace('.', ',')
-    var image_url = `${api.defaults.baseURL}${product.image_path}`;
-
-    // var objectStockFromContext = stock.find(item => item.id === product.id);
-    // var stockValue = objectStockFromContext?.quantity;
-
-    const stockValue = stockMap.get(product.id);
+    const image_url = `${api.defaults.baseURL}${product.image_path}`;
 
     return (
         <Pressable
             style={({ pressed }) => [
                 {
-                    backgroundColor: pressed ? Colors[colorScheme].background : bgItemColor,
+                    backgroundColor: pressed ? Colors[colorScheme].background : itemColors.background,
                     // display: hideProduct ? 'none' : 'flex'
                 }, styles.item]}
             key={product.id}
@@ -123,7 +127,7 @@ function ProductItem({ product, productCount }: ItemProps) {
             }}>
 
             <View style={styles.itemHeader}>
-                <Text style={[styles.itemName, { color: nameColor }]}>{product.name_product}</Text>
+                <Text style={[styles.itemName, { color: itemColors.name }]}>{product.name_product}</Text>
                 {
                     productCount > 0 &&
                     <Text style={styles.itemCount}>{productCount}</Text>
@@ -145,7 +149,7 @@ function ProductItem({ product, productCount }: ItemProps) {
                     </View>
                     {
                         price_product > 0 &&
-                        <Text style={[styles.itemPrice, { backgroundColor: bgItemPriceColor, color: priceColor }]}>
+                        <Text style={[styles.itemPrice, { backgroundColor: itemColors.backgroundPrice, color: itemColors.price }]}>
                             R$ {priceProductFormatted}
                         </Text>
                     }

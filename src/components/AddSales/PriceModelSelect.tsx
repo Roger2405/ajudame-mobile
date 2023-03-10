@@ -3,10 +3,9 @@ import { View, Text, TouchableOpacity } from 'react-native';
 //ICONS
 import { EvilIcons } from '@expo/vector-icons';
 
-import Colors from '../../../constants/Colors';
+import Colors from '../../constants/Colors';
 
-import { useOrderProducts } from '../../../contexts/order';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import { useOrderProducts } from '../../contexts/order';
 
 export function PriceModelSelect() {
     const { priceModel, setPriceModel } = useOrderProducts();
@@ -18,7 +17,7 @@ export function PriceModelSelect() {
                     style={{
                         backgroundColor: priceModel == 'main_price' ? Colors.primary : Colors.gray,
                         overflow: 'hidden',
-                        borderRadius: 4,
+                        borderRadius: 8,
                         flexDirection: 'row', justifyContent: 'space-between'
                     }}
                 >

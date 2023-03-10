@@ -4,7 +4,6 @@ import Colors from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
     container: {
-         paddingHorizontal: 8,
         position: 'relative',
     },
     item: {

@@ -1,6 +1,6 @@
 
 import { useFocusEffect } from "@react-navigation/native";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { OrderProductProps } from "../@types/orderProduct";
 import { ProductProps } from "../@types/product";
 import { PriceModels } from "../@types/sales";
@@ -13,6 +13,7 @@ interface OrderProductsContextData {
     priceModel: PriceModels,
     setPriceModel: React.Dispatch<React.SetStateAction<PriceModels>>
     clearOrderProducts: () => void,
+    totalValue: number
 }
 
 const OrderProductsContext = createContext<OrderProductsContextData>({} as OrderProductsContextData);
@@ -22,6 +23,13 @@ interface Props {
 export function OrderProductsProvider({ children }: Props) {
     const [orderProducts, setOrderProducts] = useState<OrderProductProps[]>([])
     const [priceModel, setPriceModel] = useState<PriceModels>('main_price');
+    const totalValue = useMemo(() => {
+        let sum = 0;
+        orderProducts.forEach(orderProduct => {
+            sum += (priceModel == 'main_price' ? orderProduct.main_price : (orderProduct.secondary_price || 0)) * orderProduct.count;
+        })
+        return sum;
+    }, [orderProducts, priceModel])
 
     // const [isLoading, setIsLoading] = useState(false)
     function clearOrderProducts() {
@@ -71,7 +79,7 @@ export function OrderProductsProvider({ children }: Props) {
     }
 
     return (
-        <OrderProductsContext.Provider value={{ priceModel, setPriceModel, addCountToOrderProduct, clearOrderProducts, subProductOfOrder, addProductToOrder, orderProducts }}>
+        <OrderProductsContext.Provider value={{ totalValue, priceModel, setPriceModel, addCountToOrderProduct, clearOrderProducts, subProductOfOrder, addProductToOrder, orderProducts }}>
             {children}
         </OrderProductsContext.Provider>
     )

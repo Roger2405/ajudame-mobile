@@ -14,7 +14,7 @@ export async function getRecentSales() {
 }
 export async function getSalesByDate(date: string) {
     const ID_USER = await getUserID();
-
+    console.log(date)
     const response = await api.get(`/${ID_USER}/sales/${date}`)
     const sales: SaleProductProps[] = response.data;
     return sales;
@@ -47,7 +47,6 @@ export async function getLastSale() {
     const ID_USER = await getUserID();
     const response = await api.get(`/${ID_USER}/sales/last`)
     const lastSale: DetailedSaleProps = response.data;
-
     return lastSale;
 }
 export async function getDetailedSalesOfDay(date: string) {

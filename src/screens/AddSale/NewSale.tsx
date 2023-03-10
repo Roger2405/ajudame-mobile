@@ -17,6 +17,7 @@ import { ModalSale } from '../../components/AddSales/AddSaleModal';
 import { useStock } from '../../contexts/stock';
 import { useOrderProducts } from '../../contexts/order';
 import { useProducts } from '../../contexts/products';
+import { TotalValue } from '../../components/AddSales/TotalValue';
 
 
 export function NewSale() {
@@ -45,7 +46,6 @@ export function NewSale() {
             setHideNoStockProducts(false)
         }
     }, [])
-    console.log('---------------------------------------------')
 
     useEffect(() => {
         if (hideNoStockProducts)
@@ -93,7 +93,8 @@ export function NewSale() {
                                             />
                                         </View>
                                     </View>
-                                    <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
+                                    
+                                    <ScrollView contentContainerStyle={{ paddingBottom: 250 }}>
                                         {
                                             productsGroupedByType?.map(type => {
                                                 if (type.length) {
@@ -115,6 +116,7 @@ export function NewSale() {
 
             }
             <ButtonsContainer>
+                <TotalValue />
                 {
                     //se há algum produto adicionado no pedido, é exibido o botão de cancelar para resetar o pedido
                     orderProducts.length ?

@@ -1,6 +1,6 @@
 import { styles } from './styles';
 
-import React from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 
 import Animated, { Layout, FadeOutUp } from 'react-native-reanimated';
@@ -13,15 +13,18 @@ import useColorScheme from '../../../hooks/useColorScheme';
 import { OrderProductProps } from '../../../@types/orderProduct';
 
 import { useOrderProducts } from '../../../contexts/order';
+import { PriceModels } from '../../../@types/sales';
 
 
 export default function OrderProducts() {
-    const { orderProducts } = useOrderProducts();
+    const orderProductsContext = useOrderProducts();
+
     return (
         <ScrollView style={styles.container}>
             {
-                orderProducts.map(sale => {
-                    return <Item key={sale.id} item={sale} />
+                orderProductsContext.orderProducts.map(item => {
+                    const itemProp = item;
+                    return <Item key={item.id} item={itemProp} {...orderProductsContext} />
                 })
             }
         </ScrollView>
@@ -32,11 +35,13 @@ export default function OrderProducts() {
 
 interface ItemProps {
     item: OrderProductProps
+    addCountToOrderProduct: (orderProduct: OrderProductProps) => void,
+    subProductOfOrder: (id: number) => void,
+    priceModel: PriceModels,
 }
-function Item({ item }: ItemProps) {
+function Item({ item, priceModel, addCountToOrderProduct, subProductOfOrder }: ItemProps) {
     const colorScheme = useColorScheme();
-    const { subProductOfOrder, addCountToOrderProduct, priceModel } = useOrderProducts();
-    
+
     const price_product = item[priceModel];
     const subtotal = (((price_product || 0) * item.count).toFixed(2).replace('.', ',') || 0);
     const price = (price_product)?.toFixed(2).replace('.', ',')

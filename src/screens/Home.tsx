@@ -45,8 +45,7 @@ export default function Home() {
   const { productTypes } = useProducts();
 
   const [salesGroupedByType, setSalesGroupedByType] = useState<SaleProductProps[][]>([])
-  
-  
+
 
   useEffect(() => {
     if (sales) {
@@ -67,7 +66,7 @@ export default function Home() {
         setFeedbackMessage({ type: 'error', msg: err })
       })
   }
-  
+
   const onRefresh = React.useCallback(() => {
     updateSales()
   }, []);
