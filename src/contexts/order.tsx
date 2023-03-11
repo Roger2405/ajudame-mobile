@@ -39,7 +39,7 @@ export function OrderProductsProvider({ children }: Props) {
 
     function subProductOfOrder(id_product: number) {
         setOrderProducts(orderProducts => {
-            const indexOfProduct = orderProducts.findIndex(item => item.id == id_product);
+            const indexOfProduct = orderProducts.findIndex(item => item.id_product == id_product);
             const oldItem = orderProducts[indexOfProduct];
 
             oldItem.count--;
@@ -53,7 +53,7 @@ export function OrderProductsProvider({ children }: Props) {
     }
     function addCountToOrderProduct(orderProduct: OrderProductProps) {
         setOrderProducts(orderProducts => {
-            const indexOfProduct = orderProducts.findIndex(item => item.id == orderProduct.id);
+            const indexOfProduct = orderProducts.findIndex(item => item.id_product == orderProduct.id_product);
 
             if (indexOfProduct != -1) {//caso encontre um produto já existente no array
                 orderProducts[indexOfProduct].count++;
@@ -65,7 +65,7 @@ export function OrderProductsProvider({ children }: Props) {
 
     function addProductToOrder(product: ProductProps) {
         setOrderProducts(orderProducts => {
-            const indexOfProduct = orderProducts.findIndex(item => item.id === product.id);
+            const indexOfProduct = orderProducts.findIndex(item => item.id_product === product.id_product);
 
             if (indexOfProduct != -1) {//caso encontre um produto já existente no array
                 orderProducts[indexOfProduct].count++;

@@ -33,10 +33,6 @@ export function StockProvider({ children }: Props) {
         setStockMap(map)
     }, [stock])
 
-    useEffect(() => {
-        console.log("stock map:", stockMap)
-    }, [stockMap])
-
     async function updateStockInContext() {
         const stockResponse = await getStock();
         setStock(stockResponse);

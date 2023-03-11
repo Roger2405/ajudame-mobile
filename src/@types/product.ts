@@ -1,5 +1,5 @@
 export interface ProductProps {
-    id: number
+    id_product: number
     name_product: string
     type_product: string
     image_path?: string
@@ -8,7 +8,7 @@ export interface ProductProps {
 }
 
 export type ProductDetailsProps = {
-    id: number;
+    id_product: number;
     name_product: string;
     image_path?: string | null
     type_product: string;

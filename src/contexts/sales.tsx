@@ -1,11 +1,8 @@
 
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { SaleProductProps, SaleOverviewProps, DetailedSaleProps } from "../@types/sales";
 import { getLastSale, getOverview, getSalesByDate } from "../services/sales";
 import { getCurrentDate } from "../utils/date";
-import getGroupedArray from "../utils/groupArray";
-import { getPieChartData } from "../utils/sales";
-import { useProducts } from "./products";
 
 interface RecentSalesContextData {
     sales: SaleProductProps[] | undefined,

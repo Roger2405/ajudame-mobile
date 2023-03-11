@@ -4,17 +4,9 @@ import { DetailedSaleProps, HistoricDetailsItemProps, PriceModels, SaleOverviewP
 import api from "./api";
 import getUserID from "./getUserID";
 
-export async function getRecentSales() {
-    const ID_USER = await getUserID();
 
-    const response = await api.get(`/${ID_USER}/sales/recent`)
-    const salesOfDay: SaleProductProps[] = response.data;
-
-    return salesOfDay;
-}
 export async function getSalesByDate(date: string) {
     const ID_USER = await getUserID();
-    console.log(date)
     const response = await api.get(`/${ID_USER}/sales/${date}`)
     const sales: SaleProductProps[] = response.data;
     return sales;

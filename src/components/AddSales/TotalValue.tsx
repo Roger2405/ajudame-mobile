@@ -21,7 +21,7 @@ export function TotalValue({ relative }: Props) {
 }
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'flex-end', paddingHorizontal: 8, alignItems: 'center', flexDirection: 'row', padding: 4, borderRadius: 24, marginLeft: 'auto'
+        justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row', padding: 4, borderRadius: 24, marginLeft: 'auto'
     },
     absoluteContainer: {
         position: 'absolute', top: -48,

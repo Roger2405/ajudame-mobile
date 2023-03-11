@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, TextInput } from 'react-native';
 //CORES E TEMA
-import Colors from '../../../constants/Colors';
-import useColorScheme from '../../../hooks/useColorScheme';
+import Colors from '../../constants/Colors';
+import useColorScheme from '../../hooks/useColorScheme';
 
-import { ProductProps } from '../../../@types/product';
+import { ProductProps } from '../../@types/product';
 
-import { ButtonsContainer, CancelButton, ConfirmButton } from '../../common/Buttons';
+import { ButtonsContainer, CancelButton, ConfirmButton } from '../common/Buttons';
 
 interface ModalSaleProps {
     modal: {

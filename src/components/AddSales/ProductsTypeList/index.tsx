@@ -54,10 +54,10 @@ function Itens({ productsArr, orderProducts }: Props) {
         <>
             {
                 productsArr.map(product => {
-                    const orderItem = orderProducts.find(item => item.id == product.id)
+                    const orderItem = orderProducts.find(item => item.id_product == product.id_product)
                     const productCount = (orderItem?.count) || 0;
-                    const stockValue = stockMap.get(product.id) || 0;
-                    return <ItemMemo key={product.id} stockValue={stockValue} addProductToOrder={addProductToOrder} priceModel={priceModel} productCount={productCount} product={product} />
+                    const stockValue = stockMap.get(product.id_product) || 0;
+                    return <ItemMemo key={product.id_product} stockValue={stockValue} addProductToOrder={addProductToOrder} priceModel={priceModel} productCount={productCount} product={product} />
                 })
             }
         </>
@@ -100,7 +100,7 @@ function ItemComponent({ product, stockValue, productCount, priceModel, addProdu
         name: Colors[colorScheme].text
     }
     //se o produto está no pedido outras cores são exibidas
-    const itemColors  = useMemo(() => {
+    const itemColors = useMemo(() => {
         return productCount > 0 ? orderedColors : initialColors
     }, [productCount, priceModel]);
 
@@ -117,7 +117,7 @@ function ItemComponent({ product, stockValue, productCount, priceModel, addProdu
                     backgroundColor: pressed ? Colors[colorScheme].background : itemColors.background,
                     // display: hideProduct ? 'none' : 'flex'
                 }, styles.item]}
-            key={product.id}
+            key={product.id_product}
             // onLongPress={() => {
             //     setModal({ options: { product: product, type: 'add' }, showModal: true })
             // }}

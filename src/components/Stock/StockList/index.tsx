@@ -63,7 +63,6 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
                 return new Map(oldMap)
             })
         else if (newValue >= 0) {
-            console.log(stock.id_product)
             setNewStock((oldMap) => new Map(oldMap?.set(stock.id_product, (newValue || 0))))
         }
     }
@@ -104,7 +103,7 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
                             onLongPress={() => {
                                 setModal({ showModal: true, options: { productId: stock.id_product, type: 'sub', initialStock: stock.quantity } })
                             }}
-                            delayLongPress={2500}
+                            delayLongPress={250}
                             onPress={() => {
                                 var newStockValue = stock.quantity - 1
                                 if (stockValueInState != null)
@@ -136,7 +135,7 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
                                 setModal({ showModal: true, options: { productId: stock.id_product, type: 'add', initialStock: stock.quantity } })
 
                             }}
-                            delayLongPress={2500}
+                            delayLongPress={250}
                             onPress={() => {
                                 var newStockValue = stock.quantity + 1
                                 if (stockValueInState != null)

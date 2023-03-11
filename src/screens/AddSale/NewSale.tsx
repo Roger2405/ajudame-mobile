@@ -12,12 +12,12 @@ import Colors from '../../constants/Colors';
 import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
 import { ProductsTypeList } from '../../components/AddSales/ProductsTypeList';
-import { ModalSale } from '../../components/AddSales/AddSaleModal';
 
 import { useStock } from '../../contexts/stock';
 import { useOrderProducts } from '../../contexts/order';
 import { useProducts } from '../../contexts/products';
 import { TotalValue } from '../../components/AddSales/TotalValue';
+import { ModalSale } from '../../components/AddSales/ModalAddSales';
 
 
 export function NewSale() {
@@ -52,7 +52,7 @@ export function NewSale() {
             setProductsGroupedByType(
                 productsFromContext?.map((group, index) => {
                     return group.filter(product => {
-                        const productStock = stock.find(item => item.id_product == product.id);
+                        const productStock = stock.find(item => item.id_product == product.id_product);
                         return productStock?.quantity as number > 0;
                     })
                 })
@@ -93,7 +93,7 @@ export function NewSale() {
                                             />
                                         </View>
                                     </View>
-                                    
+
                                     <ScrollView contentContainerStyle={{ paddingBottom: 250 }}>
                                         {
                                             productsGroupedByType?.map(type => {

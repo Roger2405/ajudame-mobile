@@ -24,7 +24,7 @@ export default function OrderProducts() {
             {
                 orderProductsContext.orderProducts.map(item => {
                     const itemProp = item;
-                    return <Item key={item.id} item={itemProp} {...orderProductsContext} />
+                    return <Item key={item.id_product} item={itemProp} {...orderProductsContext} />
                 })
             }
         </ScrollView>
@@ -59,7 +59,7 @@ function Item({ item, priceModel, addCountToOrderProduct, subProductOfOrder }: I
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Pressable style={styles.buttonCount}
-                        onPress={() => subProductOfOrder(item.id)}
+                        onPress={() => subProductOfOrder(item.id_product)}
                     ><Feather name='minus' size={24} color={Colors.white} /></Pressable>
 
                     <Text style={[styles.itemCount, { color: Colors[colorScheme].text }]}>{(item.count.toString())}</Text>
