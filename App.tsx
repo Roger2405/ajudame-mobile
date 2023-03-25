@@ -9,6 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 export default function App() {
   return (
     <NavigationContainer>
+
       <AuthProvider>
         <SafeAreaProvider>
           <StatusBar translucent backgroundColor='transparent' />
@@ -17,4 +18,9 @@ export default function App() {
       </AuthProvider >
     </NavigationContainer>
   );
+<<<<<<< HEAD
 }
+=======
+}
+// }
+>>>>>>> parent of dada9bd (improving performance in contexts)

@@ -40,7 +40,13 @@
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
+<<<<<<< HEAD
     "react-native-webview": "11.26.0",
+=======
+    "react-native-tab-view": "^3.3.4",
+    "react-native-web": "~0.18.7",
+    "react-native-webview": "11.23.1",
+>>>>>>> parent of dada9bd (improving performance in contexts)
     "rn-sliding-up-panel": "^2.4.6",
     "victory-native": "^36.6.8"
   },

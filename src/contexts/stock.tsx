@@ -1,5 +1,5 @@
 
-import { createContext, ReactNode, useContext, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { StockProps } from "../@types/stock";
 import { getStock, groupStockByProductType } from "../services/stock";
 
@@ -14,16 +14,14 @@ interface Props {
     children: ReactNode
 }
 export function StockProvider({ children }: Props) {
+    const [stockGroupedByType, setStockGroupedByType] = useState<StockProps[][] | null>(null)
     const [stock, setStock] = useState<StockProps[]>([]);
     const [stockMap, setStockMap] = useState(new Map<number, number>())
 
-    const stockGroupedByType = useMemo(() => {
-        return groupStockByProductType(stock)
-    }, [stock])
-
-    useLayoutEffect(() => {
+    useEffect(() => {
         updateStockInContext();
     }, [])
+<<<<<<< HEAD
 
     useEffect(() => {
         let map = new Map();
@@ -37,7 +35,17 @@ export function StockProvider({ children }: Props) {
         const stockResponse = await getStock();
         setStock(stockResponse);
     }
+=======
+>>>>>>> parent of dada9bd (improving performance in contexts)
 
+    async function updateStockInContext() {
+        getStock()
+            .then(res => {
+                setStock(res)
+                let stockGrouped = groupStockByProductType(res);
+                setStockGroupedByType(stockGrouped)
+            })
+    }
     return (
         <StockContext.Provider value={{ stockMap, stockGroupedByType, stock, updateStockInContext }}>
             {children}

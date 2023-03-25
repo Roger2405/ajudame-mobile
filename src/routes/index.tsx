@@ -23,12 +23,17 @@ export function Routes() {
         <ProductsProvider>
             <SalesProvider>
                 <StockProvider>
-                     <OrderProductsProvider>
+                    <OrderProductsProvider>
                         <DrawerNav />
+<<<<<<< HEAD
                      </OrderProductsProvider>
+=======
+
+                    </OrderProductsProvider>
+>>>>>>> parent of dada9bd (improving performance in contexts)
                 </StockProvider>
-             </SalesProvider>
-         </ProductsProvider>
+            </SalesProvider>
+        </ProductsProvider>
         :
         <AuthRoutes />
 

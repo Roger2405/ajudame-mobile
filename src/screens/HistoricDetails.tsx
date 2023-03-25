@@ -35,8 +35,10 @@ export default function HistoricDetails({ route }: Props) {
 
   const [dataBarChart, setDataBarChart] = useState<HistoricDetailsItemProps[]>();
   const [sales, setSales] = useState<SaleProductProps[] | undefined>()
+  const [noCostItems, setNoCostItems] = useState<SaleProductProps[]>()
   const [isLoading, setIsLoading] = useState(true)
   const [overviewData, setOverviewData] = useState<SaleOverviewProps>({} as SaleOverviewProps)
+  const [priceModel, setPriceModel] = useState<PriceModels | undefined>('main');
   const [dataPieChart, setDataPieChart] = useState<{
     label: string;
     type: string,
@@ -51,10 +53,9 @@ export default function HistoricDetails({ route }: Props) {
       setSalesGroupedByType(salesGroupedByType)
       const dataPieChart = getPieChartData(salesGroupedByType)
       setDataPieChart(dataPieChart)
-      console.log('sales')
     }
   }, [sales])
-  
+
   useEffect(() => {
     getHistoricDetails(date)
       .then((res) => setDataBarChart(res as HistoricDetailsItemProps[]))
@@ -65,7 +66,6 @@ export default function HistoricDetails({ route }: Props) {
       .catch(alert)
       .finally(() => setIsLoading(false))
   }, [])
-
 
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
@@ -102,7 +102,7 @@ export default function HistoricDetails({ route }: Props) {
                             domainPadding={{ x: 24 }}
                             style={{
                               data: {
-                                fill: Colors.red
+                                fill: Colors.primary
                               }
                             }}
                             data={dataBarChart}
@@ -113,12 +113,12 @@ export default function HistoricDetails({ route }: Props) {
                             domainPadding={{ x: 24 }}
                             style={{
                               data: {
-                                fill: Colors.primary
+                                fill: Colors.red
                               }
                             }}
                             data={dataBarChart}
                             x='day'
-                            y='gain'
+                            y='cost'
                           />
 
                         </VictoryChart>
