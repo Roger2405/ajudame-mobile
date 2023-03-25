@@ -84,7 +84,7 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
         bgColor = defaultItemBg
 
     return (
-        <View style={[itemStyles.item, { backgroundColor: bgColor, opacity: (stock.quantity > 0) ? 1 : .5 }]}>
+        <View style={[itemStyles.item, { backgroundColor: bgColor, opacity: (stock.quantity > 0 || (stockValueInState || 0) > 0) ? 1 : .5 }]}>
 
             <Text style={itemStyles.name}>
                 {stock.name_product}
@@ -104,7 +104,7 @@ function StockListItem({ stock, editMode, setNewStock, newStock, setModal }: Sto
                                 setModal({ showModal: true, options: { productId: stock.id_product, type: 'sub', initialStock: stock.quantity } })
                             }}
                             delayLongPress={250}
-                           onPress={() => {
+                            onPress={() => {
                                 var newStockValue = stock.quantity - 1
                                 if (stockValueInState != null)
                                     newStockValue = stockValueInState - 1;

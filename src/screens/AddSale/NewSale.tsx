@@ -22,6 +22,7 @@ import { ModalSale } from '../../components/AddSales/ModalAddSales';
 
 export function NewSale() {
     const navigation = useNavigation();
+
     const colorScheme = useColorScheme();
 
     //CONTEXTS

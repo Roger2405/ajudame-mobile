@@ -7,13 +7,7 @@ export interface ProductProps {
     secondary_price?: number
 }
 
-export type ProductDetailsProps = {
-    id_product: number;
-    name_product: string;
-    image_path?: string | null
-    type_product: string;
-    main_price: number;
-    secondary_price?: number;
+export interface ProductDetailsProps extends ProductProps {
     stock: number;
     editable_cost: number;
     cost?: number

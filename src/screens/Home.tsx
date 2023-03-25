@@ -44,6 +44,7 @@ export default function Home() {
 
   const { productTypes } = useProducts();
 
+
   const [salesGroupedByType, setSalesGroupedByType] = useState<SaleProductProps[][]>([])
 
 

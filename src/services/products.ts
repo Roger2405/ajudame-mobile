@@ -8,6 +8,7 @@ export async function getProducts() {
     const ID_USER = await getUserID();
     // const url = `${process.env.REACT_APP_LINK_API}/${ID_USER}/stock/update`;
     const response = await api.get(`/${ID_USER}/products`);
+    console.log(response.data);
     return response.data as ProductProps[];
 }
 
