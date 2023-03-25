@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import androidx.annotation.NonNull;
 
-import com.swmansion.reanimated.ReanimatedPackage;
-
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -37,7 +35,6 @@ public class MainApplication extends Application implements ReactApplication {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());
-      packages.add(new ReanimatedPackage());
       return packages;
     }
 

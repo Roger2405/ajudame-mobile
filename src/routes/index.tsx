@@ -13,7 +13,7 @@ import { DrawerNav } from "./drawerNav.routes";
 export function Routes() {
 
     const { signed, loading } = useAuth();
-    
+
     if (loading) {
         <View>
             <ActivityIndicator />
@@ -25,12 +25,7 @@ export function Routes() {
                 <StockProvider>
                     <OrderProductsProvider>
                         <DrawerNav />
-<<<<<<< HEAD
-                     </OrderProductsProvider>
-=======
-
                     </OrderProductsProvider>
->>>>>>> parent of dada9bd (improving performance in contexts)
                 </StockProvider>
             </SalesProvider>
         </ProductsProvider>

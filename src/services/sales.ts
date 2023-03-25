@@ -9,7 +9,6 @@ export async function getSalesByDate(date: string) {
     const ID_USER = await getUserID();
     const response = await api.get(`/${ID_USER}/sales/${date}`)
     const sales: SaleProductProps[] = response.data;
-
     return sales;
 }
 

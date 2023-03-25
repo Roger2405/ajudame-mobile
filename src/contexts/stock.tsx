@@ -21,7 +21,6 @@ export function StockProvider({ children }: Props) {
     useEffect(() => {
         updateStockInContext();
     }, [])
-<<<<<<< HEAD
 
     useEffect(() => {
         let map = new Map();
@@ -31,12 +30,6 @@ export function StockProvider({ children }: Props) {
         setStockMap(map)
     }, [stock])
 
-    async function updateStockInContext() {
-        const stockResponse = await getStock();
-        setStock(stockResponse);
-    }
-=======
->>>>>>> parent of dada9bd (improving performance in contexts)
 
     async function updateStockInContext() {
         getStock()

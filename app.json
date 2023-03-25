@@ -5,6 +5,8 @@
     "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
     "plugins": [
       [
         "expo-image-picker",
@@ -13,8 +15,6 @@
         }
       ]
     ],
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",

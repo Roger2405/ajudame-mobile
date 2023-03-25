@@ -4,6 +4,5 @@ export function getCurrentDate() {
     const [month, day, year] = localeDateString.split('/');
     const formatedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
-
     return formatedDate;
 }
