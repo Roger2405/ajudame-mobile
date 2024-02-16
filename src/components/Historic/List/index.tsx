@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native';
-import { SaleOverviewProps, SalesResumeProps } from '../../../@types/sales';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { SaleOverviewProps } from '../../../@types/sales';
 import Colors from '../../../constants/Colors';
 
 import useColorScheme from '../../../hooks/useColorScheme';
-import { FontAwesome5, Foundation } from '@expo/vector-icons';
+import { Foundation } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 

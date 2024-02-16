@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Switch, Button } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, ActivityIndicator, Switch, Button, TouchableOpacity } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,7 +11,7 @@ import Colors from '../../constants/Colors';
 
 import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
-import { ProductsTypeList } from '../../components/AddSales/ProductsTypeList';
+import { ProductsTypeList, ProductTypeListMemo } from '../../components/AddSales/ProductsTypeList';
 
 import { useStock } from '../../contexts/stock';
 import { useOrderProducts } from '../../contexts/order';
@@ -30,9 +30,10 @@ export function NewSale() {
     const { productsGroupedByType: productsFromContext, isLoading } = useProducts();
     const { stock } = useStock();
 
-    const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>(productsFromContext)
+    const [productsGroupedByType, setProductsGroupedByType] = useState<{ [type: string]: [] }>(productsFromContext)
     const [hideNoStockProducts, setHideNoStockProducts] = useState(true);
 
+    const [category, setCategory] = useState('');
     const [modal, setModal] = useState({} as {
         showModal: boolean;
         options: {
@@ -49,16 +50,18 @@ export function NewSale() {
     }, [])
 
     useEffect(() => {
-        if (hideNoStockProducts)
-            setProductsGroupedByType(
-                productsFromContext?.map((group, index) => {
-                    return group.filter(product => {
-                        const productStock = stock.find(item => item.id_product == product.id_product);
-                        return productStock?.quantity as number > 0;
-                    })
-                })
-            )
-        else {
+        if (hideNoStockProducts) {
+            let newProductsGrouped;
+            // Object.keys( productsFromContext ).map( type => {
+            //     return productsFromContext[ type as string ].filter(product => {
+            //         const productStock = stock.find(item => item.id_product == product.id_product);
+            //         return productStock?.quantity as number > 0;
+            //     })
+            // })
+            // setProductsGroupedByType(
+            // )
+
+        } else {
             setProductsGroupedByType(productsFromContext)
         }
     }, [hideNoStockProducts, productsFromContext, stock])
@@ -72,14 +75,10 @@ export function NewSale() {
                         <ActivityIndicator size={32} />
                     </View>
                     :
-                    <View>
+                    <View style={{}}>
                         {
-                            productsFromContext.length ?
+                            Object.keys( productsFromContext ).length ?
                                 <>
-                                    {
-                                        modal.showModal &&
-                                        <ModalSale setModal={setModal} modal={modal} />
-                                    }
                                     {/* OPTIONS */}
                                     <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginVertical: 4 }}>
                                         <PriceModelSelect />
@@ -94,17 +93,56 @@ export function NewSale() {
                                             />
                                         </View>
                                     </View>
-
-                                    <ScrollView contentContainerStyle={{ paddingBottom: 250 }}>
-                                        {
-                                            productsGroupedByType?.map(type => {
-                                                if (type.length) {
-                                                    const orderProductsOfType = orderProducts.filter(item => item.type_product == type[0].type_product);
-                                                    return <ProductsTypeList orderProducts={orderProductsOfType} productsArr={type} key={type[0].type_product} />
+                                    {
+                                        !!category ?
+                                        <ProductTypeListMemo productsType={category} setOrderModal={setModal} setCategory={setCategory} productsArr={ productsGroupedByType[category] } key={ category } />
+                                        :
+                                        <></>
+                                    }
+                                        <ScrollView
+                                            scrollEnabled
+                                            contentContainerStyle={{ paddingBottom: 180 }}
+                                        >
+                                            <View
+                                                style={
+                                                    {
+                                                        position: "relative",
+                                                        paddingTop: 16,
+                                                        display: "flex",
+                                                        gap: 8,
+                                                        width: "100%",
+                                                        flexWrap: "wrap",
+                                                        flexDirection: "row",
+                                                        paddingBottom: 48
+                                                    }
                                                 }
-                                            })
-                                        }
-                                    </ScrollView>
+                                            >
+                                            {
+                                                Object.keys( productsGroupedByType ).map( category => {
+                                                    return (
+                                                        <TouchableOpacity
+                                                            style={{ 
+                                                                backgroundColor: Colors[colorScheme].itemColor,
+                                                                flexDirection: 'column',
+                                                                flexWrap: 'wrap',
+                                                                height: 120,
+                                                                flexBasis: "40%",
+                                                                maxWidth: "50%",
+                                                                flexShrink: 1,
+                                                                flexGrow: 1,
+                                                                aspectRatio: 7 / 5,
+                                                                borderRadius: 8,
+                                                                padding: 8,
+                                                                overflow: 'hidden'
+                                                            }}
+                                                            onPress={() => setCategory(category) }>
+                                                                <Text style={{fontSize: 24, flex: 1, flexWrap: 'wrap', width: "100%"}} >{category}</Text>
+                                                        </TouchableOpacity>
+                                                    ) 
+                                                })
+                                            }
+                                            </View>
+                                        </ScrollView>
 
                                 </>
                                 :
@@ -115,6 +153,12 @@ export function NewSale() {
                         }
                     </View>
 
+            }
+            {
+                Object.keys( modal ).length ?
+                <ModalSale setModal={setModal} modal={modal} />
+                :
+                <></>
             }
             <ButtonsContainer>
                 <TotalValue />

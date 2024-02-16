@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Routes } from './src/routes';
 import { AuthProvider } from './src/contexts/auth';
 import { NavigationContainer } from '@react-navigation/native';
+import "react-native-url-polyfill/auto";
 
 export default function App() {
   return (

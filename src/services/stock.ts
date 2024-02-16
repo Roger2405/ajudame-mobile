@@ -2,13 +2,11 @@
 import { ProductProps } from "../@types/product";
 import { StockProps } from "../@types/stock";
 import api from "./api";
-import getUserID from "./getUserID";
 
 
 export async function getStock() {
-    const ID_USER = await getUserID();
 
-    const response = await api.get(`/${ID_USER}/stock`);
+    const response = await api.get(`/stock`);
     return response.data as StockProps[];
 
 }
@@ -34,19 +32,13 @@ export function groupStockByProductType(arrProductStock: StockProps[]) {
     return arrayStockGrouped;
 }
 export async function addStock(mapIdCount: Map<number, number>) {
-    const ID_USER = await getUserID();
 
 }
 export async function updateStock(newStock: Map<number, number>) {
-
     let strArrayQuantities = JSON.stringify(Array.from(newStock))
 
-    // setIsLoading(true);//inicia feedback de carregamento e desativa o botão de editar estoque até a atualizção do mesmo seja feita no BD
-    const ID_USER = await getUserID();
-
-    // const url = `${process.env.REACT_APP_LINK_API}/${ID_USER}/stock/update`;
     await new Promise((resolve, reject) => {
-        api.post(`/${ID_USER}/stock/update`, {
+        api.post(`/stock/update`, {
             newQuantities: strArrayQuantities,//array em forma de string, passando as novas quantidades do estoque
         }).then(res => {
             if (res.data.success) {
@@ -60,10 +52,9 @@ export async function updateStock(newStock: Map<number, number>) {
 
 }
 export async function discountStockOfSaleItems() {
-    const ID_USER = await getUserID();
 
     await new Promise((resolve, reject) => {
-        api.post(`/${ID_USER}/stock/discount`)
+        api.post(`/stock/discount`)
             .then(res => {
                 if (res.data.success) {
                     resolve(res.data.msg)

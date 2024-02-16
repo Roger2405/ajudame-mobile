@@ -7,15 +7,25 @@ export const styles = StyleSheet.create({
         height: 100,
     },
     grid: {
-        width: '100%'
+        position: "relative",
+        paddingTop: 16,
+        display: "flex",
+        gap: 8,
+        width: "100%",
+        flexWrap: "wrap",
+        flexDirection: "row",
+        paddingBottom: 48
     },
     item: {
         flexDirection: 'column',
-        margin: 4,
         flexWrap: 'wrap',
         height: 120,
+        flexBasis: "40%",
+        maxWidth: "50%",
+        flexShrink: 1,
+        flexGrow: 1,
         aspectRatio: 7 / 5,
-        borderRadius: 4,
+        borderRadius: 8,
         overflow: 'hidden'
     },
 
@@ -29,6 +39,7 @@ export const styles = StyleSheet.create({
     itemName: {
         overflow: 'hidden',
         width: '100%',
+        padding: 4,
         textTransform: 'uppercase',
     },
     itemCount: {
@@ -64,7 +75,7 @@ export const styles = StyleSheet.create({
     itemPrice: {
         position: 'absolute',
         borderTopLeftRadius: 16,
-        borderBottomRightRadius: 2,
+        borderBottomRightRadius: 6,
         // borderRadius: 4,
         margin: 2,
         width: 100,

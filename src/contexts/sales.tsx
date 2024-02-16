@@ -37,6 +37,7 @@ export function SalesProvider({ children }: Props) {
 
     async function updateSales() {
         !isLoading && setIsLoading(true)
+        
         getSalesByDate(date)
             .then(setSales)
             .catch(alert)

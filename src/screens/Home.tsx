@@ -42,15 +42,11 @@ export default function Home() {
     sum: number;
   }[] | undefined>([]);
 
-  const { productTypes } = useProducts();
-
-
   const [salesGroupedByType, setSalesGroupedByType] = useState<SaleProductProps[][]>([])
-
 
   useEffect(() => {
     if (sales) {
-      const salesGroupedByType = getGroupedArray(sales, productTypes)
+      const salesGroupedByType = getGroupedArray(sales, sales.map( i => i["type_product"] ) );
       setSalesGroupedByType(salesGroupedByType)
       const dataPieChart = getPieChartData(salesGroupedByType)
       setDataPieChart(dataPieChart)

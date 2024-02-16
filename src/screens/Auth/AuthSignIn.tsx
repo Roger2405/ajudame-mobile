@@ -22,11 +22,11 @@ export function AuthSignIn() {
     const [errorMessage, setErrorMessage] = useState('');
 
     function handleLogIn() {
-        if (email && password && !errorMessage)
+        // if (email && password && !errorMessage)
             signIn(email, password).catch(err => setErrorMessage(err.message));
-        else {
-            setErrorMessage('Preencha os campos corretamente!')
-        }
+        // else {
+            // setErrorMessage('Preencha os campos corretamente!')
+        // }
     }
 
     useEffect(() => {

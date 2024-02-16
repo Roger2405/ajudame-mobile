@@ -14,7 +14,7 @@ export function Routes() {
 
     const { signed, loading } = useAuth();
 
-    if (loading) {
+    if (loading) { 
         <View>
             <ActivityIndicator />
         </View>

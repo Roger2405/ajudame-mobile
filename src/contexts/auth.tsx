@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import api from '../services/api';
 
 import * as auth from '../services/auth';
 
@@ -43,6 +44,7 @@ export function AuthProvider({ children }: Props) {
         const response = await auth.signIn(email, password);
         if (response.success) {
             await AsyncStorage.setItem('@AjudaME:user', JSON.stringify(response.user))
+            api.defaults.headers.Authorization = response.token;
             setUser(response.user)
         }
         else {

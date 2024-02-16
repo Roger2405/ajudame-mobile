@@ -13,6 +13,7 @@ interface OrderProductsContextData {
     priceModel: PriceModels,
     setPriceModel: React.Dispatch<React.SetStateAction<PriceModels>>
     clearOrderProducts: () => void,
+    updateOrderProductQuantity: ( product: ProductProps, quantity: number ) => void,
     totalValue: number
 }
 
@@ -63,6 +64,21 @@ export function OrderProductsProvider({ children }: Props) {
         })
     }
 
+    function updateOrderProductQuantity(product: ProductProps, quantity: number) {
+
+        setOrderProducts(orderProducts => {
+            const indexOfProduct = orderProducts.findIndex(item => item.id_product == product.id_product);
+
+            if (indexOfProduct != -1) {//caso encontre um produto já existente no array
+                orderProducts[indexOfProduct].count = quantity;
+            } else {
+                orderProducts[ Object.keys( orderProducts ).length ] = { ...product, count: quantity,  };
+            }
+            return [...orderProducts]
+
+        })
+    }
+
     function addProductToOrder(product: ProductProps) {
         setOrderProducts(orderProducts => {
             const indexOfProduct = orderProducts.findIndex(item => item.id_product === product.id_product);
@@ -79,7 +95,7 @@ export function OrderProductsProvider({ children }: Props) {
     }
 
     return (
-        <OrderProductsContext.Provider value={{ totalValue, priceModel, setPriceModel, addCountToOrderProduct, clearOrderProducts, subProductOfOrder, addProductToOrder, orderProducts }}>
+        <OrderProductsContext.Provider value={{ totalValue, priceModel, setPriceModel, addCountToOrderProduct, clearOrderProducts, subProductOfOrder, addProductToOrder, updateOrderProductQuantity, orderProducts }}>
             {children}
         </OrderProductsContext.Provider>
     )

@@ -5,7 +5,7 @@ import { getProducts, getProductTypes } from "../services/products";
 import getGroupedArray from "../utils/groupArray";
 
 interface ProductsContextData {
-    productsGroupedByType: ProductProps[][],
+    productsGroupedByType: {},
     productTypes: string[],
     updateProductsInContext: () => void,
     isLoading: boolean
@@ -15,7 +15,7 @@ interface Props {
     children: ReactNode
 }
 export function ProductsProvider({ children }: Props) {
-    const [productsGroupedByType, setProductsGroupedByType] = useState<ProductProps[][]>([])
+    const [productsGroupedByType, setProductsGroupedByType] = useState<{ [type: string]: [] }>({})
     const [productTypes, setProductTypes] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 

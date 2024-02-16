@@ -14,17 +14,21 @@ export function SalesList({ salesGroupedByType }: Props) {
     return (
         <View>
             {
-                salesGroupedByType.map(groupOfTytpe => {
+                Object.keys( salesGroupedByType ).map( productType => {
                     return (
-                        <View key={groupOfTytpe[0].type_product} style={styles.typeContainer}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors[colorScheme].text }}>{groupOfTytpe[0].type_product}</Text>
+                        salesGroupedByType[productType as any].length ?
+                        <View key={productType} style={styles.typeContainer}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors[colorScheme].text }}>{productType}</Text>
                             {
-                                groupOfTytpe.map(item => {
+                                salesGroupedByType[productType as any].map(item => {
                                     return <SalesListItem item={item} key={item.id} />
                                 })
                             }
 
-                        </View>)
+                        </View>
+                        :
+                        <></>
+                        )
                 })
             }
         </View >

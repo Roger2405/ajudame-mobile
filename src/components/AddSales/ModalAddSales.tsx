@@ -7,6 +7,7 @@ import useColorScheme from '../../hooks/useColorScheme';
 import { ProductProps } from '../../@types/product';
 
 import { ButtonsContainer, CancelButton, ConfirmButton } from '../common/Buttons';
+import { useOrderProducts } from '../../contexts/order';
 
 interface ModalSaleProps {
     modal: {
@@ -28,6 +29,9 @@ interface ModalSaleProps {
 }
 
 export function ModalSale({ modal, setModal }: ModalSaleProps) {
+
+    const { orderProducts, updateOrderProductQuantity } = useOrderProducts();
+
     const colorScheme = useColorScheme();
     const [quantity, setQuantity] = useState<number | undefined>(undefined);
 
@@ -65,7 +69,8 @@ export function ModalSale({ modal, setModal }: ModalSaleProps) {
         setModal({ showModal: false, options: {} as { product: ProductProps, type: 'add' | 'sub', initialStock: number; } })
     }
     function updateModal() {
-
+        updateOrderProductQuantity( modal.options.product, quantity || 0 );
+        setModal({} as any);
     }
 
     return (

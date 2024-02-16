@@ -25,16 +25,16 @@ export default function Products() {
           :
           <>
             {
-              productsGroupedByType.length
+              Object.keys( productsGroupedByType ).length
                 ?
                 <FlatList
                   style={{
                     flexBasis: '100%',
                     flex: 1,
                   }}
-                  data={productsGroupedByType}
+                  data={Object.values( productsGroupedByType ) as ProductProps[] }
                   contentContainerStyle={{ paddingBottom: 120 }}
-                  renderItem={productsByType => <ProductList products={productsByType.item} />}
+                  renderItem={productsByType => <ProductList products={( productsByType as any ).item} />}
                 />
                 :
                 <Text>Não foi encontrado nenhum produto!</Text>

@@ -1,14 +1,10 @@
 
 import { ProductDetailsProps, ProductProps } from "../@types/product";
 import api from "./api";
-import getUserID from "./getUserID";
 
 
 export async function getProducts() {
-    const ID_USER = await getUserID();
-    // const url = `${process.env.REACT_APP_LINK_API}/${ID_USER}/stock/update`;
-    const response = await api.get(`/${ID_USER}/products`);
-    console.log(response.data);
+    const response = await api.get(`/products`);
     return response.data as ProductProps[];
 }
 
@@ -23,9 +19,8 @@ export function getProductTypes(arrProducts: ProductProps[]) {
     return productsTypes;
 }
 export async function addProduct(data: {}) {
-    const ID_USER = await getUserID();
 
-    const response = await api.post(`/${ID_USER}/products/register`, data, {
+    const response = await api.post(`/products/register`, data, {
         headers: {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data'
@@ -35,23 +30,20 @@ export async function addProduct(data: {}) {
 }
 
 export async function getProduct(id_product: number) {
-    const ID_USER = await getUserID();
 
 
-    const response = await api.get(`/${ID_USER}/products/${id_product}`)
+    const response = await api.get(`/products/${id_product}`)
     return response.data[0] as ProductDetailsProps;
 }
 
 export async function deleteProduct(id_product: number) {
-    const ID_USER = await getUserID();
 
-    const response = await api.delete(`/${ID_USER}/products/${id_product}`)
+    const response = await api.delete(`/products/${id_product}`)
     return response;
 }
 export async function updateProduct(data: {}, id: number) {
-    const ID_USER = await getUserID();
 
-    const response = await api.put(`/${ID_USER}/products/${id}`, data, {
+    const response = await api.put(`/products/${id}`, data, {
         headers: {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data'
