@@ -95,7 +95,7 @@ export default function Home() {
                       lastSale &&
                       <View>
                         <Text style={{ fontSize: 20, fontWeight: 'bold', color: Colors.gray }}>Última venda:</Text>
-                        <DetailedSale data={lastSale} handleDeleteSale={handleDeleteSale} />
+                        <DetailedSale data={lastSale} handleDeleteSale={handleDeleteSale}  key={lastSale.header.datetime}/>
                         <Pressable onPress={() => navigation.navigate('DetailedSales')}>
                           <Text style={{ color: Colors.gray, textDecorationLine: 'underline', fontSize: 16, paddingHorizontal: 8, textAlign: 'right' }}>
                             Ver todas as vendas do dia

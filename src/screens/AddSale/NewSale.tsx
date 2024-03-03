@@ -11,13 +11,15 @@ import Colors from '../../constants/Colors';
 
 import { BackButton, ButtonsContainer, CancelButton, ContinueButton } from '../../components/common/Buttons';
 import { PriceModelSelect } from '../../components/AddSales/PriceModelSelect';
-import { ProductsTypeList, ProductTypeListMemo } from '../../components/AddSales/ProductsTypeList';
+import { ItemMemo, ProductsTypeList, ProductTypeListMemo } from '../../components/AddSales/ProductsTypeList';
 
 import { useStock } from '../../contexts/stock';
 import { useOrderProducts } from '../../contexts/order';
 import { useProducts } from '../../contexts/products';
 import { TotalValue } from '../../components/AddSales/TotalValue';
 import { ModalSale } from '../../components/AddSales/ModalAddSales';
+import { InputField } from '../../components/auth/TextInput';
+import { TextInput } from 'react-native-gesture-handler';
 
 
 export function NewSale() {
@@ -26,9 +28,9 @@ export function NewSale() {
     const colorScheme = useColorScheme();
 
     //CONTEXTS
-    const { orderProducts, clearOrderProducts } = useOrderProducts();
-    const { productsGroupedByType: productsFromContext, isLoading } = useProducts();
-    const { stock } = useStock();
+    const { addProductToOrder, priceModel, orderProducts, clearOrderProducts } = useOrderProducts();
+    const { productsGroupedByType: productsFromContext, isLoading, topProducts } = useProducts();
+    const { stock, stockMap } = useStock();
 
     const [productsGroupedByType, setProductsGroupedByType] = useState<{ [type: string]: [] }>(productsFromContext)
     const [hideNoStockProducts, setHideNoStockProducts] = useState(true);
@@ -99,15 +101,36 @@ export function NewSale() {
                                         :
                                         <></>
                                     }
+                                        {/* <TextInput style={{ paddingVertical: 4, paddingHorizontal: 16, backgroundColor: Colors[colorScheme].itemColor, borderRadius: 80, marginBottom: 4 }} /> */}
                                         <ScrollView
                                             scrollEnabled
                                             contentContainerStyle={{ paddingBottom: 180 }}
                                         >
                                             <View
+                                                style={{ borderRadius: 8, backgroundColor: Colors.lightPrimary, padding: 8, paddingBottom: 16 }}
+                                            >
+                                                <Text style={{ fontSize: 24, color: Colors[colorScheme].text }}>Mais vendidos</Text>
+                                                <ScrollView horizontal snapToEnd contentContainerStyle={{ gap: 8 }}>
+                                                    {
+                                                        topProducts.map(product => {
+                                                            let productData = product as any;
+                                                            const orderItem = orderProducts.find(item => item.id_product == productData.id_product)
+                                                            console.log( productData );
+                                                            const productCount = (orderItem?.count) || 0;
+                                                            const stockValue = stockMap.get(productData.id_product) || 0;
+                                                            return <>
+                                                            <ItemMemo key={productData.id_product} stockValue={stockValue} setOrderModal={() => {}} addProductToOrder={addProductToOrder} priceModel={priceModel} productCount={productCount} product={product} />
+                                                            </>
+                                                        })
+                                                    }
+                                                </ScrollView>
+                                            </View>
+                                            
+                                            <Text style={{ marginTop: 16, fontSize: 24 }}>Categorias</Text>
+                                            <View
                                                 style={
                                                     {
                                                         position: "relative",
-                                                        paddingTop: 16,
                                                         display: "flex",
                                                         gap: 8,
                                                         width: "100%",
@@ -135,6 +158,7 @@ export function NewSale() {
                                                                 padding: 8,
                                                                 overflow: 'hidden'
                                                             }}
+                                                            key={category}
                                                             onPress={() => setCategory(category) }>
                                                                 <Text style={{fontSize: 24, flex: 1, flexWrap: 'wrap', width: "100%"}} >{category}</Text>
                                                         </TouchableOpacity>

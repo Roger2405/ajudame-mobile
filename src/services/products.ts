@@ -5,7 +5,7 @@ import api from "./api";
 
 export async function getProducts() {
     const response = await api.get(`/products`);
-    return response.data as ProductProps[];
+    return response.data as { "products": ProductProps[], "topProducts": ProductProps[] };
 }
 
 export function getProductTypes(arrProducts: ProductProps[]) {

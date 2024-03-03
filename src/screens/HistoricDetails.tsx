@@ -59,13 +59,13 @@ export default function HistoricDetails({ route }: Props) {
   useEffect(() => {
     getHistoricDetails(date)
       .then((res) => setDataBarChart(res as HistoricDetailsItemProps[]))
-      .then(() => getSalesByDate(date))
+      .then(( res ) => getSalesByDate(date))
       .then(setSales)
       .then(() => getOverview(date))
       .then((res) => setOverviewData(res as SaleOverviewProps))
       .catch(alert)
       .finally(() => setIsLoading(false))
-  }, [])
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
@@ -96,9 +96,9 @@ export default function HistoricDetails({ route }: Props) {
                         <Text style={{ textAlign: 'center', padding: 8, color: Colors.red, backgroundColor: Colors.lightRed, borderRadius: 8, marginVertical: 8 }}>Não foi possível gerar o gráfico</Text>
                     }
                     {
-                      dataBarChart?.length ?
-                        <VictoryChart>
-                          <VictoryBar
+                      !!dataBarChart && !!( dataBarChart?.length ) ?
+                        <VictoryChart domainPadding={10}>
+                          {/* <VictoryBar
                             domainPadding={{ x: 24 }}
                             style={{
                               data: {
@@ -108,8 +108,13 @@ export default function HistoricDetails({ route }: Props) {
                             data={dataBarChart}
                             x='day'
                             y='total'
+                          /> */}
+                            <VictoryBar
+                            style={{ data: { fill: Colors.primary } }}
+                            alignment="start"
+                            data={dataBarChart.map(i => i.total)}
                           />
-                          <VictoryBar
+                          {/* <VictoryBar
                             domainPadding={{ x: 24 }}
                             style={{
                               data: {
@@ -119,7 +124,7 @@ export default function HistoricDetails({ route }: Props) {
                             data={dataBarChart}
                             x='day'
                             y='cost'
-                          />
+                          /> */}
 
                         </VictoryChart>
                         :

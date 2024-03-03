@@ -31,9 +31,14 @@ export function AuthProvider({ children }: Props) {
     useEffect(() => {
         async function loadStoragedData() {
             const storagedUser = await AsyncStorage.getItem('@AjudaME:user')
+            const token = await AsyncStorage.getItem('@AjudaME:token')
 
             if (storagedUser) {
                 setUser(JSON.parse(storagedUser))
+            }
+
+            if( token ) {
+                api.defaults.headers.authorization = token;
             }
         }
         loadStoragedData();
@@ -44,6 +49,7 @@ export function AuthProvider({ children }: Props) {
         const response = await auth.signIn(email, password);
         if (response.success) {
             await AsyncStorage.setItem('@AjudaME:user', JSON.stringify(response.user))
+            await AsyncStorage.setItem('@AjudaME:token', response.token )
             api.defaults.headers.Authorization = response.token;
             setUser(response.user)
         }

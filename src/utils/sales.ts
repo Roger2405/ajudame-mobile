@@ -9,16 +9,16 @@ export function getPieChartData(groupedSales: SaleProductProps[][]) {
         sum: number;
     }[] = [];
 
-    for (let i = 0; i < groupedSales.length; i++) {
-        const group = groupedSales[i];
-        const type_products = group[0].type_product;
+    for (let i = 0; i < Object.keys( groupedSales ).length; i++) {
+        const group = Object.keys( groupedSales )[i];
+        const type_products = group;
         const typeWrapped = type_products.split(' ');
         const label = typeWrapped.join('\n');
 
         // let groupFilteredByPriceModel = group.filter(item => (priceModel == 'main' ? item.is_main_price : priceModel == 'secondary' ? !item.is_main_price : true))
 
         let sum = 0;
-        group.forEach(sale => {
+        groupedSales[group as any].forEach(sale => {
             sum += (sale.count * sale.price_product) - (sale.cost_product ?? 0 * sale.count);
         })
         newData?.push(

@@ -21,7 +21,6 @@ export function DetailedSale({ data, handleDeleteSale }: Props) {
     const colorScheme = useColorScheme();
     const [formattedTime, setFormattedTime] = useState('')
 
-
     useEffect(() => {
         const timeOffset = 3;
         const [strHour, strMin, strSeg] = data.header.datetime.split(':');

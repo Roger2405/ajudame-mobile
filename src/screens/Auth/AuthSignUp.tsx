@@ -27,7 +27,6 @@ export function AuthSignUp() {
         if (email && password && !errorMessage) {
             signUp(email, password)
                 .then(res => {
-                    alert(res.msg)
                     if (res.success) {
                         navigation.navigate('SignIn')
                     }
