@@ -29,7 +29,8 @@ export function Routes() {
             <ActivityIndicator />
         </View>
     }
-    return signed ?
+    
+    return true ?
         <ProductsProvider>
             <SalesProvider>
                 <StockProvider>

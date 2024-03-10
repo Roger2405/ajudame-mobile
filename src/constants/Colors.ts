@@ -1,16 +1,18 @@
 
 
 export default {
-  primary: 'rgb(69, 197, 103)',
-  lightPrimary: 'rgba(69, 197, 103, 0.35)',
+  primary: '#3399CC',
+  lightPrimary: '#3399CC80',
   lightGray: 'rgba(136, 136, 136, 0.35)',
   bgSmooth: 'rgba(0,0,0,0.25)',
-  gray: 'rgb(136, 136, 136)',
-  red: 'rgb(229, 84, 84)',
+  gray: '#808080',
+  success: '#66CC33',
+  warning: '#CCB233',
+  danger: '#CC3333',
   lightRed: 'rgba(229, 84, 84, 0.35)',
-  white: '#FFF',
+  white: '#FFFFFF',
   light: {
-    text: '#444',
+    text: '#404040',
     textContrast: '#EBEBEB',
     background: '#EBEBEB',
     itemColor: '#FFF',
@@ -19,7 +21,7 @@ export default {
   dark: {
     text: '#fff',
     textContrast: '2B2B2B',
-    background: '#2B2B2B',
+    background: '#F3F3F3',
     itemColor: '#3F3F3F',
     tabIconDefault: '#2B2B2B',
   },

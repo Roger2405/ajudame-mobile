@@ -11,12 +11,10 @@ export type RootParamList = {
     Stock: undefined;
 }
 
-
 export type RootStackParamList = {
     Root: NavigatorScreenParams<RootTabParamList> | undefined;
     DetailedSales: undefined;
     NewSale: undefined;
-    ProductForm: { id?: number };
     HistoricDetails: { date: string }
     SignUp: undefined;
     SignIn: undefined;
