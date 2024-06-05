@@ -92,7 +92,7 @@ interface ItemProps {
 }
 
 
-export const ItemMemo = memo(ItemComponent, (prevProps, nextProps) => (prevProps.productCount === nextProps.productCount) && (prevProps.priceModel === nextProps.priceModel));
+const ItemMemo = memo(ItemComponent, (prevProps, nextProps) => (prevProps.productCount === nextProps.productCount) && (prevProps.priceModel === nextProps.priceModel));
 
 function ItemComponent({ product, stockValue, productCount, priceModel, addProductToOrder, setOrderModal }: ItemProps) {
     const colorScheme = useColorScheme();

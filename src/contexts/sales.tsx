@@ -40,6 +40,7 @@ export function SalesProvider({ children }: Props) {
         
         getSalesByDate(date)
             .then(setSales)
+            .catch(alert)
             .finally(() => setIsLoading(false))
     }
     return (

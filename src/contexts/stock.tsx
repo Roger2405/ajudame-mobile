@@ -24,8 +24,7 @@ export function StockProvider({ children }: Props) {
 
     useEffect(() => {
         let map = new Map();
-        
-        stock?.map((item) => {
+        stock.map((item) => {
             map.set(item.id_product, item.quantity);
         })
         setStockMap(map)
